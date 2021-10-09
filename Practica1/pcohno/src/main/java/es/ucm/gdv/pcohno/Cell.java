@@ -1,7 +1,5 @@
 package es.ucm.gdv.pcohno;
 
-import com.sun.tools.javac.util.Pair;
-
 public class Cell {
 
     public enum State {Null, Unassigned, Point, Wall}
