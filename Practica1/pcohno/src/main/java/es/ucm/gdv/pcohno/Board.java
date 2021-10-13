@@ -2,8 +2,6 @@ package es.ucm.gdv.pcohno;
 
 import com.sun.tools.javac.util.Pair;
 
-
-
 public class Board {
 
     static Pair<Integer, Integer>[] _dirs = new Pair[]{

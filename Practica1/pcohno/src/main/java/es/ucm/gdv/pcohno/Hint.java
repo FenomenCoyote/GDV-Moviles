@@ -66,7 +66,7 @@ public class Hint {
     }
 
     //Si un número tiene ya visibles el número de celdas que dice, entonces se puede cerrar
-    private Cell hint1(int seeing, boolean locked, int mustWatch, int posRow, int posCol){
+    private CellHint hint1(int seeing, boolean locked, int mustWatch, int posRow, int posCol){
         if(locked && seeing == mustWatch){
             for(Dirs dir : Dirs.values()){
                 int row = posRow + _dirs[dir.ordinal()].fst;
@@ -79,7 +79,7 @@ public class Hint {
                     col += _dirs[dir.ordinal()].snd;
                 }
                 if(emptyPos)
-                    return new Cell(false, -1, Cell.State.Wall);
+                    return new CellHint(Cell.State.Wall, row, col);
             }
         }
         return null;
@@ -87,7 +87,7 @@ public class Hint {
 
     /*Si pusiéramos un punto azul en una celda vacía, superaríamos el número de visibles
        del número, y por tanto, debe ser una pared*/
-    private Cell hint2(int seeing, boolean locked, int mustWatch, int posRow, int posCol){
+    private CellHint hint2(int seeing, boolean locked, int mustWatch, int posRow, int posCol){
         if(locked && seeing < mustWatch){
             for(Dirs dir : Dirs.values()) {
                 int row = posRow + _dirs[dir.ordinal()].fst;
@@ -99,7 +99,7 @@ public class Hint {
 
                     _board[row][col].setState(Cell.State.Point);
                     if(lookDirections(row, col) > mustWatch)
-                        return new Cell(false, -1, Cell.State.Wall);
+                        return new CellHint(Cell.State.Wall, row, col);
                     else {
                         _board[row][col].setState(Cell.State.Unassigned);
                     }
@@ -113,7 +113,7 @@ public class Hint {
 
     /*Si no ponemos un punto en alguna celda vacía, entonces es imposible alcanzar el
        número*/
-    private Cell hint3(int seeing, boolean locked, int mustWatch, int posRow, int posCol){
+    private CellHint hint3(int seeing, boolean locked, int mustWatch, int posRow, int posCol){
         if(locked && seeing < mustWatch){
             int[] maxWatchablePoss = maxWatchablePositions(seeing, mustWatch, posRow, posCol);
             for(Dirs dir : Dirs.values()){
@@ -123,20 +123,20 @@ public class Hint {
                 if (maxOthers < mustWatch){
                     int n = lookDirection(dir, posRow, posCol);
                     if(maxOthers + n < mustWatch){
-                        return new Cell(false, -1, Cell.State.Null);
+                        return new CellHint(Cell.State.Point, posRow, posCol);
                     }
                 }
             }
         }
-        return new Cell(false, -1, Cell.State.Null);
+        return null;
     }
 
-    public Cell getCellState(int row, int col){
+    public CellHint getCellState(int row, int col){
         int seeing = lookDirections(row, col);
         boolean locked = _board[row][col].getLocked();
         int mustWatch = _board[row][col].getMustWatch();
 
-        Cell c = null;
+        CellHint c = null;
 
         c = hint1(seeing, locked, mustWatch, row, col);
         if(c != null) return c;
