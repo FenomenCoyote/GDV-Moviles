@@ -131,7 +131,52 @@ public class Hint {
         return null;
     }
 
-    public CellHint getCellState(int row, int col){
+    private CellHint hint4(int seeing, boolean locked, int mustWatch, int posRow, int posCol){
+        if(_board[posRow][posCol].getState() == Cell.State.Point) {
+            if (locked && seeing > mustWatch)
+                return new CellHint(Cell.State.Null, posRow, posCol);
+        }
+        return null;
+    }
+
+    private CellHint hint5(int seeing, boolean locked, int mustWatch, int posRow, int posCol) {
+        if(_board[posRow][posCol].getState() == Cell.State.Point) {
+            if (locked && seeing < mustWatch) {
+                int[] maxWatchablePoss = maxWatchablePositions(seeing, mustWatch, posRow, posCol);
+                int sum = 0;
+                for (int value : maxWatchablePoss)
+                    sum += value;
+                if(sum < mustWatch)
+                    return new CellHint(Cell.State.Null, posRow, posCol);
+            }
+        }
+        return null;
+    }
+
+    private CellHint hint6(int seeing, boolean locked, int mustWatch, int posRow, int posCol) {
+        if (_board[posRow][posCol].getState() == Cell.State.Unassigned){
+            if( posRow - 1 < 0 || _board[posRow - 1][posCol].getState() == Cell.State.Wall &&
+                posRow + 1 >= _boardSize || _board[posRow + 1][posCol].getState() == Cell.State.Wall &&
+                posCol - 1 < 0 || _board[posRow][posCol - 1].getState() == Cell.State.Wall &&
+                posCol + 1 >= _boardSize || _board[posRow][posCol + 1].getState() == Cell.State.Wall)
+                return new CellHint(Cell.State.Null, posRow, posCol);
+        }
+        return null;
+    }
+
+
+    private CellHint hint7(int seeing, boolean locked, int mustWatch, int posRow, int posCol) {
+        if (_board[posRow][posCol].getState() == Cell.State.Point && !locked && seeing == 0){
+            if( posRow - 1 < 0 || _board[posRow - 1][posCol].getState() == Cell.State.Wall &&
+                posRow + 1 >= _boardSize || _board[posRow + 1][posCol].getState() == Cell.State.Wall &&
+                posCol - 1 < 0 || _board[posRow][posCol - 1].getState() == Cell.State.Wall &&
+                posCol + 1 >= _boardSize || _board[posRow][posCol + 1].getState() == Cell.State.Wall)
+                return new CellHint(Cell.State.Null, posRow, posCol);
+        }
+        return null;
+    }
+
+    public CellHint getPositiveHint(int row, int col){
         int seeing = lookDirections(row, col);
         boolean locked = _board[row][col].getLocked();
         int mustWatch = _board[row][col].getMustWatch();
@@ -147,8 +192,25 @@ public class Hint {
         c = hint3(seeing, locked, mustWatch, row, col);
         if(c != null) return c;
 
-        //Si no he podido usar ninguna pista, devuelvo un null state
-        return null;
+        c = hint6(seeing, locked, mustWatch, row, col);
+        return c;
+    }
+
+    public CellHint getNegativeHint(int row, int col){
+        int seeing = lookDirections(row, col);
+        boolean locked = _board[row][col].getLocked();
+        int mustWatch = _board[row][col].getMustWatch();
+
+        CellHint c = null;
+
+        c = hint4(seeing, locked, mustWatch, row, col);
+        if(c != null) return c;
+
+        c = hint5(seeing, locked, mustWatch, row, col);
+        if(c != null) return c;
+
+        c = hint7(seeing, locked, mustWatch, row, col);
+        return c;
     }
 
     private Cell[][] _board;

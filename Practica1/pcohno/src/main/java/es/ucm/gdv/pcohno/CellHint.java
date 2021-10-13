@@ -15,5 +15,5 @@ public class CellHint{
     }
 
     public Cell.State state;
-    Pair<Integer, Integer> pos;
+    public Pair<Integer, Integer> pos;
 }

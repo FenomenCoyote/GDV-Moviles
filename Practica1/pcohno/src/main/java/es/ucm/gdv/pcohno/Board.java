@@ -40,55 +40,58 @@ public class Board {
 
     private boolean isCellRight(int row, int col){
         Cell c = _board[row][col];
-        /*if(c.getLocked())
+        if(c.getLocked() && c.getState() == Cell.State.Point)
             return c.getMustWatch() == lookDirections(row, col);
-        else //Necesita estar definida a wall o a point
-            return c.getState() != Cell.State.Unassigned;*/
-        return false;
+        else if(c.getState() == Cell.State.Point)
+            return lookDirections(row, col) > 0;
+        else
+            return c.getState() == Cell.State.Wall;
     }
 
+    //Devolver nueva celda puesta o una cela mal muesta
     public void getHint() {
         for (int i = 0; i < _size; ++i){
             for (int j = 0; j < _size; ++j){
-                //Devolver posicion
-                /* Cell.State s = _hint.getCellState(i, j);
-                if(s == Cell.State.Null)
+                CellHint h = _hint.getPositiveHint(i, j);
+                if(h == null)
                     continue;
-                _board[i][j].setState(whatever);*/
+                _board[h.pos.fst][h.pos.snd].setState(h.state);
             }
         }
     }
 
-/*
-    private int lookDirections(Cell[][] board){
+
+    private int lookDirections(int row, int col){
         int seeing = 0;
 
         //Look up
-        seeing += lookDirection(Dirs.Up, board);
+        seeing += lookDirection(Dirs.Up, row, col);
         //Look down
-        seeing+= lookDirection(Dirs.Down, board);
+        seeing+= lookDirection(Dirs.Down, row, col);
         //Look left
-        seeing += lookDirection(Dirs.Left, board);
+        seeing += lookDirection(Dirs.Left, row, col);
         //Look right
-        seeing += lookDirection(Dirs.Right, board);
+        seeing += lookDirection(Dirs.Right, row, col);
 
         return seeing;
     }
 
-    private int lookDirection(Dirs direction, Cell[][] board){
+    private int lookDirection(Dirs direction, int row, int col){
         Pair<Integer,Integer> dir = _dirs[direction.ordinal()];
 
-        int row = _pos.fst;
-        int col = _pos.snd;
         int seeing = 0;
         while(row >= 0 && row < _size && col >= 0 && col < _size){
-            if(board[row][col].isPoint()) ++seeing;
-                row += dir.fst; col += dir.snd;
-            else break;
+            if(_board[row][col].getState() == Cell.State.Point) {
+                ++seeing;
+                row += dir.fst;
+                col += dir.snd;
+            }
+            else
+                break;
+
         }
         return seeing;
     }
- */
 
     public int getSize(){ return _size;}
 
