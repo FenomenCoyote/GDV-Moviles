@@ -11,6 +11,8 @@ public class Board {
             new Pair(0, 1),
     };
 
+
+
     static enum Dirs {Up, Down, Left, Right}
 
     public Board(int size){
@@ -22,6 +24,28 @@ public class Board {
             for (int j = 0; j < size; ++j){
                 _board[i][j] = new Cell();
             }
+        }
+
+    }
+
+    public void setForGame() {
+        _board[1][1].setState(Cell.State.Point);
+        _board[1][1].setMustWatch(2);
+        _board[1][1].setLocked(true);
+        _board[1][3].setState(Cell.State.Wall);
+        _board[1][3].setLocked(true);
+        _board[3][3].setState(Cell.State.Point);
+        _board[3][3].setMustWatch(5);
+        _board[3][3].setLocked(true);
+    }
+
+    public void print() {
+        System.out.println("=============================");
+        for (int i = 0; i < _size; ++i) {
+            for (int j = 0; j < _size; ++j) {
+                System.out.print(_board[i][j].getState() + "\t\t");
+            }
+            System.out.println("\n");
         }
     }
 
@@ -52,7 +76,12 @@ public class Board {
     public void getHint() {
         for (int i = 0; i < _size; ++i){
             for (int j = 0; j < _size; ++j){
-                CellHint h = _hint.getPositiveHint(i, j);
+                CellHint h = null;
+                try {
+                    h = _hint.getPositiveHint(i, j);
+                } catch (Exception e){
+                    e.printStackTrace();
+                }
                 if(h == null)
                     continue;
                 _board[h.pos.fst][h.pos.snd].setState(h.state);
@@ -92,8 +121,6 @@ public class Board {
         }
         return seeing;
     }
-
-    public int getSize(){ return _size;}
 
     private Cell[][] _board;
     private int _size;

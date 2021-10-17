@@ -25,14 +25,14 @@ public class Hint {
 
     private int lookDirections(int row, int col){
         int[] view = getView(row, col);
-        return view[0] + view[1] + view[2] + view[3];
+        return 1 + view[0] + view[1] + view[2] + view[3];
     }
 
     private int lookDirection(Dirs direction, int posRow, int posCol){
         Pair<Integer,Integer> dir = _dirs[direction.ordinal()];
 
-        int row = posRow;
-        int col = posCol;
+        int row = posRow + dir.fst;
+        int col = posCol + dir.snd;
         int seeing = 0;
         while(row >= 0 && row < _boardSize && col >= 0 && col < _boardSize){
             if(_board[row][col].getState() == Cell.State.Point) {
@@ -95,9 +95,8 @@ public class Hint {
                 while(row >= 0 && row < _boardSize && col >= 0 && col < _boardSize
                         && _board[row][col].getState() != Cell.State.Wall){
                     if(_board[row][col].getState() == Cell.State.Point)
-                        continue;
+                        break;
 
-                    _board[row][col].setState(Cell.State.Point);
                     if(lookDirections(row, col) > mustWatch)
                         return new CellHint(Cell.State.Wall, row, col);
                     else {
@@ -120,10 +119,19 @@ public class Hint {
                 int maxOthers = maxWatchablePoss[(dir.ordinal() +1) % 4] +
                         maxWatchablePoss[(dir.ordinal() +2) % 4] +
                         maxWatchablePoss[(dir.ordinal() +3) % 4];
-                if (maxOthers < mustWatch){
-                    int n = lookDirection(dir, posRow, posCol);
-                    if(maxOthers + n < mustWatch){
-                        return new CellHint(Cell.State.Point, posRow, posCol);
+                if (maxOthers < mustWatch - 1){ //Minus 1 because i count myself in mustWatch
+                    int n = 1 + lookDirection(dir, posRow, posCol);
+                    if(maxOthers + n < mustWatch ){
+                        Pair<Integer, Integer> _dir = _dirs[dir.ordinal()];
+                        int posiblePosRow = posRow + _dir.fst * n;
+                        int posiblePosCol = posCol + _dir.snd * n;
+
+                        if(     posiblePosRow >= 0 && posiblePosRow < _boardSize &&
+                                posiblePosCol >= 0 && posiblePosCol < _boardSize &&
+                                _board[posiblePosRow][posiblePosCol].getState() == Cell.State.Unassigned)
+                            return new CellHint(Cell.State.Point,
+                                    posiblePosRow,
+                                    posiblePosCol);
                     }
                 }
             }
@@ -155,11 +163,12 @@ public class Hint {
 
     private CellHint hint6(int seeing, boolean locked, int mustWatch, int posRow, int posCol) {
         if (_board[posRow][posCol].getState() == Cell.State.Unassigned){
-            if( posRow - 1 < 0 || _board[posRow - 1][posCol].getState() == Cell.State.Wall &&
-                posRow + 1 >= _boardSize || _board[posRow + 1][posCol].getState() == Cell.State.Wall &&
-                posCol - 1 < 0 || _board[posRow][posCol - 1].getState() == Cell.State.Wall &&
-                posCol + 1 >= _boardSize || _board[posRow][posCol + 1].getState() == Cell.State.Wall)
+            if(     ((posRow - 1) < 0 || _board[posRow - 1][posCol].getState() == Cell.State.Wall) &&
+                    ((posRow + 1) >= _boardSize || _board[posRow + 1][posCol].getState() == Cell.State.Wall) &&
+                    ((posCol - 1) < 0 || _board[posRow][posCol - 1].getState() == Cell.State.Wall) &&
+                    ((posCol + 1) >= _boardSize || _board[posRow][posCol + 1].getState() == Cell.State.Wall)){
                 return new CellHint(Cell.State.Null, posRow, posCol);
+            }
         }
         return null;
     }
@@ -167,11 +176,12 @@ public class Hint {
 
     private CellHint hint7(int seeing, boolean locked, int mustWatch, int posRow, int posCol) {
         if (_board[posRow][posCol].getState() == Cell.State.Point && !locked && seeing == 0){
-            if( posRow - 1 < 0 || _board[posRow - 1][posCol].getState() == Cell.State.Wall &&
-                posRow + 1 >= _boardSize || _board[posRow + 1][posCol].getState() == Cell.State.Wall &&
-                posCol - 1 < 0 || _board[posRow][posCol - 1].getState() == Cell.State.Wall &&
-                posCol + 1 >= _boardSize || _board[posRow][posCol + 1].getState() == Cell.State.Wall)
+            if(     ((posRow - 1) < 0 || _board[posRow - 1][posCol].getState() == Cell.State.Wall) &&
+                    ((posRow + 1) >= _boardSize || _board[posRow + 1][posCol].getState() == Cell.State.Wall) &&
+                    ((posCol - 1) < 0 || _board[posRow][posCol - 1].getState() == Cell.State.Wall) &&
+                    ((posCol + 1) >= _boardSize || _board[posRow][posCol + 1].getState() == Cell.State.Wall)){
                 return new CellHint(Cell.State.Null, posRow, posCol);
+            }
         }
         return null;
     }
