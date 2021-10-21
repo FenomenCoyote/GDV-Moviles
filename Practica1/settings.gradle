@@ -1,3 +1,7 @@
 rootProject.name = "Practica1"
-include ':app'
+include ':AGame'
 include ':pcohno'
+include ':PCGame'
+include ':Engine'
+include ':PCEngine'
+include ':AEngine'

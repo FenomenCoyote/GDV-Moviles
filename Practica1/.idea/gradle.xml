@@ -10,7 +10,11 @@
         <option name="modules">
           <set>
             <option value="$PROJECT_DIR$" />
-            <option value="$PROJECT_DIR$/app" />
+            <option value="$PROJECT_DIR$/AEngine" />
+            <option value="$PROJECT_DIR$/AGame" />
+            <option value="$PROJECT_DIR$/Engine" />
+            <option value="$PROJECT_DIR$/PCEngine" />
+            <option value="$PROJECT_DIR$/PCGame" />
             <option value="$PROJECT_DIR$/pcohno" />
           </set>
         </option>

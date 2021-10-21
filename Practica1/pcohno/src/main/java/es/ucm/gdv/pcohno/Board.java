@@ -29,14 +29,13 @@ public class Board {
     }
 
     public void setForGame() {
+        _board[1][0].setState(Cell.State.Wall);
+        _board[1][0].setLocked(true);
+        _board[1][2].setState(Cell.State.Wall);
+        _board[1][2].setLocked(true);
         _board[1][1].setState(Cell.State.Point);
-        _board[1][1].setMustWatch(2);
+        _board[1][1].setMustWatch(3);
         _board[1][1].setLocked(true);
-        _board[1][3].setState(Cell.State.Wall);
-        _board[1][3].setLocked(true);
-        _board[3][3].setState(Cell.State.Point);
-        _board[3][3].setMustWatch(5);
-        _board[3][3].setLocked(true);
     }
 
     public void print() {
