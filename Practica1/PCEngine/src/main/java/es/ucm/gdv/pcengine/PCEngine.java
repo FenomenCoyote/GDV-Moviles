@@ -2,14 +2,13 @@ package es.ucm.gdv.pcengine;
 
 import es.ucm.gdv.engine.Application;
 import es.ucm.gdv.engine.Engine;
+import es.ucm.gdv.engine.Graphics;
+import es.ucm.gdv.engine.Input;
 
 public class PCEngine implements Engine {
     @Override
     public void init() {
-        Window ventana = new Window("OhNo!");
-        if (!ventana.init(400, 600))
-            // Ooops. Ha fallado la inicialización.
-            return;
+
     }
 
     @Override
@@ -28,24 +27,9 @@ public class PCEngine implements Engine {
             lastFrameTime = currentTime;
             double elapsedTime = (double) nanoElapsedTime / 1.0E9;
 
-            _app.update(elapsedTime);
+            _app.update();
+            _graphics.render(_app);
 
-            // Informe de FPS
-            if (currentTime - informePrevio > 1000000000l) {
-                long fps = frames * 1000000000l / (currentTime - informePrevio);
-                System.out.println("" + fps + " fps");
-                frames = 0;
-                informePrevio = currentTime;
-            }
-            ++frames;
-
-			/*
-			// Posibilidad: cedemos algo de tiempo. es una medida conflictiva...
-			try {
-				Thread.sleep(1);
-			}
-			catch(Exception e) {}
-			*/
         } // while
     }
 
@@ -57,6 +41,16 @@ public class PCEngine implements Engine {
     @Override
     public void setApplication(Application app) {
         _app = app;
+    }
+
+    @Override
+    public Graphics getGraphics() {
+        return _graphics;
+    }
+
+    @Override
+    public Input getInput() {
+        return _input;
     }
 
     PCGraphics _graphics = null;
