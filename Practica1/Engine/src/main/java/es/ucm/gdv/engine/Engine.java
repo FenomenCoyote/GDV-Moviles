@@ -10,4 +10,7 @@ public interface Engine {
 
     public void setApplication(Application app);
 
+    public Graphics getGraphics();
+    public Input getInput();
+
 }

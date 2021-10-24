@@ -1,6 +1,7 @@
 package es.ucm.gdv.pcengine;
 
-public class Image {
+public class PCImage {
+
 
 
 }

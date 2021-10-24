@@ -6,11 +6,11 @@ import java.awt.Graphics;
 import java.io.FileInputStream;
 import java.io.InputStream;
 
-public class MyFont {
+public class PCFont {
 
     private final Font _font;
 
-    public MyFont(String font){
+    public PCFont(String font){
         Font baseFont = null;
         try (InputStream is = new FileInputStream("Bangers-Regular.ttf")) {
             baseFont = Font.createFont(Font.TRUETYPE_FONT, is);
