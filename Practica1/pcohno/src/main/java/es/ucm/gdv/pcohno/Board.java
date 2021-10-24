@@ -2,6 +2,8 @@ package es.ucm.gdv.pcohno;
 
 import com.sun.tools.javac.util.Pair;
 
+import java.util.Random;
+
 public class Board {
 
     static Pair<Integer, Integer>[] _dirs = new Pair[]{
@@ -34,7 +36,7 @@ public class Board {
 
     public void setForGame() {
 
-        _board[2][1].setState(Cell.State.Wall);
+       /* _board[2][1].setState(Cell.State.Wall);
         _board[2][1].setLocked(true);
 
         _board[1][2].setState(Cell.State.Wall);
@@ -54,33 +56,29 @@ public class Board {
 
         _board[4][4].setState(Cell.State.Point);
         _board[4][4].setMustWatch(4);
-        _board[4][4].setLocked(true);
+        _board[4][4].setLocked(true);*/
+
+        Cell[][] puzzle = new Cell[_size + 2][_size + 2];
+
+        for (int i = 0; i < _size + 2; ++i){
+            for (int j = 0; j < _size + 2; ++j){
+                puzzle[i][j] = new Cell(_board[i][j]);
+            }
+        }
+
+        //Hasta que haya un puzzle que tenga solucion
+        while(true) {
+            clean(puzzle);
+            randomize(puzzle);
+            copyToBoard(puzzle);
+            if(resolve(puzzle)){ //Si esta resuelto
+                return;
+            }
+        }
     }
 
     public void print() {
-        System.out.println("=============================");
-        for (int i = 1; i < _size + 1; ++i) {
-            for (int j = 1; j < _size + 1; ++j) {
-                switch (_board[i][j].getState()){
-                    case Null:
-                        break;
-                    case Unassigned:
-                        System.out.print("?");
-                        break;
-                    case Point:
-                        if(_board[i][j].getLocked())
-                            System.out.print(_board[i][j].getMustWatch());
-                        else
-                            System.out.print("O");
-                        break;
-                    case Wall:
-                        System.out.print("X");
-                        break;
-                }
-                System.out.print('\t');
-            }
-            System.out.println("\n");
-        }
+        print(_board);
     }
 
     /**
@@ -124,7 +122,6 @@ public class Board {
         }
     }
 
-
     private int lookDirections(int row, int col){
         int seeing = 0;
 
@@ -153,6 +150,101 @@ public class Board {
             col += dir.snd;
         }
         return seeing;
+    }
+
+    private void clean(Cell[][] puzzle){
+        for (int i = 1; i < _size + 1; ++i){
+            for (int j = 1; j < _size + 1; ++j){
+                Cell c = puzzle[i][j];
+                c.setLocked(false);
+                c.setMustWatch(-1);
+                c.setState(Cell.State.Unassigned);
+            }
+        }
+    }
+
+    private void randomize(Cell[][] puzzle){
+        Random rng = new Random();
+        int randomCells = _size + rng.nextInt(_size/2);
+        for(int i = 0; i < randomCells; ++i){
+            int posX, posY;
+            posX = 1 + rng.nextInt(_size);
+            posY = 1 + rng.nextInt(_size);
+            Cell c = puzzle[posX][posY];
+            if(c.getLocked()){
+                --i;
+                continue;
+            }
+            if(rng.nextInt(randomCells) == 0){
+                c.setState(Cell.State.Wall);
+            }
+            else {
+                c.setState(Cell.State.Point);
+                c.setMustWatch(1 + rng.nextInt((_size - 1) * 2));
+            }
+            c.setLocked(true);
+        }
+    }
+
+    private boolean resolve(Cell[][] puzzle){
+        boolean changed = true;
+        Hint puzzleHint = new Hint(puzzle);
+        while(changed){
+            changed = false;
+            print(puzzle);
+            for (int i = 1; i < _size + 1; ++i){
+                for (int j = 1; j < _size + 1; ++j){
+                    CellHint h = null;
+                    try {
+                        h = puzzleHint.getPositiveHint(i, j);
+                    } catch (Exception e){
+                        e.printStackTrace();
+                    }
+                    if(h == null)
+                        continue;
+                    puzzle[h.pos.fst][h.pos.snd].setState(h.state);
+                    changed = true;
+                }
+            }
+        }
+
+        return wrongCell() == null;
+    }
+
+    private void copyToBoard(Cell[][] puzzle){
+        for (int i = 1; i < _size + 1; ++i){
+            for (int j = 1; j < _size + 1; ++j) {
+                _board[i][j].setState(puzzle[i][j].getState());
+                _board[i][j].setMustWatch(puzzle[i][j].getMustWatch());
+                _board[i][j].setLocked(puzzle[i][j].getLocked());
+            }
+        }
+    }
+
+    private void print(Cell[][] board) {
+        System.out.println("=============================");
+        for (int i = 1; i < _size + 1; ++i) {
+            for (int j = 1; j < _size + 1; ++j) {
+                switch (board[i][j].getState()){
+                    case Null:
+                        break;
+                    case Unassigned:
+                        System.out.print("?");
+                        break;
+                    case Point:
+                        if(board[i][j].getLocked())
+                            System.out.print(board[i][j].getMustWatch());
+                        else
+                            System.out.print("o");
+                        break;
+                    case Wall:
+                        System.out.print("x");
+                        break;
+                }
+                System.out.print('\t');
+            }
+            System.out.println("\n");
+        }
     }
 
     private Cell[][] _board;

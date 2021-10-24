@@ -16,6 +16,12 @@ public class Cell {
         this._state = state;
     }
 
+    public Cell(Cell cell){
+        this._locked = cell._locked;
+        this._mustWatch = cell._mustWatch;
+        this._state = cell._state;
+    }
+
     public boolean setState(State state) {
         if(!_locked){
             _state = state;

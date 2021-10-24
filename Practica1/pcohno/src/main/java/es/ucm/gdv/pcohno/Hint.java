@@ -10,7 +10,6 @@ public class Hint {
 
     public Hint(Cell[][] board){
         this._board = board;
-        this._boardSize = board.length;
     }
 
     //Devuelve un array de 4 con el numero de puntos que ve en cada direccion :)
@@ -217,5 +216,4 @@ public class Hint {
     }
 
     private Cell[][] _board;
-    private int _boardSize;
 }
