@@ -53,14 +53,16 @@ public class PCGraphics implements Graphics {
 
     public void render(Application app){
         // Pintamos el frame con el BufferStrategy
+        width = window.getWidth();
+        height = window.getHeight();
         do {
             do {
-                java.awt.Graphics graphics = strategy.getDrawGraphics();
+                awtGraphics = strategy.getDrawGraphics();
                 try {
                     app.render();
                 }
                 finally {
-                    graphics.dispose();
+                    awtGraphics.dispose();
                 }
             } while(strategy.contentsRestored());
             strategy.show();
@@ -78,8 +80,9 @@ public class PCGraphics implements Graphics {
     }
 
     @Override
-    public void clear(int color) {
-
+    public void clear(int argb) {
+        setColor(argb);
+        awtGraphics.fillRect(0, 0, width, height);
     }
 
     @Override
@@ -104,7 +107,8 @@ public class PCGraphics implements Graphics {
 
     @Override
     public void setLogicalSize(int width, int height) {
-
+        logicalWidth = width;
+        logicalHeight = height;
     }
 
     @Override
@@ -113,13 +117,14 @@ public class PCGraphics implements Graphics {
     }
 
     @Override
-    public void setColor(int r, int g, int b, int a) {
-
+    public void setColor(int argb) {
+        Color c = new Color(argb, true);
+        awtGraphics.setColor(c);
     }
 
     @Override
     public void fillCircle(int cx, int cy, int r) {
-
+        awtGraphics.fillOval(cx, cy, r, r);
     }
 
     @Override
@@ -129,14 +134,18 @@ public class PCGraphics implements Graphics {
 
     @Override
     public int getWidth() {
-        return 0;
+        return width;
     }
 
     @Override
     public int getHeight() {
-        return 0;
+        return height;
     }
 
+    private int logicalWidth, logicalHeight;
+    private int width, height;
+
+    private java.awt.Graphics awtGraphics;
     private JFrame window;
     private BufferStrategy strategy;
 }

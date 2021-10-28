@@ -1,7 +1,5 @@
 package es.ucm.gdv.aengine;
 
-import android.graphics.Color;
-
 import es.ucm.gdv.engine.Graphics;
 import es.ucm.gdv.engine.Image;
 import es.ucm.gdv.engine.MyFont;
@@ -63,6 +61,11 @@ public class AGraphics implements Graphics {
     }
 
     @Override
+    public void setColor(int rgba) {
+
+    }
+
+    @Override
     public void fillCircle(int cx, int cy, int r) {
 
     }
@@ -82,8 +85,4 @@ public class AGraphics implements Graphics {
         return 0;
     }
 
-    @Override
-    public void setColor(int r, int g, int b, int a) {
-
-    }
 }

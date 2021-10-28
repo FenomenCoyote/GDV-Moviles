@@ -9,6 +9,12 @@ public class PCEngine implements Engine {
     @Override
     public void init() {
 
+        _graphics = new PCGraphics();
+        _graphics.init(400, 600);
+
+        _input = new PCInput();
+        //_input.init();
+        _app.init(this);
     }
 
     @Override
@@ -29,13 +35,16 @@ public class PCEngine implements Engine {
 
             _app.update();
             _graphics.render(_app);
-
         } // while
     }
 
     @Override
     public void release() {
         //??
+        _app.release();
+
+        _graphics.release();
+        //_input.release();
     }
 
     @Override

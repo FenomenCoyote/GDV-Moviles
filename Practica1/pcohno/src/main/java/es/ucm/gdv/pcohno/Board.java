@@ -68,9 +68,11 @@ public class Board {
         while(true) {
             clean(puzzle);
             randomize(puzzle);
-            if(wrongInitialBoard(puzzle) == null) {
+            if(!wrongInitialBoard(puzzle)) {
+                print(puzzle);
                 copyToBoard(puzzle);
-                if (resolve(puzzle)) { //Si esta resuelto
+                if (resolve(puzzle)) { //Si se puede resolver
+                    print(puzzle);
                     return;
                 }
             }
@@ -94,22 +96,16 @@ public class Board {
         return null;
     }
 
-    public Pair<Integer, Integer> wrongInitialBoard(Cell[][] puzzle){
+    public boolean wrongInitialBoard(Cell[][] puzzle){
         for (int i = 1; i < _size + 1; ++i){
             for (int j = 1; j < _size + 1; ++j){
                 Cell c = puzzle[i][j];
-                boolean right = true;
-                if(c.getLocked() && c.getState() == Cell.State.Point)
-                    right =  c.getMustWatch() == lookDirections(i, j);
-                else if(c.getState() == Cell.State.Point)
-                    right = lookDirections(i, j) > 0;
-                else
-                    right = c.getState() == Cell.State.Wall || c.getState() == Cell.State.Unassigned;
-
-                if(!right) return new Pair<Integer, Integer>(i,j);
+                if(c.getState() == Cell.State.Point
+                        && lookDirections(i, j) > c.getMustWatch())
+                    return true;
             }
         }
-        return null;
+        return false;
     }
 
     private boolean isCellRight(int row, int col){
@@ -209,7 +205,6 @@ public class Board {
         Hint puzzleHint = new Hint(puzzle);
         while(changed){
             changed = false;
-            print(puzzle);
             for (int i = 1; i < _size + 1; ++i){
                 for (int j = 1; j < _size + 1; ++j){
                     CellHint h = null;
@@ -225,7 +220,7 @@ public class Board {
                 }
             }
         }
-
+        print(puzzle);
         return wrongCell() == null;
     }
 
