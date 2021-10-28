@@ -15,7 +15,10 @@ public class PCGraphics implements Graphics {
     public boolean init(int width, int height){
         window = new JFrame("OhNo!");
 
+        setLogicalSize(width, height);
         window.setSize(width, height);
+        scale = 1;
+        offsetX = offsetY = 0;
         window.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
         window.setIgnoreRepaint(true);
@@ -55,10 +58,14 @@ public class PCGraphics implements Graphics {
         // Pintamos el frame con el BufferStrategy
         width = window.getWidth();
         height = window.getHeight();
+
+        calculateTranslationScale();
+
         do {
             do {
                 awtGraphics = strategy.getDrawGraphics();
                 try {
+                    //TODO clears donde haya offset
                     app.render();
                 }
                 finally {
@@ -71,12 +78,16 @@ public class PCGraphics implements Graphics {
 
     @Override
     public Image newImage(String name) {
-        return null;
+        PCImage img = new PCImage();
+        img.loadImage(name);
+        return img;
     }
 
     @Override
     public MyFont newFont(String filename, int size, boolean isBold) {
-        return null;
+        PCFont font = new PCFont();
+        font.loadFont(filename, size, isBold);
+        return font;
     }
 
     @Override
@@ -87,7 +98,7 @@ public class PCGraphics implements Graphics {
 
     @Override
     public void translate(int x, int y) {
-
+        awtGraphics.translate(x, y);
     }
 
     @Override
@@ -112,24 +123,32 @@ public class PCGraphics implements Graphics {
     }
 
     @Override
-    public void drawImage(Image image, String route) {
-
-    }
-
-    @Override
     public void setColor(int argb) {
         Color c = new Color(argb, true);
         awtGraphics.setColor(c);
     }
 
     @Override
+    public void setFont(MyFont font) {
+        awtGraphics.setFont(((PCFont)font).getFont());
+    }
+
+    @Override
     public void fillCircle(int cx, int cy, int r) {
+        //TODO: Convertir x e y a realPosition
         awtGraphics.fillOval(cx, cy, r, r);
     }
 
     @Override
-    public void drawText(String text, int x, int y) {
+    public void drawImage(Image image, int x, int y) {
+        //TODO: Convertir x e y a realPosition
+        awtGraphics.drawImage(((PCImage)image).getSprite(), x, y, null);
+    }
 
+    @Override
+    public void drawText(String text, int x, int y) {
+        //TODO: Convertir x e y a realPosition
+        awtGraphics.drawString(text, x, y);
     }
 
     @Override
@@ -142,8 +161,29 @@ public class PCGraphics implements Graphics {
         return height;
     }
 
+    private void calculateTranslationScale(){
+        //Ajustar el alto para que sea exacto al height
+        float heightRelation = (float)height/logicalHeight;
+
+
+        if(logicalWidth * heightRelation > width){ //Si el width es muy pequeño para eso, padding arriba y abajo
+            offsetX = 0;
+            //TODO offsetY = algo;
+            scale = heightRelation;
+        }
+        else { //Si el width es grande padding izquierda y derecha
+            offsetY = 0;
+            //TODO offsetX = algoDiferente;
+            scale = (float)width/logicalWidth;
+        }
+
+
+    }
+
     private int logicalWidth, logicalHeight;
     private int width, height;
+    float scale;
+    int offsetX, offsetY;
 
     private java.awt.Graphics awtGraphics;
     private JFrame window;

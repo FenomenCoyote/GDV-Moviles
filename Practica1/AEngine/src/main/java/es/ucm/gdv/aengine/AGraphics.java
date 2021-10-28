@@ -56,12 +56,17 @@ public class AGraphics implements Graphics {
     }
 
     @Override
-    public void drawImage(Image image, String route) {
+    public void drawImage(Image image, int x, int y) {
 
     }
 
     @Override
     public void setColor(int rgba) {
+
+    }
+
+    @Override
+    public void setFont(MyFont font) {
 
     }
 

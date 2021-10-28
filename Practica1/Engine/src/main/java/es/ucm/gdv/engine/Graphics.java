@@ -17,10 +17,13 @@ public interface Graphics {
 
     public void setLogicalSize(int width, int height);
 
-    public void drawImage(Image image,String route);
+    public void drawImage(Image image, int x, int y);
     public void setColor(int argb);
+    public void setFont(MyFont font);
+
     public void fillCircle(int cx, int cy, int r);
     public void drawText(String text, int x, int y);
+
     int getWidth();
     int getHeight();
 }

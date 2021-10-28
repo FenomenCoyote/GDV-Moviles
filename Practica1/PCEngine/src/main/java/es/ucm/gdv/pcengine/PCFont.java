@@ -2,17 +2,17 @@ package es.ucm.gdv.pcengine;
 
 import java.awt.Color;
 import java.awt.Font;
-import java.awt.Graphics;
 import java.io.FileInputStream;
 import java.io.InputStream;
 
-public class PCFont {
+import es.ucm.gdv.engine.MyFont;
 
-    private final Font _font;
+public class PCFont implements MyFont {
 
-    public PCFont(String font){
+    @Override
+    public void loadFont(String route, int size, boolean isBold) {
         Font baseFont = null;
-        try (InputStream is = new FileInputStream("Bangers-Regular.ttf")) {
+        try (InputStream is = new FileInputStream(route)) {
             baseFont = Font.createFont(Font.TRUETYPE_FONT, is);
         }
         catch (Exception e) {
@@ -20,17 +20,13 @@ public class PCFont {
             System.err.println("Error cargando la fuente: " + e);
         }
 
-        // baseFont contiene el tipo de letra base en tamaño 1. La
-        // usamos como punto de partida para crear la nuestra, más
-        // grande y en negrita.
-        _font = baseFont.deriveFont(Font.BOLD, 40);
+        int bold = isBold ? 1 : 0;
+        _font = baseFont.deriveFont(bold, size);
     }
 
-    public void renderText(java.awt.Graphics graphics, String text, int posX, int posY, Color color){
-        if (_font != null) {
-            graphics.setColor(color);
-            graphics.setFont(_font);
-            graphics.drawString(text, posX, posY);
-        }
+    public Font getFont(){
+        return _font;
     }
+
+    private Font _font;
 }
