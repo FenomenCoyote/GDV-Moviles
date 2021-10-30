@@ -1,6 +1,7 @@
 package es.ucm.gdv.pcengine;
 
 import java.awt.Color;
+import java.awt.Font;
 import java.awt.image.BufferStrategy;
 
 import javax.swing.JFrame;
@@ -17,10 +18,18 @@ public class PCGraphics implements Graphics {
 
         setLogicalSize(width, height);
         window.setSize(width, height);
+
         scale = 1;
         offsetX = offsetY = 0;
         paintScaleX=paintScaleY=1;
         paintOriginX=paintOriginY=0;
+
+        saveColor = Color.white;
+        saveFont = null;
+        savePaintOriginX = savePaintOriginY = 0;
+        saveScaleOriginX = saveScaleOriginY = 1;
+
+
         window.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
         window.setIgnoreRepaint(true);
@@ -63,12 +72,22 @@ public class PCGraphics implements Graphics {
 
         calculateTranslationScale();
 
-
         do {
             do {
                 awtGraphics = strategy.getDrawGraphics();
                 try {
                     //TODO clears donde haya offset
+                    Color previousColor = awtGraphics.getColor();
+                    setColor(0xffffffff);
+                    if(offsetY == 0){
+                        awtGraphics.fillRect(0, 0, offsetX, height);
+                        awtGraphics.fillRect(offsetX + (int)(logicalWidth*scale), 0, offsetX, height);
+                    }
+                    else{
+                        awtGraphics.fillRect(0, 0, width, offsetY);
+                        awtGraphics.fillRect(0, offsetY + (int)(logicalHeight * scale), width, offsetY);
+                    }
+                    awtGraphics.setColor(previousColor);
                     app.render();
                 }
                 finally {
@@ -113,13 +132,22 @@ public class PCGraphics implements Graphics {
 
     @Override
     public void save() {
-
+        saveColor = awtGraphics.getColor();
+        saveFont = awtGraphics.getFont();
+        savePaintOriginX = paintOriginX;
+        savePaintOriginY = paintOriginY;
+        saveScaleOriginX = paintScaleX;
+        saveScaleOriginY = paintScaleY;
     }
 
     @Override
     public void restore() {
-        paintScaleX=paintScaleY=1;
-        paintOriginX=paintOriginY=0;
+        awtGraphics.setColor(saveColor);
+        awtGraphics.setFont(saveFont);
+        paintOriginX = savePaintOriginX;
+        paintOriginY = savePaintOriginY;
+        paintScaleX = saveScaleOriginX;
+        paintScaleY = saveScaleOriginY;
     }
 
     @Override
@@ -211,6 +239,11 @@ public class PCGraphics implements Graphics {
     int offsetX, offsetY;
     int paintOriginX, paintOriginY;
     float paintScaleX,paintScaleY;
+
+    Color saveColor;
+    Font saveFont;
+    int savePaintOriginX, savePaintOriginY;
+    float saveScaleOriginX, saveScaleOriginY;
 
 
     private java.awt.Graphics awtGraphics;
