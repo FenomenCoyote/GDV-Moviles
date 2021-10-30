@@ -19,6 +19,8 @@ public class PCGraphics implements Graphics {
         window.setSize(width, height);
         scale = 1;
         offsetX = offsetY = 0;
+        paintScaleX=paintScaleY=1;
+        paintOriginX=paintOriginY=0;
         window.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
         window.setIgnoreRepaint(true);
@@ -61,6 +63,7 @@ public class PCGraphics implements Graphics {
 
         calculateTranslationScale();
 
+
         do {
             do {
                 awtGraphics = strategy.getDrawGraphics();
@@ -93,17 +96,19 @@ public class PCGraphics implements Graphics {
     @Override
     public void clear(int argb) {
         setColor(argb);
-        awtGraphics.fillRect(0, 0, width, height);
+        awtGraphics.fillRect(offsetX, offsetY, (int)(logicalWidth*scale), (int)(logicalHeight*scale));
     }
 
     @Override
     public void translate(int x, int y) {
-        awtGraphics.translate(x, y);
+        paintOriginX =x;
+        paintOriginY =y;
     }
 
     @Override
     public void scale(float x, float y) {
-
+        paintScaleX=x;
+        paintScaleY=y;
     }
 
     @Override
@@ -113,7 +118,8 @@ public class PCGraphics implements Graphics {
 
     @Override
     public void restore() {
-
+        paintScaleX=paintScaleY=1;
+        paintOriginX=paintOriginY=0;
     }
 
     @Override
@@ -135,20 +141,41 @@ public class PCGraphics implements Graphics {
 
     @Override
     public void fillCircle(int cx, int cy, int r) {
-        //TODO: Convertir x e y a realPosition
-        awtGraphics.fillOval(cx, cy, r, r);
+        int realX,realY;
+        int realRadiusX,realRadiusY;
+
+        realX=offsetX + (int)((paintOriginX + cx)*scale);
+        realY=offsetY + (int)((paintOriginY + cy)*scale);
+        realRadiusX= (int)(r*scale*paintScaleX);
+        realRadiusY= (int)(r*scale*paintScaleY);
+        awtGraphics.fillOval(realX, realY, realRadiusX, realRadiusY);
     }
 
     @Override
     public void drawImage(Image image, int x, int y) {
-        //TODO: Convertir x e y a realPosition
-        awtGraphics.drawImage(((PCImage)image).getSprite(), x, y, null);
+        int realX,realY;
+        int width,height;
+        //TODO: ¿scale se llama con coordenadas logicas?
+        realX=offsetX + (int)((paintOriginX + x)*scale);
+        realY=offsetY + (int)((paintOriginY + y)*scale);
+        width=(int)(image.getWidth()*scale*paintScaleX);
+        height=(int)(image.getHeight()*scale*paintScaleY);
+        awtGraphics.drawImage(((PCImage)image).getSprite(), realX, realY,width,height, null);
+
     }
 
     @Override
     public void drawText(String text, int x, int y) {
-        //TODO: Convertir x e y a realPosition
-        awtGraphics.drawString(text, x, y);
+        int realX,realY;
+        int width,height;
+        //TODO: ¿como cambiar el tamaño del texto sin cargar una nueva fuente?
+        realX=offsetX + (int)((paintOriginX + x)*scale);
+        realY=offsetY + (int)((paintOriginY + y)*scale);
+
+        //width=(int)(image.getWidth()*scale*paintScaleX);
+        //height=(int)(image.getHeight()*scale*paintScaleY);
+
+        awtGraphics.drawString(text, realX, realY);
     }
 
     @Override
@@ -168,24 +195,26 @@ public class PCGraphics implements Graphics {
 
         if(logicalWidth * heightRelation > width){ //Si el width es muy pequeño para eso, padding arriba y abajo
             offsetX = 0;
-            //TODO offsetY = algo;
-            scale = heightRelation;
+            offsetY = (height-(int)(logicalHeight*scale))/2;
+            scale = (float)width/logicalWidth;
         }
         else { //Si el width es grande padding izquierda y derecha
             offsetY = 0;
-            //TODO offsetX = algoDiferente;
-            scale = (float)width/logicalWidth;
+            offsetX = (width-(int)(logicalWidth*scale))/2;
+            scale = heightRelation;
         }
-
-
     }
 
     private int logicalWidth, logicalHeight;
     private int width, height;
     float scale;
     int offsetX, offsetY;
+    int paintOriginX, paintOriginY;
+    float paintScaleX,paintScaleY;
+
 
     private java.awt.Graphics awtGraphics;
     private JFrame window;
     private BufferStrategy strategy;
 }
+
