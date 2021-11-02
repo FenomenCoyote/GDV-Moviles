@@ -27,8 +27,14 @@ public class OhNoApplication implements Application {
     public void render() {
         graphics.clear(0xffff0000);
         graphics.setColor(0xff000000);
-        graphics.drawImage(img,100,100);
-        graphics.fillCircle(200,450,50);
+
+        graphics.save();
+        graphics.translate(100, 100);
+        graphics.drawImage(img,0,0);
+        graphics.restore();
+
+        graphics.fillCircle(0,0,50);
+
         graphics.setFont(font);
         graphics.drawText("OhNo¡¡¡",100,300);
     }

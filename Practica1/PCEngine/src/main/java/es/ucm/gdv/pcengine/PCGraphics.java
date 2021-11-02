@@ -2,6 +2,7 @@ package es.ucm.gdv.pcengine;
 
 import java.awt.Color;
 import java.awt.Font;
+import java.awt.Graphics2D;
 import java.awt.image.BufferStrategy;
 
 import javax.swing.JFrame;
@@ -19,16 +20,10 @@ public class PCGraphics implements Graphics {
         setLogicalSize(width, height);
         window.setSize(width, height);
 
-        scale = 1;
-        offsetX = offsetY = 0;
-        paintScaleX=paintScaleY=1;
-        paintOriginX=paintOriginY=0;
-
         saveColor = Color.white;
         saveFont = null;
-        savePaintOriginX = savePaintOriginY = 0;
-        saveScaleOriginX = saveScaleOriginY = 1;
 
+        matrix = new double[6];
 
         window.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
@@ -70,24 +65,18 @@ public class PCGraphics implements Graphics {
         width = window.getWidth();
         height = window.getHeight();
 
-        calculateTranslationScale();
-
         do {
             do {
-                awtGraphics = strategy.getDrawGraphics();
+                awtGraphics = (Graphics2D)strategy.getDrawGraphics();
                 try {
-                    //TODO clears donde haya offset
+                    //Clear de toda la pantalla
                     Color previousColor = awtGraphics.getColor();
                     setColor(0xffffffff);
-                    if(offsetY == 0){
-                        awtGraphics.fillRect(0, 0, offsetX, height);
-                        awtGraphics.fillRect(offsetX + (int)(logicalWidth*scale), 0, offsetX, height);
-                    }
-                    else{
-                        awtGraphics.fillRect(0, 0, width, offsetY);
-                        awtGraphics.fillRect(0, offsetY + (int)(logicalHeight * scale), width, offsetY);
-                    }
+                    awtGraphics.fillRect(0, 0, width, height);
                     awtGraphics.setColor(previousColor);
+
+                    calculateTranslationScale();
+
                     app.render();
                 }
                 finally {
@@ -115,39 +104,33 @@ public class PCGraphics implements Graphics {
     @Override
     public void clear(int argb) {
         setColor(argb);
-        awtGraphics.fillRect(offsetX, offsetY, (int)(logicalWidth*scale), (int)(logicalHeight*scale));
+        awtGraphics.fillRect(0, 0, logicalWidth, logicalHeight);
     }
 
     @Override
     public void translate(int x, int y) {
-        paintOriginX =x;
-        paintOriginY =y;
+        awtGraphics.translate(x, y);
     }
 
     @Override
     public void scale(float x, float y) {
-        paintScaleX=x;
-        paintScaleY=y;
+        awtGraphics.scale(x, y);
     }
 
     @Override
     public void save() {
         saveColor = awtGraphics.getColor();
         saveFont = awtGraphics.getFont();
-        savePaintOriginX = paintOriginX;
-        savePaintOriginY = paintOriginY;
-        saveScaleOriginX = paintScaleX;
-        saveScaleOriginY = paintScaleY;
+
+        awtGraphics.getTransform().getMatrix(matrix);
     }
 
     @Override
     public void restore() {
         awtGraphics.setColor(saveColor);
         awtGraphics.setFont(saveFont);
-        paintOriginX = savePaintOriginX;
-        paintOriginY = savePaintOriginY;
-        paintScaleX = saveScaleOriginX;
-        paintScaleY = saveScaleOriginY;
+
+        awtGraphics.getTransform().setTransform(matrix[0], matrix[1],matrix[2],matrix[3],matrix[4],matrix[5]);
     }
 
     @Override
@@ -169,41 +152,17 @@ public class PCGraphics implements Graphics {
 
     @Override
     public void fillCircle(int cx, int cy, int r) {
-        int realX,realY;
-        int realRadiusX,realRadiusY;
-
-        realX=offsetX + (int)((paintOriginX + cx)*scale);
-        realY=offsetY + (int)((paintOriginY + cy)*scale);
-        realRadiusX= (int)(r*scale*paintScaleX);
-        realRadiusY= (int)(r*scale*paintScaleY);
-        awtGraphics.fillOval(realX, realY, realRadiusX, realRadiusY);
+        awtGraphics.fillOval(cx, cy, r, r);
     }
 
     @Override
     public void drawImage(Image image, int x, int y) {
-        int realX,realY;
-        int width,height;
-        //TODO: ¿scale se llama con coordenadas logicas?
-        realX=offsetX + (int)((paintOriginX + x)*scale);
-        realY=offsetY + (int)((paintOriginY + y)*scale);
-        width=(int)(image.getWidth()*scale*paintScaleX);
-        height=(int)(image.getHeight()*scale*paintScaleY);
-        awtGraphics.drawImage(((PCImage)image).getSprite(), realX, realY,width,height, null);
-
+        awtGraphics.drawImage(((PCImage)image).getSprite(), x, y, null);
     }
 
     @Override
     public void drawText(String text, int x, int y) {
-        int realX,realY;
-        int width,height;
-        //TODO: ¿como cambiar el tamaño del texto sin cargar una nueva fuente?
-        realX=offsetX + (int)((paintOriginX + x)*scale);
-        realY=offsetY + (int)((paintOriginY + y)*scale);
-
-        //width=(int)(image.getWidth()*scale*paintScaleX);
-        //height=(int)(image.getHeight()*scale*paintScaleY);
-
-        awtGraphics.drawString(text, realX, realY);
+        awtGraphics.drawString(text, x, y);
     }
 
     @Override
@@ -218,35 +177,33 @@ public class PCGraphics implements Graphics {
 
     private void calculateTranslationScale(){
         //Ajustar el alto para que sea exacto al height
-        float heightRelation = (float)height/logicalHeight;
+        double heightRelation = (double)height/logicalHeight;
 
-
+        int offsetX, offsetY;
+        double scale;
         if(logicalWidth * heightRelation > width){ //Si el width es muy pequeño para eso, padding arriba y abajo
+            scale = (double)width/logicalWidth;
             offsetX = 0;
             offsetY = (height-(int)(logicalHeight*scale))/2;
-            scale = (float)width/logicalWidth;
         }
         else { //Si el width es grande padding izquierda y derecha
+            scale = heightRelation;
             offsetY = 0;
             offsetX = (width-(int)(logicalWidth*scale))/2;
-            scale = heightRelation;
         }
+        awtGraphics.translate(offsetX, offsetY);
+        awtGraphics.scale(scale, scale);
     }
 
     private int logicalWidth, logicalHeight;
     private int width, height;
-    float scale;
-    int offsetX, offsetY;
-    int paintOriginX, paintOriginY;
-    float paintScaleX,paintScaleY;
 
     Color saveColor;
     Font saveFont;
-    int savePaintOriginX, savePaintOriginY;
-    float saveScaleOriginX, saveScaleOriginY;
 
+    double[] matrix;
 
-    private java.awt.Graphics awtGraphics;
+    private java.awt.Graphics2D awtGraphics;
     private JFrame window;
     private BufferStrategy strategy;
 }
