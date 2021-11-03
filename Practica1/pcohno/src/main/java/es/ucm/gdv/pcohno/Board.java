@@ -69,14 +69,68 @@ public class Board {
             clean(puzzle);
             randomize(puzzle);
             if(!wrongInitialBoard(puzzle)) {
-                print(puzzle);
+                //print(puzzle);
                 copyToBoard(puzzle);
                 if (resolve(puzzle)) { //Si se puede resolver
-                    print(puzzle);
+                    //print(puzzle);
                     return;
                 }
             }
         }
+    }
+
+    public void setForGame2(){
+        Cell[][] puzzle = new Cell[_size + 2][_size + 2];
+
+        for (int i = 1; i < _size + 1; ++i){
+            for (int j = 1; j < _size +1; ++j){
+                puzzle[i][j] = new Cell(_board[i][j]);
+            }
+        }
+
+        Random rng = new Random();
+        do{
+            clean(puzzle);
+            int points = 0;
+            int walls = 0;
+            int numWalls = (_size*_size)/8 + rng.nextInt((_size*_size)/3);
+            int maxPoints = (_size*_size)/4 + rng.nextInt((_size*_size)/2);
+
+            print(puzzle);
+
+            for(int i=1; i< _size+1; i++){
+                for(int j=1; j<_size+1; j++){
+                    Cell c = puzzle[i][j];
+                    if(rng.nextFloat() <= 0.8f || points >= maxPoints){
+                        c.setState(Cell.State.Wall);
+                        walls++;
+                    }
+                    else{
+                        c.setState(Cell.State.Point);
+                        c.setMustWatch(1 + rng.nextInt((_size - 1) * 2));
+                        points++;
+                    }
+                    c.setLocked(true);
+                }
+            }
+            print(puzzle);
+            if(walls < numWalls || wrongInitialBoard(puzzle)){
+                continue;
+            }
+
+            while(walls > numWalls){
+                int posX = 1 + rng.nextInt(_size);
+                int posY = 1 + rng.nextInt(_size);
+                if(puzzle[posX][posY].getState() == Cell.State.Wall) {
+                    puzzle[posX][posY].setLocked(false);
+                    puzzle[posX][posY].setState(Cell.State.Unassigned);
+                    walls--;
+                }
+                print(puzzle);
+            }
+
+            print(puzzle);
+        } while(!resolve(puzzle));
     }
 
     public void print() {
@@ -220,7 +274,7 @@ public class Board {
                 }
             }
         }
-        print(puzzle);
+        //print(puzzle);
         return wrongCell() == null;
     }
 

@@ -13,9 +13,14 @@ public class OhNoApplication implements Application {
         graphics = engine.getGraphics();
         input = engine.getInput();
 
+        int boardSize = 3;
+        Board board = new Board(boardSize);
+        board.setForGame2();
+
         graphics.setLogicalSize(400, 600);
-        img= graphics.newImage("Resources/sprites/close.png");
         font = graphics.newFont("Resources/fonts/Molle-Regular.ttf",50,false);
+
+        img= graphics.newImage("Resources/sprites/close.png");
     }
 
     @Override
@@ -25,13 +30,15 @@ public class OhNoApplication implements Application {
 
     @Override
     public void render() {
-        graphics.clear(0xffff0000);
+        graphics.clear(0xffeeeeee);
         graphics.setColor(0xff000000);
+
 
         graphics.save();
         graphics.translate(100, 100);
         graphics.drawImage(img,0,0);
         graphics.restore();
+        graphics.drawImage(img,0,0);
 
         graphics.fillCircle(0,0,50);
 

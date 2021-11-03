@@ -3,6 +3,7 @@ package es.ucm.gdv.pcengine;
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.Graphics2D;
+import java.awt.geom.AffineTransform;
 import java.awt.image.BufferStrategy;
 
 import javax.swing.JFrame;
@@ -67,7 +68,12 @@ public class PCGraphics implements Graphics {
 
         do {
             do {
-                awtGraphics = (Graphics2D)strategy.getDrawGraphics();
+                //try {
+                    awtGraphics = (Graphics2D)strategy.getDrawGraphics();
+                //}
+                //catch (Exception e){
+                    //awtGraphics = (Graphics2D)strategy.getDrawGraphics();
+                //}
                 try {
                     //Clear de toda la pantalla
                     Color previousColor = awtGraphics.getColor();
@@ -122,7 +128,8 @@ public class PCGraphics implements Graphics {
         saveColor = awtGraphics.getColor();
         saveFont = awtGraphics.getFont();
 
-        awtGraphics.getTransform().getMatrix(matrix);
+        //awtGraphics.getTransform().getMatrix(matrix);
+        tr = awtGraphics.getTransform();
     }
 
     @Override
@@ -130,7 +137,8 @@ public class PCGraphics implements Graphics {
         awtGraphics.setColor(saveColor);
         awtGraphics.setFont(saveFont);
 
-        awtGraphics.getTransform().setTransform(matrix[0], matrix[1],matrix[2],matrix[3],matrix[4],matrix[5]);
+        awtGraphics.setTransform(tr);
+        //awtGraphics.getTransform().setTransform(matrix[0], matrix[1],matrix[2],matrix[3],matrix[4],matrix[5]);
     }
 
     @Override
@@ -202,6 +210,7 @@ public class PCGraphics implements Graphics {
     Font saveFont;
 
     double[] matrix;
+    AffineTransform tr;
 
     private java.awt.Graphics2D awtGraphics;
     private JFrame window;
