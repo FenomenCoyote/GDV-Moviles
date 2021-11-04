@@ -1,5 +1,7 @@
 package es.ucm.gdv.pcohno;
 
+import java.awt.Font;
+import java.util.ArrayList;
 import java.util.List;
 
 import es.ucm.gdv.engine.Application;
@@ -20,7 +22,10 @@ public class OhNoApplication implements Application {
         graphics = engine.getGraphics();
         input = engine.getInput();
 
-        state = State.Menu;
+        state = State.Playing;
+        startGame(4);
+
+        clickables = new ArrayList<Clickable>();
 
         graphics.setLogicalSize(400, 600);
         font1 = graphics.newFont("Resources/fonts/Molle-Regular.ttf",64,false);
@@ -32,22 +37,42 @@ public class OhNoApplication implements Application {
         imgLock= graphics.newImage("Resources/sprites/lock.png");
     }
 
+    private void updateInicio(){
+        ArrayList<Input.TouchEvent> events = input.getTouchEvents();
+        while(!events.isEmpty()){
+            state = State.Menu;
+            events.remove(0);
+        }
+    }
+
+    private void updateMenu(){
+
+    }
+
+    private void updatePlaying(){
+
+    }
+
+    private void updateEnd(){
+
+    }
+
+
     @Override
     public void update() {
         switch (state) {
             case Inicio:
+                updateInicio();
                 break;
             case Menu:
+                updateMenu();
                 break;
             case Playing:
+                updatePlaying();
                 break;
             case End:
+                updateEnd();
                 break;
-        }
-
-        List<Input.TouchEvent> events = input.getTouchEvents();
-        while(!events.isEmpty()){
-
         }
     }
 
@@ -158,6 +183,8 @@ public class OhNoApplication implements Application {
     State state;
 
     Board board;
+
+    ArrayList<Clickable> clickables;
 
     Graphics graphics;
     Input input;

@@ -1,5 +1,6 @@
 package es.ucm.gdv.engine;
 
+import java.util.ArrayList;
 import java.util.List;
 
 
@@ -27,6 +28,6 @@ public interface Input
         public int id;
     }
 
-    List<TouchEvent> getTouchEvents();
+    ArrayList<TouchEvent> getTouchEvents();
     void addEvent(TouchEvent e);
 }

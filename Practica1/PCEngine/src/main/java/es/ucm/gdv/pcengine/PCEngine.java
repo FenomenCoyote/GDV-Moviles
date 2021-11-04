@@ -12,9 +12,8 @@ public class PCEngine implements Engine {
         _graphics = new PCGraphics();
         _graphics.init(400, 600);
 
-        _input = new PCInput();
+        _input = new PCInput(_graphics);
 
-        _mouseListener = new MouseListener(_input);
         //_input.init();
         _app.init(this);
     }

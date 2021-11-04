@@ -188,8 +188,6 @@ public class PCGraphics implements Graphics {
         //Ajustar el alto para que sea exacto al height
         double heightRelation = (double)height/logicalHeight;
 
-        int offsetX, offsetY;
-        double scale;
         if(logicalWidth * heightRelation > width){ //Si el width es muy pequeño para eso, padding arriba y abajo
             scale = (double)width/logicalWidth;
             offsetX = 0;
@@ -204,8 +202,27 @@ public class PCGraphics implements Graphics {
         awtGraphics.scale(scale, scale);
     }
 
+    public int getOffsetX() {
+        return offsetX;
+    }
+
+    public int getOffsetY() {
+        return offsetY;
+    }
+
+    public double getScale() {
+        return scale;
+    }
+
+    public JFrame getWindow() {
+        return window;
+    }
+
     private int logicalWidth, logicalHeight;
     private int width, height;
+
+    private int offsetX, offsetY;
+    double scale;
 
     Color saveColor;
     Font saveFont;
@@ -214,6 +231,7 @@ public class PCGraphics implements Graphics {
     AffineTransform tr;
 
     private java.awt.Graphics2D awtGraphics;
+
     private JFrame window;
     private BufferStrategy strategy;
 }

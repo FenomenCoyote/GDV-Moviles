@@ -7,11 +7,10 @@ import es.ucm.gdv.engine.Input;
 
 public class MouseListener implements javax.swing.event.MouseInputListener{
 
-    MouseListener(PCInput input){
+    MouseListener(PCInput input, PCGraphics graphics){
         pcInput = input;
-        offsetX = 0;
-        offsetY = 0;
-        scale = 0;
+        this.graphics = graphics;
+        graphics.getWindow().addMouseListener(this);
     }
 
     @Override
@@ -57,22 +56,15 @@ public class MouseListener implements javax.swing.event.MouseInputListener{
 
     }
 
-    public void setOffsetScale(int x, int y, float actualScale){
-        offsetX = x;
-        offsetY = y;
-        scale = actualScale;
-    }
-
     private Point translateCoordinates(int x, int y){
-        x-= offsetX;
-        y-= offsetY;
-        x*=scale;
-        y*=scale;
+        x-= graphics.getOffsetX();
+        y-= graphics.getOffsetY();
+        x/=graphics.getScale();
+        y/=graphics.getScale();
         return new Point(x, y);
     }
 
     PCInput pcInput;
+    PCGraphics graphics;
 
-    int offsetX, offsetY;
-    float scale;
 }
