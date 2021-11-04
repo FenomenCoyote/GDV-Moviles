@@ -4,6 +4,8 @@ import com.sun.tools.javac.util.Pair;
 
 import java.util.Random;
 
+import es.ucm.gdv.engine.Graphics;
+
 public class Board {
 
     static Pair<Integer, Integer>[] _dirs = new Pair[]{
@@ -34,7 +36,7 @@ public class Board {
 
     public void setForGame() {
 
-       /* _board[2][1].setState(Cell.State.Wall);
+        _board[2][1].setState(Cell.State.Wall);
         _board[2][1].setLocked(true);
 
         _board[1][2].setState(Cell.State.Wall);
@@ -54,9 +56,9 @@ public class Board {
 
         _board[4][4].setState(Cell.State.Point);
         _board[4][4].setMustWatch(4);
-        _board[4][4].setLocked(true);*/
+        _board[4][4].setLocked(true);
 
-        Cell[][] puzzle = new Cell[_size + 2][_size + 2];
+      /*  Cell[][] puzzle = new Cell[_size + 2][_size + 2];
 
         for (int i = 0; i < _size + 2; ++i){
             for (int j = 0; j < _size + 2; ++j){
@@ -76,7 +78,7 @@ public class Board {
                     return;
                 }
             }
-        }
+        }*/
     }
 
     public void setForGame2(){
@@ -132,6 +134,23 @@ public class Board {
             print(puzzle);
         } while(!resolve(puzzle));
     }
+
+
+    public void render(Graphics graphics) {
+        graphics.save();
+        int spacing = 105;
+        graphics.translate(50, spacing);
+        graphics.scale(300 / (float)(spacing * _size), 300 / (float)(spacing * _size));
+        for(int i = 0; i < _size; ++i){
+            for (int j = 0; j < _size; j++) {
+                _board[i + 1][j + 1].render(graphics);
+                graphics.translate(spacing, 0);
+            }
+            graphics.translate(-spacing * _size, spacing);
+        }
+        graphics.restore();
+    }
+
 
     public void print() {
         print(_board);

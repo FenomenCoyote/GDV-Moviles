@@ -1,6 +1,28 @@
 package es.ucm.gdv.pcohno;
 
+import es.ucm.gdv.engine.Graphics;
+
 public class Cell {
+
+    public void render(Graphics graphics) {
+        switch (_state){
+            case Unassigned:
+                graphics.setColor(0xffaaaaaa);
+                break;
+            case Point:
+                graphics.setColor(0xff4477ff);
+                break;
+            case Wall:
+                graphics.setColor(0xffff4411);
+                break;
+        }
+        graphics.fillCircle(0, 0, 100);
+        if(_mustWatch > 0){
+            graphics.setColor(0xffffffff);
+            graphics.drawText(Integer.toString(_mustWatch), 30, 70);
+        }
+
+    }
 
     public enum State {Null, Unassigned, Point, Wall}
 

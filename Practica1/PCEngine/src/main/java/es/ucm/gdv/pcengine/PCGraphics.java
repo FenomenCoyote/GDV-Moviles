@@ -155,7 +155,8 @@ public class PCGraphics implements Graphics {
 
     @Override
     public void setFont(MyFont font) {
-        awtGraphics.setFont(((PCFont)font).getFont());
+        Font f = ((PCFont)font).getFont();
+        awtGraphics.setFont(f);
     }
 
     @Override
