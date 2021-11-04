@@ -5,8 +5,8 @@ import es.ucm.gdv.engine.Image;
 
 public class ClickImage extends Clickable {
 
-    ClickImage(Image img, int x, int y) {
-        super(x, y, img.getWidth(), img.getHeight());
+    ClickImage(Image img, int x, int y, int w, int h) {
+        super(x, y, w, h);
         image = img;
     }
 

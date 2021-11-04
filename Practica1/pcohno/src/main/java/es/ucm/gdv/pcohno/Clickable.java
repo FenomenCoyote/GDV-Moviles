@@ -5,7 +5,6 @@ import es.ucm.gdv.engine.Graphics;
 public abstract class Clickable {
 
     Clickable(int x, int y, int width, int height){
-
         this.x = x;
         this.y = y;
         this.width = width;
