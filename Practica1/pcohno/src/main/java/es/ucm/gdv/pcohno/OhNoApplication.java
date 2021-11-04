@@ -1,5 +1,7 @@
 package es.ucm.gdv.pcohno;
 
+import java.util.List;
+
 import es.ucm.gdv.engine.Application;
 import es.ucm.gdv.engine.Engine;
 import es.ucm.gdv.engine.Graphics;
@@ -41,6 +43,11 @@ public class OhNoApplication implements Application {
                 break;
             case End:
                 break;
+        }
+
+        List<Input.TouchEvent> events = input.getTouchEvents();
+        while(!events.isEmpty()){
+
         }
     }
 

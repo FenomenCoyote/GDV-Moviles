@@ -9,4 +9,9 @@ public class AInput implements Input {
     public List<TouchEvent> getTouchEvents() {
         return null;
     }
+
+    @Override
+    public void addEvent(TouchEvent e) {
+
+    }
 }

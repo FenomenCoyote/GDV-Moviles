@@ -8,7 +8,14 @@ public interface Input
 
     class TouchEvent
     {
-        enum TouchEventType{
+        public TouchEvent(){
+            type = TouchEventType.Touch;
+            x = 0;
+            y = 0;
+            id = 0;
+        }
+
+        public enum TouchEventType{
             Touch,
             Release,
             Slide
@@ -21,4 +28,5 @@ public interface Input
     }
 
     List<TouchEvent> getTouchEvents();
+    void addEvent(TouchEvent e);
 }

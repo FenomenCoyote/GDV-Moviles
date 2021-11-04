@@ -13,6 +13,8 @@ public class PCEngine implements Engine {
         _graphics.init(400, 600);
 
         _input = new PCInput();
+
+        _mouseListener = new MouseListener(_input);
         //_input.init();
         _app.init(this);
     }
@@ -65,4 +67,5 @@ public class PCEngine implements Engine {
     PCGraphics _graphics = null;
     PCInput _input = null;
     Application _app = null;
+    MouseListener _mouseListener = null;
 }
