@@ -3,6 +3,7 @@ package es.ucm.gdv.pcohno;
 import com.sun.tools.javac.util.Pair;
 
 import java.util.Random;
+import java.util.Stack;
 
 import es.ucm.gdv.engine.Graphics;
 
@@ -22,6 +23,7 @@ public class Board {
         _totalUnassignedCells=0;
         _size = size;
         this._hint = new Hint(_board);
+        _actions = new Stack<CellHint>();
 
         for (int i = 0; i < size + 2; ++i){
             for (int j = 0; j < size + 2; ++j){
@@ -62,14 +64,15 @@ public class Board {
     private void prune(Cell[][] puzzle){
         Random rng = new Random();
         int changeWall = 3;
-        int changePoint = 5;
         for (int i = 1; i < _size + 1; ++i){
             for (int j = 1; j < _size +1; ++j){
                 Cell c = puzzle[i][j];
                 if(!(c.getLocked() && c.getState() == Cell.State.Point))
-                    if(c.getState() == Cell.State.Wall && rng.nextInt(changeWall) > 0)
+                    if(c.getState() == Cell.State.Wall && rng.nextInt(changeWall) > 0){
+                        c.setLocked(false);
                         c.setState(Cell.State.Unassigned);
-                    else if(c.getState() == Cell.State.Point && rng.nextInt(changePoint) != 0)
+                    }
+                    else if(c.getState() == Cell.State.Point)
                         c.setState(Cell.State.Unassigned);
             }
         }
@@ -109,10 +112,17 @@ public class Board {
         mx /= aux;
         my /= aux;
 
-        mx = (int)((mx / (spacing * _size)) * 10);
-        my = (int)((my / (spacing * _size)) * 10);
+        mx = 1 + ((int)((mx / (spacing * _size)) * _size));
+        my = 1 + ((int)((my / (spacing * _size)) * _size));
 
-        System.out.println("Celda: (" + mx + ", " + my + ")");
+        int columna = (int)mx;
+        int fila = (int)my;
+
+        Cell c = _board[fila][columna];
+        if(!c.getLocked()) {
+            _actions.push(new CellHint(c.getState(), fila, columna));
+            c.nextState();
+        }
     }
 
 
@@ -184,6 +194,13 @@ public class Board {
         int percentage = 100-((100*unassignedCells)/_totalUnassignedCells);
 
         return percentage;
+    }
+
+    public void undo(){
+        if(!_actions.empty()){
+            CellHint last = _actions.pop();
+            _board[last.pos.fst][last.pos.snd].setState(last.state);
+        }
     }
 
     private int lookDirections(int row, int col, Cell[][] puzzle){
@@ -326,6 +343,7 @@ public class Board {
                  c.setState(Cell.State.Point);
         }
         puzzle[i + (k + 1) * _dirs[dir.ordinal()].fst][j + (k + 1) * _dirs[dir.ordinal()].snd].setState(Cell.State.Wall);
+        puzzle[i + (k + 1) * _dirs[dir.ordinal()].fst][j + (k + 1) * _dirs[dir.ordinal()].snd].setLocked(true);
     }
 
     private boolean resolve(Cell[][] puzzle){
@@ -408,4 +426,5 @@ public class Board {
     private int _size;
     private Hint _hint;
     private int _totalUnassignedCells;
+    Stack<CellHint> _actions;
 }

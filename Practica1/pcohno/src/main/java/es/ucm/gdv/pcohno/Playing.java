@@ -1,6 +1,11 @@
 package es.ucm.gdv.pcohno;
 
+import com.sun.tools.javac.util.Pair;
+
 import java.util.ArrayList;
+import java.util.Stack;
+
+import javax.swing.Painter;
 
 import es.ucm.gdv.engine.Graphics;
 import es.ucm.gdv.engine.Image;
@@ -56,10 +61,17 @@ public class Playing extends State {
             }
             else if(clickableUnDo.isOnMe(t.x * 2, t.y * 2))
             {
+                board.undo();
                 events.clear();
             }
             board.isOnMe(t.x, t.y);
         }
+
+        if(board.wrongCell() == null){
+            System.out.println("Ganaste!!!");
+            return OhNoApplication.State.Menu;
+        }
+
         return null;
     }
 

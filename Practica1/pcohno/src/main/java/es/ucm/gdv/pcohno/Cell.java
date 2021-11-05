@@ -1,5 +1,9 @@
 package es.ucm.gdv.pcohno;
 
+import com.sun.tools.javac.util.Pair;
+
+import java.util.Stack;
+
 import es.ucm.gdv.engine.Graphics;
 
 public class Cell {
@@ -50,6 +54,20 @@ public class Cell {
             return true;
         }
         return false;
+    }
+
+    public void nextState(){
+        switch (_state){
+            case Unassigned:
+                _state = State.Point;
+                break;
+            case Point:
+                _state = State.Wall;
+                break;
+            case Wall:
+                _state = State.Unassigned;
+                break;
+        }
     }
 
     public State getState() { return _state;  }
