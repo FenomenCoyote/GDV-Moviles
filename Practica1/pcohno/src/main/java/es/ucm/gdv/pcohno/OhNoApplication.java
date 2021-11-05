@@ -53,7 +53,6 @@ public class OhNoApplication implements Application {
     private void startGame(int boardSize){
         board = new Board(boardSize);
         board.setForGame();
-        //board.setForGame2();
     }
 
     @Override

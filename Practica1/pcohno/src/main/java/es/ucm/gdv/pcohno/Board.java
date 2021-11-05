@@ -19,7 +19,7 @@ public class Board {
 
     public Board(int size){
         _board = new Cell[size + 2][size + 2];
-
+        _totalUnassignedCells=0;
         _size = size;
         this._hint = new Hint(_board);
 
@@ -52,6 +52,7 @@ public class Board {
                 prune(puzzle);
                 copyToBoard(puzzle);
                 if (resolve(puzzle)) { //Si se puede resolver
+                    _totalUnassignedCells=countUnassignedCells();
                     return;
                 }
             }
@@ -174,6 +175,15 @@ public class Board {
                 return;
             }
         }
+    }
+
+    public int getPercentage()
+    {
+        int unassignedCells = countUnassignedCells();
+
+        int percentage = 100-((100*unassignedCells)/_totalUnassignedCells);
+
+        return percentage;
     }
 
     private int lookDirections(int row, int col, Cell[][] puzzle){
@@ -379,7 +389,23 @@ public class Board {
         }
     }
 
+    private int countUnassignedCells()
+    {
+        int unassignedCells=0;
+        for (int i = 1; i < _size + 1; ++i){
+            for (int j = 1; j < _size + 1; ++j){
+                if(_board[i][j].getState()== Cell.State.Unassigned && !_board[i][j].getLocked())
+                {
+                    unassignedCells++;
+                }
+            }
+        }
+
+        return unassignedCells;
+    }
+
     private Cell[][] _board;
     private int _size;
     private Hint _hint;
+    private int _totalUnassignedCells;
 }

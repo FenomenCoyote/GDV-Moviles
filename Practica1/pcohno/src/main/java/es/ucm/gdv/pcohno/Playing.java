@@ -29,7 +29,7 @@ public class Playing extends State {
 
         graphics.setColor(0xff222222);
         graphics.setFont(font2);
-        graphics.drawText("0%",200,510);
+        graphics.drawText(board.getPercentage() + "%",200,510);
         graphics.setFont(font1);
         graphics.drawText(boardSize + " x " + boardSize, 200, 80);
 
