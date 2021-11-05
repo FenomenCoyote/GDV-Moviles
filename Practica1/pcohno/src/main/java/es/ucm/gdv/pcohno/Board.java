@@ -22,6 +22,7 @@ public class Board {
 
         _size = size;
         this._hint = new Hint(_board);
+
         for (int i = 0; i < size + 2; ++i){
             for (int j = 0; j < size + 2; ++j){
                 _board[i][j] = new Cell();
@@ -138,9 +139,12 @@ public class Board {
 
     public void render(Graphics graphics) {
         graphics.save();
+
         int spacing = 105;
-        graphics.translate(50, spacing);
-        graphics.scale(300 / (float)(spacing * _size), 300 / (float)(spacing * _size));
+        float aux = 380 / (float)(spacing * _size);
+        graphics.scale(aux, aux);
+        graphics.translate(((spacing + 20) / 2) , +spacing/2);
+
         for(int i = 0; i < _size; ++i){
             for (int j = 0; j < _size; j++) {
                 _board[i + 1][j + 1].render(graphics);
@@ -148,7 +152,32 @@ public class Board {
             }
             graphics.translate(-spacing * _size, spacing);
         }
+
         graphics.restore();
+    }
+
+    public void isOnMe(int x, int y){
+
+        int spacing = 100;
+        float aux = 400 / (float)(spacing * _size);
+
+        x /= aux;
+        y /= aux;
+        x -= ((spacing + 0) / 2) * aux;
+        y -= spacing * aux + spacing / 2 * aux;
+
+        for(int i = 0; i < _size; ++i){
+            for (int j = 0; j < _size; j++) {
+                if(_board[i + 1][j + 1].isOnMe(x, y)){
+                    System.out.print("celda: " + (i) + ", " + (j) + '\t');
+                    return;
+                }
+                x -= spacing;
+            }
+            x += spacing * _size * aux;
+            y -= spacing * aux;
+        }
+
     }
 
 

@@ -19,20 +19,23 @@ public class Menu extends State {
         imgClose = graphics.newImage("Resources/sprites/close.png");
 
         clickablesCircles = new ArrayList<>();
-        clickableClose = new ClickImage(imgClose, 200 - imgClose.getWidth()/2, 500, 100, 100);
+        clickableClose = new ClickImage(imgClose, 400 - imgClose.getWidth()/2, 1000, 100, 100);
 
-        clickablesCircles.add(new ClickCircle(0xff44aaff, 100, 325, 80, "4"));
-        clickablesCircles.add(new ClickCircle(0xffff4848, 200, 325, 80, "5"));
-        clickablesCircles.add(new ClickCircle(0xff44aaff, 300, 325, 80, "6"));
+        int red = 0xffff384a;
+        int blue = 0xff1cc0e0;
 
-        clickablesCircles.add(new ClickCircle(0xffff4848, 100, 425, 80, "7"));
-        clickablesCircles.add(new ClickCircle(0xff44aaff, 200, 425, 80, "8"));
-        clickablesCircles.add(new ClickCircle(0xffff4848, 300, 425, 80, "9"));
+        clickablesCircles.add(new ClickCircle(blue, 0, 0, 40, "4"));
+        clickablesCircles.add(new ClickCircle(red, 90, 0, 40, "5"));
+        clickablesCircles.add(new ClickCircle(blue, 180, 0, 40, "6"));
+
+        clickablesCircles.add(new ClickCircle(red, 0, 90, 40, "7"));
+        clickablesCircles.add(new ClickCircle(blue, 90, 90, 40, "8"));
+        clickablesCircles.add(new ClickCircle(red, 180, 90, 40, "9"));
     }
 
     @Override
     public void render() {
-        graphics.setColor(0xff222222);
+        graphics.setColor(0xff333333);
 
         graphics.setFont(font1);
         graphics.drawText("Oh no", 200, 100);
@@ -43,12 +46,14 @@ public class Menu extends State {
         graphics.save();
 
         graphics.setFont(font3);
-        graphics.translate(80, 60);
+        graphics.translate(110, 300);
 
         for (Clickable c : clickablesCircles)
             c.render(graphics);
 
         graphics.restore();
+
+        graphics.scale(0.5f, 0.5f);
 
         clickableClose.render(graphics);
 
@@ -59,24 +64,28 @@ public class Menu extends State {
         ArrayList<Input.TouchEvent> events = input.getTouchEvents();
         while(!events.isEmpty()){
             Input.TouchEvent t = events.remove(0);
-
             int i = 0;
             for (Clickable c : clickablesCircles) {
-                if (c.isOnMe(t.x, t.y)) {
+                if (c.isOnMe(t.x - 100, t.y - 300)) {
                     boardSize = 4 + i;
+                    System.out.print(boardSize);
+                    events.clear();
                     return OhNoApplication.State.Playing;
                 }
                 ++i;
             }
 
-            if(clickableClose.isOnMe(t.x, t.y))
+            if(clickableClose.isOnMe(t.x * 2, t.y * 2)){
+                events.clear();
                 return OhNoApplication.State.Start;
+            }
+
         }
         return null;
     }
 
     @Override
-    public void init() {
+    public void init(OhNoApplication app) {
 
     }
 

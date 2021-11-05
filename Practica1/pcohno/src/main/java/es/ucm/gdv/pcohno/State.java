@@ -12,7 +12,7 @@ public abstract class State {
 
     abstract public void render();
     abstract public OhNoApplication.State update();
-    abstract public void init();
+    abstract public void init(OhNoApplication app);
 
     protected Graphics graphics;
     protected Input input;

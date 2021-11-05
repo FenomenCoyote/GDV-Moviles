@@ -26,6 +26,7 @@ public class OhNoApplication implements Application {
 
         states.add(new Start(graphics, input));
         states.add(new Menu(graphics, input));
+        states.add(new Playing(graphics, input));
         graphics.setLogicalSize(400, 600);
 
        /*font1 = graphics.newFont("Resources/fonts/Molle-Regular.ttf",64,false);
@@ -40,10 +41,12 @@ public class OhNoApplication implements Application {
     @Override
     public void update() {
         State s = states.get(state.ordinal()).update();
-        if(s != null){
+        if(s != null) {
             state = s;
-            if(state == State.Playing)
-                states.get(state.ordinal()).init();
+            if(state == State.Playing) {
+                boardSize = ((Menu)states.get(State.Menu.ordinal())).getBoardSize();
+                states.get(state.ordinal()).init(this);
+            }
         }
     }
 
@@ -55,13 +58,16 @@ public class OhNoApplication implements Application {
 
     @Override
     public void render() {
-        graphics.clear(0xfff6f6f6);
         states.get(state.ordinal()).render();
     }
 
     @Override
     public void release() {
 
+    }
+
+    public int getBoardSize(){
+        return boardSize;
     }
 
     OhNoApplication.State state;
@@ -72,8 +78,7 @@ public class OhNoApplication implements Application {
 
     Board board;
 
-    ArrayList<Clickable> clickables;
-
+    private int boardSize;
 
     Image imgClose, imgQ, imgEye, imgHistory, imgLock;
     MyFont font1, font2;

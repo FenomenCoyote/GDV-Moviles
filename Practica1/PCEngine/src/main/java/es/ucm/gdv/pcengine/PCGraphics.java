@@ -161,7 +161,7 @@ public class PCGraphics implements Graphics {
 
     @Override
     public void fillCircle(int cx, int cy, int r) {
-        awtGraphics.fillOval(cx - r/2, cy - r/2, r, r);
+        awtGraphics.fillOval(cx - r, cy - r, r * 2, r * 2);
     }
 
     @Override

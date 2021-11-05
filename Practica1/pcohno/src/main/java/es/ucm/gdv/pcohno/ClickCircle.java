@@ -4,8 +4,13 @@ import es.ucm.gdv.engine.Graphics;
 
 public class ClickCircle extends Clickable {
 
+    ClickCircle(int r){
+        super(0,0, r, r);
+        this.r = r;
+    }
+
     ClickCircle(int color, int x, int y, int r, String number) {
-        super(x - r, y - r, r * 2, r * 2);
+        super(x, y, r, r );
         this.color = color;
         this.number = number;
         this.r = r;
@@ -17,6 +22,13 @@ public class ClickCircle extends Clickable {
         graphics.fillCircle(x, y, r);
         graphics.setColor(0xffffffff);
         graphics.drawText(this.number, x, y + 16);
+    }
+
+    @Override
+    public boolean isOnMe(int x, int y){
+        float a = (x - this.x);
+        float b = (y - this.y);
+        return Math.sqrt(a * a + b * b) < this.r;
     }
 
     private int r;
