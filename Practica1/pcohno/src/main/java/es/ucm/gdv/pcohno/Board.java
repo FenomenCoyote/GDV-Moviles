@@ -36,29 +36,6 @@ public class Board {
     }
 
     public void setForGame() {
-
-/*        _board[2][1].setState(Cell.State.Wall);
-        _board[2][1].setLocked(true);
-
-        _board[1][2].setState(Cell.State.Wall);
-        _board[1][2].setLocked(true);
-
-        _board[2][3].setState(Cell.State.Point);
-        _board[2][3].setMustWatch(2);
-        _board[2][3].setLocked(true);
-
-        _board[3][2].setState(Cell.State.Point);
-        _board[3][2].setMustWatch(1);
-        _board[3][2].setLocked(true);
-
-        _board[4][3].setState(Cell.State.Point);
-        _board[4][3].setMustWatch(2);
-        _board[4][3].setLocked(true);
-
-        _board[4][4].setState(Cell.State.Point);
-        _board[4][4].setMustWatch(4);
-        _board[4][4].setLocked(true);*/
-
         Cell[][] puzzle = new Cell[_size + 2][_size + 2];
 
         for (int i = 0; i < _size + 2; ++i){
@@ -72,10 +49,8 @@ public class Board {
             clean(puzzle);
             randomize(puzzle);
             if(!wrongInitialBoard(puzzle)) {
-                print(puzzle);
                 prune(puzzle);
                 copyToBoard(puzzle);
-                print(_board);
                 if (resolve(puzzle)) { //Si se puede resolver
                     return;
                 }
@@ -85,86 +60,34 @@ public class Board {
 
     private void prune(Cell[][] puzzle){
         Random rng = new Random();
-        int changeWall = 2;
-        int changePoint = 3;
+        int changeWall = 3;
+        int changePoint = 5;
         for (int i = 1; i < _size + 1; ++i){
             for (int j = 1; j < _size +1; ++j){
                 Cell c = puzzle[i][j];
                 if(!(c.getLocked() && c.getState() == Cell.State.Point))
-                    if(c.getState() == Cell.State.Wall && rng.nextInt(changeWall) == 0)
+                    if(c.getState() == Cell.State.Wall && rng.nextInt(changeWall) > 0)
                         c.setState(Cell.State.Unassigned);
-                    else if(c.getState() == Cell.State.Point && rng.nextInt(changePoint) == 0)
+                    else if(c.getState() == Cell.State.Point && rng.nextInt(changePoint) != 0)
                         c.setState(Cell.State.Unassigned);
             }
         }
     }
-
-    public void setForGame2(){
-        Cell[][] puzzle = new Cell[_size + 2][_size + 2];
-
-        for (int i = 1; i < _size + 1; ++i){
-            for (int j = 1; j < _size +1; ++j){
-                puzzle[i][j] = new Cell(_board[i][j]);
-            }
-        }
-
-        Random rng = new Random();
-        do{
-            clean(puzzle);
-            int points = 0;
-            int walls = 0;
-            int numWalls = (_size*_size)/8 + rng.nextInt((_size*_size)/3);
-            int maxPoints = (_size*_size)/4 + rng.nextInt((_size*_size)/2);
-
-            print(puzzle);
-
-            for(int i=1; i< _size+1; i++){
-                for(int j=1; j<_size+1; j++){
-                    Cell c = puzzle[i][j];
-                    if(rng.nextFloat() <= 0.8f || points >= maxPoints){
-                        c.setState(Cell.State.Wall);
-                        walls++;
-                    }
-                    else{
-                        c.setState(Cell.State.Point);
-                        c.setMustWatch(1 + rng.nextInt((_size - 1) * 2));
-                        points++;
-                    }
-                    c.setLocked(true);
-                }
-            }
-            print(puzzle);
-            if(walls < numWalls || wrongInitialBoard(puzzle)){
-                continue;
-            }
-
-            while(walls > numWalls){
-                int posX = 1 + rng.nextInt(_size);
-                int posY = 1 + rng.nextInt(_size);
-                if(puzzle[posX][posY].getState() == Cell.State.Wall) {
-                    puzzle[posX][posY].setLocked(false);
-                    puzzle[posX][posY].setState(Cell.State.Unassigned);
-                    walls--;
-                }
-                print(puzzle);
-            }
-
-            print(puzzle);
-        } while(!resolve(puzzle));
-    }
-
 
     public void render(Graphics graphics) {
         graphics.save();
 
+        graphics.translate(10, 100);
+
         int spacing = 105;
         float aux = 380 / (float)(spacing * _size);
-        graphics.scale(aux, aux);
-        graphics.translate(((spacing + 20) / 2) , +spacing/2);
 
-        for(int i = 0; i < _size; ++i){
-            for (int j = 0; j < _size; j++) {
-                _board[i + 1][j + 1].render(graphics);
+        graphics.scale(aux, aux);
+        graphics.translate((int)(spacing * 0.5), spacing/2);
+
+        for(int i = 1; i < _size + 1; ++i){
+            for (int j = 1; j < _size + 1; j++) {
+                _board[i][j].render(graphics);
                 graphics.translate(spacing, 0);
             }
             graphics.translate(-spacing * _size, spacing);
@@ -175,26 +98,20 @@ public class Board {
 
     public void isOnMe(int x, int y){
 
-        int spacing = 100;
-        float aux = 400 / (float)(spacing * _size);
+        y -= 100;
+        x -= 10;
 
-        x /= aux;
-        y /= aux;
-        x -= ((spacing + 0) / 2) * aux;
-        y -= spacing * aux + spacing / 2 * aux;
+        int spacing = 105;
+        float aux = 380 / (float)(spacing * _size);
+        float mx = x, my = y;
 
-        for(int i = 0; i < _size; ++i){
-            for (int j = 0; j < _size; j++) {
-                if(_board[i + 1][j + 1].isOnMe(x, y)){
-                    System.out.print("celda: " + (i) + ", " + (j) + '\t');
-                    return;
-                }
-                x -= spacing;
-            }
-            x += spacing * _size * aux;
-            y -= spacing * aux;
-        }
+        mx /= aux;
+        my /= aux;
 
+        mx = (int)((mx / (spacing * _size)) * 10);
+        my = (int)((my / (spacing * _size)) * 10);
+
+        System.out.println("Celda: (" + mx + ", " + my + ")");
     }
 
 
@@ -389,27 +306,6 @@ public class Board {
                 }
             }
         }
-
-        /*
-        int randomCells = _size + rng.nextInt(_size/2);
-        for(int i = 0; i < randomCells; ++i){
-            int posX, posY;
-            posX = 1 + rng.nextInt(_size);
-            posY = 1 + rng.nextInt(_size);
-            Cell c = puzzle[posX][posY];
-            if(c.getLocked()){
-                --i;
-                continue;
-            }
-            if(rng.nextInt(randomCells) == 0){
-                c.setState(Cell.State.Wall);
-            }
-            else {
-                c.setState(Cell.State.Point);
-                c.setMustWatch(1 + rng.nextInt((_size - 1) * 2));
-            }
-            c.setLocked(true);
-        }*/
     }
 
     private void expand(Cell[][] puzzle, int i, int j, int k, Dirs dir){

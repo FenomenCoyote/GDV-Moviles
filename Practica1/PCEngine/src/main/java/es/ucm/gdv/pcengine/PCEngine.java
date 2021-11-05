@@ -10,7 +10,7 @@ public class PCEngine implements Engine {
     public void init() {
 
         _graphics = new PCGraphics();
-        _graphics.init(500, 600);
+        _graphics.init(400, 600);
 
         _input = new PCInput(_graphics);
 

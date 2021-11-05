@@ -25,9 +25,7 @@ public class Playing extends State {
         graphics.setFont(font1);
         graphics.drawText(boardSize + " x " + boardSize, 200, 80);
 
-        graphics.translate(0, 100);
         board.render(graphics);
-        graphics.translate(0, -100);
 
         graphics.scale(0.5f, 0.5f);
         clickableClose.render(graphics);

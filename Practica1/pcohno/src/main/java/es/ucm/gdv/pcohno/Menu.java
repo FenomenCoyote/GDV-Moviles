@@ -68,7 +68,6 @@ public class Menu extends State {
             for (Clickable c : clickablesCircles) {
                 if (c.isOnMe(t.x - 100, t.y - 300)) {
                     boardSize = 4 + i;
-                    System.out.print(boardSize);
                     events.clear();
                     return OhNoApplication.State.Playing;
                 }

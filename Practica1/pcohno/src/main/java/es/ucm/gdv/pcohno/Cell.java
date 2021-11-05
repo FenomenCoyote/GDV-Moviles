@@ -2,9 +2,8 @@ package es.ucm.gdv.pcohno;
 
 import es.ucm.gdv.engine.Graphics;
 
-public class Cell extends ClickCircle {
+public class Cell {
 
-    @Override
     public void render(Graphics graphics) {
         switch (_state){
             case Unassigned:
@@ -28,21 +27,18 @@ public class Cell extends ClickCircle {
     public enum State {Null, Unassigned, Point, Wall}
 
     public Cell(){
-        super(50);
         this._locked = false;
         this._mustWatch = -1;
         this._state = State.Unassigned;
     }
 
     public Cell(boolean locked, int mustWatch, State state){
-        super(50);
         this._locked = locked;
         this._mustWatch = mustWatch;
         this._state = state;
     }
 
     public Cell(Cell cell){
-        super(50);
         this._locked = cell._locked;
         this._mustWatch = cell._mustWatch;
         this._state = cell._state;
