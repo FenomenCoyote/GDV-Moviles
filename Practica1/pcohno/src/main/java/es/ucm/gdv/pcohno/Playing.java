@@ -66,8 +66,10 @@ public class Playing extends State {
             if(text != null){
                 if(text == "Splendid")
                     return OhNoApplication.State.Menu;
-                else
+                else{
                     text = null;
+                    board.highlightCircle(0, 0, false);
+                }
             }
             if(clickableClose.isOnMe(t.x * 2, t.y * 2)){
                 events.clear();
@@ -94,7 +96,7 @@ public class Playing extends State {
                             text = "This one cant see anyone";
                             break;
                     }
-                    //TODO: marcar casilla hint.pos
+                    board.highlightCircle(hint.pos.fst, hint.pos.snd, true);
                 }
             }
             else if(clickableUnDo.isOnMe(t.x * 2, t.y * 2)) {
@@ -111,7 +113,7 @@ public class Playing extends State {
                             text = "This tile was reversed to red";
                             break;
                     }
-                //TODO: marcar casilla hint.pos
+                    board.highlightCircle(hint.pos.fst, hint.pos.snd, true);
                 }
             }
             else

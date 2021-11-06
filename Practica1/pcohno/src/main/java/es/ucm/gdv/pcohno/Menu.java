@@ -64,6 +64,8 @@ public class Menu extends State {
         ArrayList<Input.TouchEvent> events = input.getTouchEvents();
         while(!events.isEmpty()){
             Input.TouchEvent t = events.remove(0);
+            if(t.type != Input.TouchEvent.TouchEventType.Touch)
+                continue;
             int i = 0;
             for (Clickable c : clickablesCircles) {
                 if (c.isOnMe(t.x - 100, t.y - 300)) {

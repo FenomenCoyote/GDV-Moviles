@@ -165,6 +165,11 @@ public class PCGraphics implements Graphics {
     }
 
     @Override
+    public void drawCircle(int cx, int cy, int r) {
+        awtGraphics.drawOval(cx - r, cy - r, r * 2, r * 2);
+    }
+
+    @Override
     public void drawImage(Image image, int x, int y) {
         awtGraphics.drawImage(((PCImage)image).getSprite(), x, y, null);
     }

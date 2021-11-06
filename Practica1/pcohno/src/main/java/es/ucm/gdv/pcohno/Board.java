@@ -24,6 +24,8 @@ public class Board {
         _size = size;
         this._hint = new Hint(_board);
         _actions = new Stack<CellHint>();
+        highlightedCircle = false;
+        highlightedRow = highlightedCol = 0;
 
         for (int i = 0; i < size + 2; ++i){
             for (int j = 0; j < size + 2; ++j){
@@ -96,6 +98,10 @@ public class Board {
         for(int i = 1; i < _size + 1; ++i){
             for (int j = 1; j < _size + 1; j++) {
                 _board[i][j].render(graphics);
+                if (highlightedCircle && i == highlightedRow && j == highlightedCol){
+                    graphics.setColor(0xff222222);
+                    graphics.drawCircle(0,0,50);
+                }
                 graphics.translate(spacing, 0);
             }
             graphics.translate(-spacing * _size, spacing);
@@ -188,6 +194,7 @@ public class Board {
                 if(h == null)
                     continue;
 
+                h.pos = new Pair<Integer, Integer>(i, j);
                 return h;
             }
         }
@@ -210,6 +217,12 @@ public class Board {
             return last;
         }
         return null;
+    }
+
+    public void highlightCircle(int row, int col, boolean enable){
+        highlightedRow = row;
+        highlightedCol = col;
+        highlightedCircle = enable;
     }
 
     private int lookDirections(int row, int col, Cell[][] puzzle){
@@ -435,5 +448,9 @@ public class Board {
     private int _size;
     private Hint _hint;
     private int _totalUnassignedCells;
-    Stack<CellHint> _actions;
+    private Stack<CellHint> _actions;
+
+    private boolean highlightedCircle;
+    private int highlightedRow;
+    private int highlightedCol;
 }

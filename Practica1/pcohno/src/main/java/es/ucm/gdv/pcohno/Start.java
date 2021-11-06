@@ -39,7 +39,9 @@ public class Start extends State {
     @Override
     public OhNoApplication.State update() {
         ArrayList<Input.TouchEvent> events = input.getTouchEvents();
-        if(!events.isEmpty()){
+        while(!events.isEmpty()){
+            if(events.remove(0).type != Input.TouchEvent.TouchEventType.Touch)
+                continue;
             events.clear();
             return OhNoApplication.State.Menu;
         }
