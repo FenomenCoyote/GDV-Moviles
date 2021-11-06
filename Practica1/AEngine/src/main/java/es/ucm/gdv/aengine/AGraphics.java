@@ -1,13 +1,38 @@
 package es.ucm.gdv.aengine;
 
+import android.content.Context;
+import android.graphics.Canvas;
+import android.view.SurfaceHolder;
+import android.view.SurfaceView;
+
+import es.ucm.gdv.engine.Application;
 import es.ucm.gdv.engine.Graphics;
 import es.ucm.gdv.engine.Image;
 import es.ucm.gdv.engine.MyFont;
 
-public class AGraphics implements Graphics {
+public class AGraphics extends SurfaceView implements Graphics  {
+
+
+
+    public AGraphics(Context context) {
+        super(context);
+        _holder=getHolder();
+    }
+
     @Override
     public boolean init(int width, int height) {
+
         return false;
+    }
+
+    public void render(Application a)
+    {
+        while (!_holder.getSurface().isValid());
+
+        Canvas canvas = _holder.lockCanvas();
+        a.render();
+        _holder.unlockCanvasAndPost(canvas);
+
     }
 
     @Override
@@ -76,18 +101,14 @@ public class AGraphics implements Graphics {
     }
 
     @Override
+    public void drawCircle(int cx, int cy, int r) {
+
+    }
+
+    @Override
     public void drawText(String text, int x, int y) {
 
     }
 
-    @Override
-    public int getWidth() {
-        return 0;
-    }
-
-    @Override
-    public int getHeight() {
-        return 0;
-    }
-
+    private SurfaceHolder _holder;
 }
