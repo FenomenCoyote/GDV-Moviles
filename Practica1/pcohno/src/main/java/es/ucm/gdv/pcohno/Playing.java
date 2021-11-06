@@ -61,10 +61,14 @@ public class Playing extends State {
             }
             else if(clickableUnDo.isOnMe(t.x * 2, t.y * 2))
             {
-                board.undo();
                 events.clear();
+                board.undo();
             }
-            board.isOnMe(t.x, t.y);
+            else
+            {
+                board.isOnMe(t.x, t.y);
+            }
+
         }
 
         if(board.wrongCell() == null){
