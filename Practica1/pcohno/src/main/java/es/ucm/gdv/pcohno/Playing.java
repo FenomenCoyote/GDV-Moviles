@@ -1,11 +1,6 @@
 package es.ucm.gdv.pcohno;
 
-import com.sun.tools.javac.util.Pair;
-
 import java.util.ArrayList;
-import java.util.Stack;
-
-import javax.swing.Painter;
 
 import es.ucm.gdv.engine.Graphics;
 import es.ucm.gdv.engine.Image;
@@ -19,6 +14,7 @@ public class Playing extends State {
 
         font1 = graphics.newFont("Resources/fonts/JosefinSans-Bold.ttf",64,false);
         font2 = graphics.newFont("Resources/fonts/JosefinSans-Bold.ttf",16,false);
+        font3 = graphics.newFont("Resources/fonts/JosefinSans-Bold.ttf",26,false);
 
         imgClose = graphics.newImage("Resources/sprites/close.png");
         imgUnDo = graphics.newImage("Resources/sprites/history.png");
@@ -27,17 +23,31 @@ public class Playing extends State {
         clickableClose = new ClickImage(imgClose, 150 - imgClose.getWidth()/2, 1050, 100, 100);
         clickableUnDo = new ClickImage(imgUnDo, 400 - imgUnDo.getWidth()/2, 1050, 100, 100);
         clickableEye = new ClickImage(imgEye, 650 - imgEye.getWidth()/2, 1050, 100, 100);
+
+        text = null;
     }
 
     @Override
     public void render() {
 
-        graphics.setColor(0xff222222);
+        graphics.setColor(0xff333333);
         graphics.setFont(font2);
         graphics.drawText(board.getPercentage() + "%",200,510);
         graphics.setFont(font1);
-        graphics.drawText(boardSize + " x " + boardSize, 200, 80);
-
+        if(text == null)
+            graphics.drawText(boardSize + " x " + boardSize, 200, 80);
+        else{
+            graphics.save();
+            if(text == "Splendid")
+                graphics.setFont(font2);
+            graphics.setFont(font3);
+            String texts[] = text.split("\n");
+            for (String t_ : texts) {
+                graphics.drawText(t_, 200, 60 );
+                graphics.translate(0, 25);
+            }
+            graphics.restore();
+        }
         board.render(graphics);
 
         graphics.scale(0.5f, 0.5f);
@@ -51,29 +61,67 @@ public class Playing extends State {
         ArrayList<Input.TouchEvent> events = input.getTouchEvents();
         while(!events.isEmpty()){
             Input.TouchEvent t = events.remove(0);
+            if(t.type != Input.TouchEvent.TouchEventType.Touch)
+                continue;
+            if(text != null){
+                if(text == "Splendid")
+                    return OhNoApplication.State.Menu;
+                else
+                    text = null;
+            }
             if(clickableClose.isOnMe(t.x * 2, t.y * 2)){
                 events.clear();
                 return OhNoApplication.State.Menu;
             }
             else if(clickableEye.isOnMe(t.x * 2, t.y * 2))
             {
-                events.clear();
+                CellHint hint = board.getHint();
+
+                if(hint == null)
+                    text = "There is a mistake in the board";
+                else {
+                    switch (hint.type) {
+                        case First:
+                            text = "This number can see all its dots";
+                            break;
+                        case Second:
+                            text = "Looking further in one direction\nwould exceed this number";
+                            break;
+                        case Third:
+                            text = "One specific dot is included\nin all solutions imaginable";
+                            break;
+                        case Sixth:
+                            text = "This one cant see anyone";
+                            break;
+                    }
+                    //TODO: marcar casilla hint.pos
+                }
             }
-            else if(clickableUnDo.isOnMe(t.x * 2, t.y * 2))
-            {
-                events.clear();
-                board.undo();
+            else if(clickableUnDo.isOnMe(t.x * 2, t.y * 2)) {
+                CellHint hint = board.undo();
+                if (hint != null){
+                    switch (hint.state) {
+                        case Unassigned:
+                            text = "This tile was reversed to its\nempty state";
+                            break;
+                        case Point:
+                            text = "This tile was reversed to blue";
+                            break;
+                        case Wall:
+                            text = "This tile was reversed to red";
+                            break;
+                    }
+                //TODO: marcar casilla hint.pos
+                }
             }
             else
             {
                 board.isOnMe(t.x, t.y);
             }
-
         }
 
         if(board.wrongCell() == null){
-            System.out.println("Ganaste!!!");
-            return OhNoApplication.State.Menu;
+            text = "Splendid";
         }
 
         return null;
@@ -84,15 +132,18 @@ public class Playing extends State {
         boardSize = app.getBoardSize();
         board = new Board(boardSize);
         board.setForGame();
+        text = null;
     }
 
     private int boardSize;
 
     private Board board;
 
-    private MyFont font1,font2;
+    private MyFont font1,font2, font3;
 
     private Image imgClose,imgUnDo,imgEye;
 
     private ClickImage clickableClose,clickableUnDo, clickableEye;
+
+    private String text;
 }

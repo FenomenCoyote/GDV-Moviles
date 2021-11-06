@@ -122,13 +122,12 @@ public class Board {
         int columna = (int)mx;
         int fila = (int)my;
 
-        columna = Math.max(1, Math.min(columna, _size));
-        fila = Math.max(1, Math.min(fila, _size));
-
-        Cell c = _board[fila][columna];
-        if(!c.getLocked()) {
-            _actions.push(new CellHint(c.getState(), fila, columna));
-            c.nextState();
+        if(columna >= 0 && columna <= _size && fila >= 0 && columna <= _size){
+            Cell c = _board[fila][columna];
+            if(!c.getLocked()) {
+                _actions.push(new CellHint(c.getState(), fila, columna));
+                c.nextState();
+            }
         }
     }
 
@@ -177,7 +176,7 @@ public class Board {
     }
 
     //Devolver nueva celda puesta o una cela mal muesta
-    public void getHint() {
+    public CellHint getHint() {
         for (int i = 1; i < _size + 1; ++i){
             for (int j = 1; j < _size + 1; ++j){
                 CellHint h = null;
@@ -188,10 +187,11 @@ public class Board {
                 }
                 if(h == null)
                     continue;
-                _board[h.pos.fst][h.pos.snd].setState(h.state);
-                return;
+
+                return h;
             }
         }
+        return null;
     }
 
     public int getPercentage()
@@ -203,11 +203,13 @@ public class Board {
         return percentage;
     }
 
-    public void undo(){
+    public CellHint undo(){
         if(!_actions.empty()){
             CellHint last = _actions.pop();
             _board[last.pos.fst][last.pos.snd].setState(last.state);
+            return last;
         }
+        return null;
     }
 
     private int lookDirections(int row, int col, Cell[][] puzzle){

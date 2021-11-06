@@ -8,6 +8,10 @@ import static es.ucm.gdv.pcohno.Board._dirs;
 
 public class Hint {
 
+    static enum Type{
+        First, Second, Third, Fourth, Fifth, Sixth, Seventh
+    }
+
     public Hint(Cell[][] board){
         this._board = board;
     }
@@ -77,7 +81,7 @@ public class Hint {
                     col += _dirs[dir.ordinal()].snd;
                 }
                 if(emptyPos)
-                    return new CellHint(Cell.State.Wall, row, col);
+                    return new CellHint(Cell.State.Wall, row, col, Type.First);
             }
         }
         return null;
@@ -97,7 +101,7 @@ public class Hint {
                 if(_board[row][col].getState() == Cell.State.Unassigned &&
                         seeing + 1 + lookDirection(dir, row, col) > mustWatch)
                 {
-                    return new CellHint(Cell.State.Wall, row, col);
+                    return new CellHint(Cell.State.Wall, row, col, Type.Second);
                 }
             }
         }
@@ -121,7 +125,7 @@ public class Hint {
                         int posiblePosCol = posCol + _dir.snd * (n + 1);
 
                         if(_board[posiblePosRow][posiblePosCol].getState() == Cell.State.Unassigned)
-                            return new CellHint(Cell.State.Point, posiblePosRow, posiblePosCol);
+                            return new CellHint(Cell.State.Point, posiblePosRow, posiblePosCol, Type.Third);
                     }
                 }
             }
@@ -132,7 +136,7 @@ public class Hint {
     private CellHint hint4(int seeing, boolean locked, int mustWatch, int posRow, int posCol){
         if(_board[posRow][posCol].getState() == Cell.State.Point) {
             if (locked && seeing > mustWatch)
-                return new CellHint(Cell.State.Null, posRow, posCol);
+                return new CellHint(Cell.State.Null, posRow, posCol, Type.Fourth);
         }
         return null;
     }
@@ -145,7 +149,7 @@ public class Hint {
                 for (int value : maxWatchablePoss)
                     sum += value;
                 if(sum < mustWatch)
-                    return new CellHint(Cell.State.Null, posRow, posCol);
+                    return new CellHint(Cell.State.Null, posRow, posCol, Type.Fifth);
             }
         }
         return null;
@@ -158,7 +162,7 @@ public class Hint {
                     ( _board[posRow][posCol - 1].getState() == Cell.State.Wall) &&
                     (_board[posRow][posCol + 1].getState() == Cell.State.Wall))
             {
-                return new CellHint(Cell.State.Wall, posRow, posCol);
+                return new CellHint(Cell.State.Wall, posRow, posCol, Type.Sixth);
             }
         }
         return null;
@@ -172,7 +176,7 @@ public class Hint {
                     (_board[posRow][posCol - 1].getState() == Cell.State.Wall) &&
                     (_board[posRow][posCol + 1].getState() == Cell.State.Wall))
             {
-                return new CellHint(Cell.State.Null, posRow, posCol);
+                return new CellHint(Cell.State.Null, posRow, posCol, Type.Seventh);
             }
         }
         return null;
