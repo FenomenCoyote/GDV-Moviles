@@ -191,8 +191,14 @@ public class Board {
                 } catch (Exception e){
                     e.printStackTrace();
                 }
-                if(h == null)
-                    continue;
+                if(h == null){
+                    try {
+                        h = _hint.getNegativeHint(i, j);
+                    } catch (Exception e){
+                        e.printStackTrace();
+                    }
+                }
+                if(h == null) continue;
 
                 h.pos = new Pair<Integer, Integer>(i, j);
                 return h;

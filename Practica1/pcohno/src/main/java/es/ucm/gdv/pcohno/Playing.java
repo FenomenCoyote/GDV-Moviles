@@ -92,8 +92,17 @@ public class Playing extends State {
                         case Third:
                             text = "One specific dot is included\nin all solutions imaginable";
                             break;
+                        case Fourth:
+                            text = "This number sees a bit too\nmuch";
+                            break;
+                        case Fifth:
+                            text = "This number can't see enough";
+                            break;
                         case Sixth:
                             text = "This one cant see anyone";
+                            break;
+                        case Seventh:
+                            text = "A blue dot should always see\nat least one other";
                             break;
                     }
                     board.highlightCircle(hint.pos.fst, hint.pos.snd, true);
@@ -114,6 +123,9 @@ public class Playing extends State {
                             break;
                     }
                     board.highlightCircle(hint.pos.fst, hint.pos.snd, true);
+                }
+                else {
+                    text = "Nothing to undo";
                 }
             }
             else
