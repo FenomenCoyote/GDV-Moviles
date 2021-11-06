@@ -1,8 +1,5 @@
 package es.ucm.gdv.aengine;
 
-import android.content.Context;
-import android.view.SurfaceView;
-
 import androidx.appcompat.app.AppCompatActivity;
 
 import es.ucm.gdv.engine.Application;
@@ -12,7 +9,7 @@ import es.ucm.gdv.engine.Input;
 
 public class AEngine implements Engine, Runnable {
     public AEngine(AppCompatActivity c) {
-        _graphics= new AGraphics(c);
+        _graphics = new AGraphics(c);
         c.setContentView(_graphics);
     }
 
@@ -43,6 +40,8 @@ public class AEngine implements Engine, Runnable {
         long informePrevio = lastFrameTime; // Informes de FPS
         int frames = 0;
 
+        _app.init(this);
+
         // Bucle principal.
         while(_running) {
 
@@ -50,7 +49,7 @@ public class AEngine implements Engine, Runnable {
             long nanoElapsedTime = currentTime - lastFrameTime;
             lastFrameTime = currentTime;
 
-            _app.update();
+            //_app.update();
             // Informe de FPS
             if (currentTime - informePrevio > 1000000000l) {
                 long fps = frames * 1000000000l / (currentTime - informePrevio);

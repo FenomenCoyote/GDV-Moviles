@@ -13,7 +13,6 @@ import es.ucm.gdv.engine.MyFont;
 public class AGraphics extends SurfaceView implements Graphics  {
 
 
-
     public AGraphics(Context context) {
         super(context);
         _holder=getHolder();
@@ -29,7 +28,7 @@ public class AGraphics extends SurfaceView implements Graphics  {
     {
         while (!_holder.getSurface().isValid());
 
-        Canvas canvas = _holder.lockCanvas();
+        canvas = _holder.lockCanvas();
         a.render();
         _holder.unlockCanvasAndPost(canvas);
 
@@ -52,7 +51,7 @@ public class AGraphics extends SurfaceView implements Graphics  {
 
     @Override
     public void clear(int color) {
-
+        canvas.drawColor(color);
     }
 
     @Override
@@ -110,5 +109,6 @@ public class AGraphics extends SurfaceView implements Graphics  {
 
     }
 
+    private Canvas canvas;
     private SurfaceHolder _holder;
 }

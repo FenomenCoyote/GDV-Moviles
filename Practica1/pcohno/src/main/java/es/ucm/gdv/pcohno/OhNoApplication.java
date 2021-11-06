@@ -12,7 +12,7 @@ import es.ucm.gdv.engine.MyFont;
 public class OhNoApplication implements Application {
 
     enum State {
-        Start, Menu, Playing, End
+        Start, Menu, Playing
     }
 
     @Override
@@ -20,22 +20,14 @@ public class OhNoApplication implements Application {
         graphics = engine.getGraphics();
         input = engine.getInput();
 
-        state = State.Start;
+        /*state = State.Start;
 
         states = new ArrayList<>();
 
         states.add(new Start(graphics, input));
         states.add(new Menu(graphics, input));
         states.add(new Playing(graphics, input));
-        graphics.setLogicalSize(400, 600);
-
-       /*font1 = graphics.newFont("Resources/fonts/Molle-Regular.ttf",64,false);
-        font2 = graphics.newFont("Resources/fonts/JosefinSans-Bold.ttf",32,false);
-        imgClose = graphics.newImage("Resources/sprites/close.png");
-        imgQ = graphics.newImage("Resources/sprites/q42.png");
-        imgEye = graphics.newImage("Resources/sprites/eye.png");
-        imgHistory = graphics.newImage("Resources/sprites/history.png");
-        imgLock = graphics.newImage("Resources/sprites/lock.png");*/
+        graphics.setLogicalSize(400, 600);*/
     }
 
     @Override
@@ -57,7 +49,8 @@ public class OhNoApplication implements Application {
 
     @Override
     public void render() {
-        states.get(state.ordinal()).render();
+        /*states.get(state.ordinal()).render();*/
+        graphics.clear(0xffffffff);
     }
 
     @Override
