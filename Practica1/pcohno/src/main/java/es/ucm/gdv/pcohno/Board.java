@@ -63,7 +63,11 @@ public class Board {
 
     private void prune(Cell[][] puzzle){
         Random rng = new Random();
-        int changeWall = 3;
+        int changeWall = 4;
+        if(_size >= 7)
+            changeWall = 3;
+        else if(_size == 9)
+            changeWall = 2;
         for (int i = 1; i < _size + 1; ++i){
             for (int j = 1; j < _size +1; ++j){
                 Cell c = puzzle[i][j];
@@ -117,6 +121,9 @@ public class Board {
 
         int columna = (int)mx;
         int fila = (int)my;
+
+        columna = Math.max(1, Math.min(columna, _size));
+        fila = Math.max(1, Math.min(fila, _size));
 
         Cell c = _board[fila][columna];
         if(!c.getLocked()) {
