@@ -12,11 +12,11 @@ public class Menu extends State {
     public Menu(Graphics graphics, Input input) {
         super(graphics, input);
 
-        font1 = graphics.newFont("Resources/fonts/Molle-Regular.ttf",64,false);
-        font2 = graphics.newFont("Resources/fonts/JosefinSans-Bold.ttf",32,false);
-        font3 = graphics.newFont("Resources/fonts/JosefinSans-Bold.ttf",48,false);
+        font1 = graphics.newFont("Molle-Regular.ttf",64,false);
+        font2 = graphics.newFont("JosefinSans-Bold.ttf",32,false);
+        font3 = graphics.newFont("JosefinSans-Bold.ttf",48,false);
 
-        imgClose = graphics.newImage("Resources/sprites/close.png");
+        imgClose = graphics.newImage("close.png");
 
         clickablesCircles = new ArrayList<>();
         clickableClose = new ClickImage(imgClose, 400 - imgClose.getWidth()/2, 1000, 100, 100);

@@ -11,10 +11,9 @@ public class PCImage implements Image {
         sprite = null;
     }
 
-    @Override
     public void loadImage(String route) {
         try {
-            sprite = javax.imageio.ImageIO.read(new File(route));
+            sprite = javax.imageio.ImageIO.read(new File("Resources/sprites/" + route));
         } catch (IOException e) {
             System.out.println("No se pudo cargar la imagen: " + route);
         }

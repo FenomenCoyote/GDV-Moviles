@@ -1,5 +1,7 @@
 package es.ucm.gdv.aengine;
 
+import android.view.SurfaceView;
+
 import androidx.appcompat.app.AppCompatActivity;
 
 import es.ucm.gdv.engine.Application;
@@ -9,8 +11,9 @@ import es.ucm.gdv.engine.Input;
 
 public class AEngine implements Engine, Runnable {
     public AEngine(AppCompatActivity c) {
-        _graphics = new AGraphics(c);
-        c.setContentView(_graphics);
+        SurfaceView surfaceView = new SurfaceView(c);
+        c.setContentView(surfaceView);
+        _graphics = new AGraphics(surfaceView, c.getAssets());
     }
 
     @Override

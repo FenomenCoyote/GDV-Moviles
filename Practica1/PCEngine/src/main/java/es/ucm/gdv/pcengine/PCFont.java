@@ -1,6 +1,5 @@
 package es.ucm.gdv.pcengine;
 
-import java.awt.Color;
 import java.awt.Font;
 import java.io.FileInputStream;
 import java.io.InputStream;
@@ -9,10 +8,9 @@ import es.ucm.gdv.engine.MyFont;
 
 public class PCFont implements MyFont {
 
-    @Override
     public void loadFont(String route, int size, boolean isBold) {
         Font baseFont = null;
-        try (InputStream is = new FileInputStream(route)) {
+        try (InputStream is = new FileInputStream("Resources/fonts/" + route)) {
             baseFont = Font.createFont(Font.TRUETYPE_FONT, is);
         }
         catch (Exception e) {

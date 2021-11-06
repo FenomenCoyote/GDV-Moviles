@@ -20,15 +20,17 @@ public class OhNoApplication implements Application {
         graphics = engine.getGraphics();
         input = engine.getInput();
 
-        /*state = State.Start;
+        state = State.Start;
 
         states = new ArrayList<>();
 
         states.add(new Start(graphics, input));
         states.add(new Menu(graphics, input));
         states.add(new Playing(graphics, input));
-        graphics.setLogicalSize(400, 600);*/
+        graphics.setLogicalSize(400, 600);
     }
+
+    private Image i;
 
     @Override
     public void update() {
@@ -49,8 +51,7 @@ public class OhNoApplication implements Application {
 
     @Override
     public void render() {
-        /*states.get(state.ordinal()).render();*/
-        graphics.clear(0xffffffff);
+        states.get(state.ordinal()).render();
     }
 
     @Override

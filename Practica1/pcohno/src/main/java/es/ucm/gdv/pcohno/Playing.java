@@ -12,13 +12,13 @@ public class Playing extends State {
     public Playing(Graphics graphics, Input input) {
         super(graphics, input);
 
-        font1 = graphics.newFont("Resources/fonts/JosefinSans-Bold.ttf",64,false);
-        font2 = graphics.newFont("Resources/fonts/JosefinSans-Bold.ttf",16,false);
-        font3 = graphics.newFont("Resources/fonts/JosefinSans-Bold.ttf",26,false);
+        font1 = graphics.newFont("JosefinSans-Bold.ttf",64,false);
+        font2 = graphics.newFont("JosefinSans-Bold.ttf",16,false);
+        font3 = graphics.newFont("JosefinSans-Bold.ttf",26,false);
 
-        imgClose = graphics.newImage("Resources/sprites/close.png");
-        imgUnDo = graphics.newImage("Resources/sprites/history.png");
-        imgEye = graphics.newImage("Resources/sprites/eye.png");
+        imgClose = graphics.newImage("close.png");
+        imgUnDo = graphics.newImage("history.png");
+        imgEye = graphics.newImage("eye.png");
 
         clickableClose = new ClickImage(imgClose, 150 - imgClose.getWidth()/2, 1050, 100, 100);
         clickableUnDo = new ClickImage(imgUnDo, 400 - imgUnDo.getWidth()/2, 1050, 100, 100);

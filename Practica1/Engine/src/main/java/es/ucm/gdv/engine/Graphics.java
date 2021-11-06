@@ -2,7 +2,6 @@ package es.ucm.gdv.engine;
 
 public interface Graphics {
 
-    public boolean init(int width, int height);
     public void release();
 
     public Image newImage(String name);

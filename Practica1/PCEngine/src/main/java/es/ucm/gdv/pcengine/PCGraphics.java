@@ -9,11 +9,11 @@ import java.awt.image.BufferStrategy;
 import javax.swing.JFrame;
 
 import es.ucm.gdv.engine.Application;
-import es.ucm.gdv.engine.Graphics;
 import es.ucm.gdv.engine.Image;
 import es.ucm.gdv.engine.MyFont;
+import es.ucm.gdv.engine.MyGraphics;
 
-public class PCGraphics implements Graphics {
+public class PCGraphics extends MyGraphics {
 
     public boolean init(int width, int height){
         window = new JFrame("OhNo!");
@@ -77,8 +77,10 @@ public class PCGraphics implements Graphics {
                 try {
                     //Clear de toda la pantalla
                     Color previousColor = awtGraphics.getColor();
+
                     setColor(0xffffffff);
                     awtGraphics.fillRect(0, 0, width, height);
+
                     awtGraphics.setColor(previousColor);
 
                     calculateTranslationScale();
@@ -141,11 +143,6 @@ public class PCGraphics implements Graphics {
         //awtGraphics.getTransform().setTransform(matrix[0], matrix[1],matrix[2],matrix[3],matrix[4],matrix[5]);
     }
 
-    @Override
-    public void setLogicalSize(int width, int height) {
-        logicalWidth = width;
-        logicalHeight = height;
-    }
 
     @Override
     public void setColor(int argb) {
@@ -190,24 +187,6 @@ public class PCGraphics implements Graphics {
         return height;
     }
 
-    private void calculateTranslationScale(){
-        //Ajustar el alto para que sea exacto al height
-        double heightRelation = (double)height/logicalHeight;
-
-        if(logicalWidth * heightRelation > width){ //Si el width es muy pequeño para eso, padding arriba y abajo
-            scale = (double)width/logicalWidth;
-            offsetX = 0;
-            offsetY = (height-(int)(logicalHeight*scale))/2;
-        }
-        else { //Si el width es grande padding izquierda y derecha
-            scale = heightRelation;
-            offsetY = 0;
-            offsetX = (width-(int)(logicalWidth*scale))/2;
-        }
-        awtGraphics.translate(offsetX, offsetY);
-        awtGraphics.scale(scale, scale);
-    }
-
     public int getOffsetX() {
         return offsetX;
     }
@@ -223,12 +202,6 @@ public class PCGraphics implements Graphics {
     public JFrame getWindow() {
         return window;
     }
-
-    private int logicalWidth, logicalHeight;
-    private int width, height;
-
-    private int offsetX, offsetY;
-    double scale;
 
     Color saveColor;
     Font saveFont;
