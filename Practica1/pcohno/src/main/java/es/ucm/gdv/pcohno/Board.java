@@ -5,6 +5,7 @@ import java.util.Stack;
 
 import es.ucm.gdv.engine.Graphics;
 import es.ucm.gdv.engine.Pair;
+import es.ucm.gdv.engine.Image;
 
 public class Board {
 
@@ -17,7 +18,7 @@ public class Board {
 
     static enum Dirs {Up, Down, Left, Right}
 
-    public Board(int size){
+    public Board(int size, Image lockImg){
         _board = new Cell[size + 2][size + 2];
         _totalUnassignedCells=1;
         _size = size;
@@ -25,6 +26,9 @@ public class Board {
         _actions = new Stack<CellHint>();
         highlightedCircle = false;
         highlightedRow = highlightedCol = 0;
+
+        imgLock = lockImg;
+        showLocks = false;
 
         for (int i = 0; i < size + 2; ++i){
             for (int j = 0; j < size + 2; ++j){
@@ -97,6 +101,13 @@ public class Board {
         for(int i = 1; i < _size + 1; ++i){
             for (int j = 1; j < _size + 1; j++) {
                 _board[i][j].render(graphics);
+                if(showLocks && _board[i][j].getState() == Cell.State.Wall){
+                    graphics.scale(0.75f, 0.75f);
+                    graphics.translate(-imgLock.getWidth()/2, -imgLock.getHeight()/2);
+                    graphics.drawImage(imgLock, 0, 0);
+                    graphics.translate(imgLock.getWidth()/2, imgLock.getHeight()/2);
+                    graphics.scale(1/0.75f, 1/0.75f);
+                }
                 if (highlightedCircle && i == highlightedRow && j == highlightedCol){
                     graphics.setColor(0xff222222);
                     graphics.drawCircle(0,0,50);
@@ -109,7 +120,7 @@ public class Board {
         graphics.restore();
     }
 
-    public void isOnMe(int x, int y){
+    public boolean isOnMe(int x, int y){
 
         y -= 100;
         x -= 10;
@@ -133,7 +144,11 @@ public class Board {
                 _actions.push(new CellHint(c.getState(), fila, columna));
                 c.nextState();
             }
+            else{
+                return false;
+            }
         }
+        return true;
     }
 
 
@@ -228,6 +243,14 @@ public class Board {
         highlightedRow = row;
         highlightedCol = col;
         highlightedCircle = enable;
+    }
+
+    public void setShowLocks(boolean enable){
+        showLocks = enable;
+    }
+
+    public boolean getShowLocks(){
+        return showLocks;
     }
 
     private int lookDirections(int row, int col, Cell[][] puzzle){
@@ -458,4 +481,7 @@ public class Board {
     private boolean highlightedCircle;
     private int highlightedRow;
     private int highlightedCol;
+
+    private boolean showLocks;
+    private Image imgLock;
 }

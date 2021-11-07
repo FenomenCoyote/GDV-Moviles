@@ -9,7 +9,7 @@ import es.ucm.gdv.engine.MyFont;
 
 public class Playing extends State {
 
-    public Playing(Graphics graphics, Input input) {
+    public Playing(Graphics graphics, Input input, double showLocksTime) {
         super(graphics, input);
 
         font1 = graphics.newFont("JosefinSans-Bold.ttf",64,false);
@@ -25,6 +25,8 @@ public class Playing extends State {
         clickableEye = new ClickImage(imgEye, 650 - imgEye.getWidth()/2, 1050, 100, 100);
 
         text = null;
+
+        this.showLocksTime = this.initialShowLocksTime = showLocksTime;
     }
 
     @Override
@@ -57,7 +59,7 @@ public class Playing extends State {
     }
 
     @Override
-    public OhNoApplication.State update() {
+    public OhNoApplication.State update(double elapsedTime) {
         ArrayList<Input.TouchEvent> events = input.getTouchEvents();
         while(!events.isEmpty()){
             Input.TouchEvent t = events.remove(0);
@@ -130,7 +132,17 @@ public class Playing extends State {
             }
             else
             {
-                board.isOnMe(t.x, t.y);
+                if(!board.isOnMe(t.x, t.y)){
+                    board.setShowLocks(true);
+                }
+            }
+        }
+
+        if(board.getShowLocks()){
+            showLocksTime -= elapsedTime;
+            if(showLocksTime <= 0){
+                board.setShowLocks(false);
+                showLocksTime = initialShowLocksTime;
             }
         }
 
@@ -144,7 +156,7 @@ public class Playing extends State {
     @Override
     public void init(OhNoApplication app) {
         boardSize = app.getBoardSize();
-        board = new Board(boardSize);
+        board = new Board(boardSize, graphics.newImage("lock.png"));
         board.setForGame();
         text = null;
     }
@@ -160,4 +172,7 @@ public class Playing extends State {
     private ClickImage clickableClose,clickableUnDo, clickableEye;
 
     private String text;
+
+    private double showLocksTime;
+    private double initialShowLocksTime;
 }

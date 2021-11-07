@@ -62,7 +62,7 @@ public class Menu extends State {
     }
 
     @Override
-    public OhNoApplication.State update() {
+    public OhNoApplication.State update(double elapsedTime) {
         ArrayList<Input.TouchEvent> events = input.getTouchEvents();
         while(!events.isEmpty()){
             Input.TouchEvent t = events.remove(0);

@@ -26,16 +26,21 @@ public class OhNoApplication implements Application {
 
         states.add(new Start(graphics, input));
         states.add(new Menu(graphics, input));
-        states.add(new Playing(graphics, input));
+        states.add(new Playing(graphics, input, 1));
         graphics.setLogicalSize(400, 600);
 
-        state = State.Playing;
-        states.get(state.ordinal()).init(this);
+        lastFrameTime = System.nanoTime();
     }
 
     @Override
     public void update() {
-        State s = states.get(state.ordinal()).update();
+
+        long currentTime = System.nanoTime();
+        long nanoElapsedTime = currentTime - lastFrameTime;
+        lastFrameTime = currentTime;
+        double elapsedTime = (double) nanoElapsedTime / 1.0E9;
+
+        State s = states.get(state.ordinal()).update(elapsedTime);
         if(s != null) {
             state = s;
             if(state == State.Playing) {
@@ -69,4 +74,6 @@ public class OhNoApplication implements Application {
 
     Image imgClose, imgQ, imgEye, imgHistory, imgLock;
     MyFont font1, font2;
+
+    long lastFrameTime;
 }

@@ -11,7 +11,7 @@ public abstract class State {
     }
 
     abstract public void render();
-    abstract public OhNoApplication.State update();
+    abstract public OhNoApplication.State update(double elapsedTime);
     abstract public void init(OhNoApplication app);
 
     protected Graphics graphics;

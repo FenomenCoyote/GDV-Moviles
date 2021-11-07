@@ -37,7 +37,7 @@ public class Start extends State {
     }
 
     @Override
-    public OhNoApplication.State update() {
+    public OhNoApplication.State update(double elapsedTime) {
         ArrayList<Input.TouchEvent> events = input.getTouchEvents();
         while(!events.isEmpty()){
             if(events.remove(0).type != Input.TouchEvent.TouchEventType.Touch)
