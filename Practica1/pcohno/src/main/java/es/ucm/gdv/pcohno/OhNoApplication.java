@@ -12,7 +12,7 @@ import es.ucm.gdv.engine.MyFont;
 public class OhNoApplication implements Application {
 
     enum State {
-        Start, Menu, Playing
+        Start, Menu, Loading, Playing
     }
 
     @Override
@@ -26,6 +26,7 @@ public class OhNoApplication implements Application {
 
         states.add(new Start(graphics, input));
         states.add(new Menu(graphics, input));
+        states.add(new Loading(graphics, input));
         states.add(new Playing(graphics, input, 1));
         graphics.setLogicalSize(400, 600);
 

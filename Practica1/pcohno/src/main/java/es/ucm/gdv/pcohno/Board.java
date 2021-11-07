@@ -318,7 +318,7 @@ public class Board {
 
     private void randomize(Cell[][] puzzle){
         Random rng = new Random();
-        int rngWall = 3;
+        int rngWall = 2;
         int rngPoint = _size;
         for (int i = 1; i < _size + 1; i++) {
             for (int j = 1; j < _size + 1; j++) {
@@ -375,18 +375,22 @@ public class Board {
         c.setLocked(true);
 
         //expandir a puntitos alrededors
-        int tries = 10;
+        int tries = 100;
         while (extraWatch > 0 && tries-- > 0){
             for (Dirs d : Dirs.values()) {
                 int n = rng.nextInt(Math.min(posibleDir[d.ordinal()] + 1, extraWatch + 1));
+                if(n == 0 && extraWatch == 1 && posibleDir[d.ordinal()] > 0)
+                    n = 1;
                 expand(puzzle, i, j, seeingDir[d.ordinal()] + n, d);
                 seeingDir[d.ordinal()] += n;
                 posibleDir[d.ordinal()] -= n;
                 extraWatch -= n;
             }
         }
-        if(tries < 0)
+        if(tries < 0){
+            System.out.print(".");
             return;
+        }
     }
 
     private void expand(Cell[][] puzzle, int i, int j, int k, Dirs dir){

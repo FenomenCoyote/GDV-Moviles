@@ -73,7 +73,7 @@ public class Menu extends State {
                 if (c.isOnMe(t.x - 100, t.y - 300)) {
                     boardSize = 4 + i;
                     events.clear();
-                    return OhNoApplication.State.Playing;
+                    return OhNoApplication.State.Loading;
                 }
                 ++i;
             }

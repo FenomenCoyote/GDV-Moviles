@@ -12,8 +12,8 @@ public class Start extends State {
     public Start(Graphics graphics, Input input) {
         super(graphics, input);
         font1 = graphics.newFont("Molle-Regular.ttf",96,false);
-        font2 = graphics.newFont("JosefinSans-Bold.ttf",56,false);
-        font3 = graphics.newFont("JosefinSans-Bold.ttf",20,false);
+        font2 = graphics.newFont("JosefinSans-Bold.ttf",56,true);
+        font3 = graphics.newFont("JosefinSans-Bold.ttf",20,true);
         imgQ = graphics.newImage("q42.png");
     }
 
