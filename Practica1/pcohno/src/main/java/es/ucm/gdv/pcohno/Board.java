@@ -69,9 +69,9 @@ public class Board {
     private void prune(Cell[][] puzzle){
         Random rng = new Random();
         int changeWall = 4;
-        if(_size >= 7)
+        if(_size >= 6)
             changeWall = 3;
-        else if(_size == 9)
+        else if(_size >= 8)
             changeWall = 2;
         for (int i = 1; i < _size + 1; ++i){
             for (int j = 1; j < _size +1; ++j){
@@ -132,13 +132,15 @@ public class Board {
         mx /= aux;
         my /= aux;
 
-        mx = 1 + ((int)((mx / (spacing * _size)) * _size));
-        my = 1 + ((int)((my / (spacing * _size)) * _size));
+        mx = mx / spacing;
+        my = my / spacing;
 
-        int columna = (int)mx;
-        int fila = (int)my;
+        int columna;
+        int fila;
 
-        if(columna >= 0 && columna <= _size && fila >= 0 && columna <= _size){
+        if(mx >= 0 && mx <= _size && my >= 0 && my <= _size){
+            fila = (int)++my;
+            columna = (int)++mx;
             Cell c = _board[fila][columna];
             if(!c.getLocked()) {
                 _actions.push(new CellHint(c.getState(), fila, columna));
@@ -316,73 +318,75 @@ public class Board {
 
     private void randomize(Cell[][] puzzle){
         Random rng = new Random();
-        int rngWall = 2;
-
+        int rngWall = 3;
+        int rngPoint = _size;
         for (int i = 1; i < _size + 1; i++) {
             for (int j = 1; j < _size + 1; j++) {
-
                 Cell c = puzzle[i][j];
-
-                if(c.getState() != Cell.State.Unassigned)
-                    continue;
-
-                if(rng.nextInt(rngWall) == 0){ //Pared
-                    c.setState(Cell.State.Wall);
-                    c.setLocked(true);
-                }
-                else{ //Punto importante
-
-                    int seeingDir[] = new int[4];
-
-                    seeingDir[Dirs.Up.ordinal()] = lookDirection(Dirs.Up ,i, j, puzzle);
-                    seeingDir[Dirs.Down.ordinal()]  = lookDirection(Dirs.Down ,i, j, puzzle);
-                    seeingDir[Dirs.Left.ordinal()]  = lookDirection(Dirs.Left ,i, j, puzzle);
-                    seeingDir[Dirs.Right.ordinal()]  = lookDirection(Dirs.Right ,i, j, puzzle);
-                    int seeing = seeingDir[0] + seeingDir[1] + seeingDir[2] + seeingDir[3];
-
-                    int posibleDir[] = new int[4];
-
-                    posibleDir[Dirs.Up.ordinal()] = posibleSeeingDirection(puzzle, Dirs.Up ,i, j);
-                    posibleDir[Dirs.Down.ordinal()]= posibleSeeingDirection(puzzle, Dirs.Down ,i, j);
-                    posibleDir[Dirs.Left.ordinal()] = posibleSeeingDirection(puzzle, Dirs.Left ,i, j);
-                    posibleDir[Dirs.Right.ordinal()] = posibleSeeingDirection(puzzle, Dirs.Right ,i, j);
-                    int posible = posibleDir[0] + posibleDir[1] + posibleDir[2] + posibleDir[3];
-
-                    if(seeing + posible == 0){
+                if (c.getState() == Cell.State.Unassigned){
+                    if (rng.nextInt(rngWall) > 0) { //Pared
                         c.setState(Cell.State.Wall);
                         c.setLocked(true);
-                        continue;
                     }
-
-                    c.setState(Cell.State.Point);
-
-                    int extraWatch = Math.max(1, rng.nextInt(_size + 1));
-
-                    if(seeing + extraWatch > _size)
-                        extraWatch = _size - seeing;
-
-                    if(extraWatch > posible)
-                        extraWatch = posible;
-
-                    c.setMustWatch(seeing + extraWatch);
-                    c.setLocked(true);
-
-                    //expandir a puntitos alrededors
-                    int tries = 10;
-                    while (extraWatch > 0 && tries-- > 0){
-                        for (Dirs d : Dirs.values()) {
-                            int n = rng.nextInt(Math.min(posibleDir[d.ordinal()] + 1, extraWatch + 1));
-                            expand(puzzle, i, j, seeingDir[d.ordinal()] + n, d);
-                            seeingDir[d.ordinal()] += n;
-                            posibleDir[d.ordinal()] -= n;
-                            extraWatch -= n;
-                        }
+                    else { //Punto importante
+                        putImportantPoint(c, i, j, puzzle, rng);
                     }
-                    if(tries < 0)
-                        return;
+                } else if (c.getState() == Cell.State.Point && rng.nextInt(rngPoint) == 0){
+                    putImportantPoint(c, i, j, puzzle, rng);
                 }
             }
         }
+    }
+
+    private void putImportantPoint(Cell c, int i, int j, Cell[][] puzzle, Random rng){
+        int seeingDir[] = new int[4];
+
+        seeingDir[Dirs.Up.ordinal()] = lookDirection(Dirs.Up ,i, j, puzzle);
+        seeingDir[Dirs.Down.ordinal()]  = lookDirection(Dirs.Down ,i, j, puzzle);
+        seeingDir[Dirs.Left.ordinal()]  = lookDirection(Dirs.Left ,i, j, puzzle);
+        seeingDir[Dirs.Right.ordinal()]  = lookDirection(Dirs.Right ,i, j, puzzle);
+        int seeing = seeingDir[0] + seeingDir[1] + seeingDir[2] + seeingDir[3];
+
+        int posibleDir[] = new int[4];
+
+        posibleDir[Dirs.Up.ordinal()] = posibleSeeingDirection(puzzle, Dirs.Up ,i, j);
+        posibleDir[Dirs.Down.ordinal()]= posibleSeeingDirection(puzzle, Dirs.Down ,i, j);
+        posibleDir[Dirs.Left.ordinal()] = posibleSeeingDirection(puzzle, Dirs.Left ,i, j);
+        posibleDir[Dirs.Right.ordinal()] = posibleSeeingDirection(puzzle, Dirs.Right ,i, j);
+        int posible = posibleDir[0] + posibleDir[1] + posibleDir[2] + posibleDir[3];
+
+        if(seeing + posible == 0){
+            c.setState(Cell.State.Wall);
+            c.setLocked(true);
+            return;
+        }
+
+        c.setState(Cell.State.Point);
+
+        int extraWatch = Math.max(1, rng.nextInt(_size + 1));
+
+        if(seeing + extraWatch > _size)
+            extraWatch = _size - seeing;
+
+        if(extraWatch > posible)
+            extraWatch = posible;
+
+        c.setMustWatch(seeing + extraWatch);
+        c.setLocked(true);
+
+        //expandir a puntitos alrededors
+        int tries = 10;
+        while (extraWatch > 0 && tries-- > 0){
+            for (Dirs d : Dirs.values()) {
+                int n = rng.nextInt(Math.min(posibleDir[d.ordinal()] + 1, extraWatch + 1));
+                expand(puzzle, i, j, seeingDir[d.ordinal()] + n, d);
+                seeingDir[d.ordinal()] += n;
+                posibleDir[d.ordinal()] -= n;
+                extraWatch -= n;
+            }
+        }
+        if(tries < 0)
+            return;
     }
 
     private void expand(Cell[][] puzzle, int i, int j, int k, Dirs dir){

@@ -53,7 +53,7 @@ public class AEngine implements Engine, Runnable {
             long nanoElapsedTime = currentTime - lastFrameTime;
             lastFrameTime = currentTime;
 
-            //_app.update();
+            _app.update();
             // Informe de FPS
             if (currentTime - informePrevio > 1000000000l) {
                 long fps = frames * 1000000000l / (currentTime - informePrevio);

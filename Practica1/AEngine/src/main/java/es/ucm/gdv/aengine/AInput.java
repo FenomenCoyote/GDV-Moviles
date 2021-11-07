@@ -7,9 +7,9 @@ import es.ucm.gdv.engine.Input;
 
 public class AInput implements Input {
 
-    AInput(SurfaceView view,AGraphics aGraphics)
+    AInput(SurfaceView view, AGraphics aGraphics)
     {
-        onTouchListener = new OnTouchListener(this,aGraphics);
+        onTouchListener = new OnTouchListener(this, aGraphics);
         touchEvents = new ArrayList<TouchEvent>();
     }
 
@@ -20,7 +20,6 @@ public class AInput implements Input {
 
     @Override
     public synchronized void addEvent(TouchEvent e) { touchEvents.add(e); }
-
 
     ArrayList<TouchEvent> touchEvents;
     OnTouchListener onTouchListener;

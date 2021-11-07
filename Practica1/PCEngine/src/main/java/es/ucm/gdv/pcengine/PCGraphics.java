@@ -187,18 +187,6 @@ public class PCGraphics extends MyGraphics {
         return height;
     }
 
-    public int getOffsetX() {
-        return offsetX;
-    }
-
-    public int getOffsetY() {
-        return offsetY;
-    }
-
-    public double getScale() {
-        return scale;
-    }
-
     public JFrame getWindow() {
         return window;
     }

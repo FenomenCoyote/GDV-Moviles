@@ -26,6 +26,18 @@ public abstract class MyGraphics implements Graphics {
         logicalHeight = height;
     }
 
+    public int getOffsetX() {
+        return offsetX;
+    }
+
+    public int getOffsetY() {
+        return offsetY;
+    }
+
+    public float getScale() {
+        return scale;
+    }
+
     protected int width, height;
     protected int logicalWidth, logicalHeight;
 

@@ -1,5 +1,6 @@
 package es.ucm.gdv.aengine;
 
+import android.graphics.Point;
 import android.view.MotionEvent;
 import android.view.View;
 
@@ -8,10 +9,10 @@ import es.ucm.gdv.engine.Input;
 public class OnTouchListener implements View.OnTouchListener {
 
 
-    OnTouchListener(AInput aInput,AGraphics aGraphics)
+    OnTouchListener(AInput aInput, AGraphics aGraphics)
     {
         this.aInput=aInput;
-        this.aGraphics=aGraphics;
+        this.graphics=aGraphics;
         aGraphics.getSurfaceView().setOnTouchListener(this);
     }
 
@@ -19,8 +20,11 @@ public class OnTouchListener implements View.OnTouchListener {
     public boolean onTouch(View v, MotionEvent event) {
 
         Input.TouchEvent e = new Input.TouchEvent();
-        e.x = (int) event.getX();
-        e.y = (int) event.getY();
+
+        Point p = translateCoordinates((int)event.getX(), (int)event.getY());
+
+        e.x = p.x;
+        e.y = p.y;
         e.id = event.getAction();
 
         switch (e.id) {
@@ -40,6 +44,14 @@ public class OnTouchListener implements View.OnTouchListener {
         return true;
     }
 
+    private Point translateCoordinates(int x, int y){
+        x-= graphics.getOffsetX();
+        y-= graphics.getOffsetY();
+        x/=graphics.getScale();
+        y/=graphics.getScale();
+        return new Point(x, y);
+    }
+
     AInput aInput;
-    AGraphics aGraphics;
+    AGraphics graphics;
 }
