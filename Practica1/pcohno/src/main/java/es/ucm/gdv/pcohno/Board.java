@@ -1,15 +1,14 @@
 package es.ucm.gdv.pcohno;
 
-import com.sun.tools.javac.util.Pair;
-
 import java.util.Random;
 import java.util.Stack;
 
 import es.ucm.gdv.engine.Graphics;
+import es.ucm.gdv.engine.Pair;
 
 public class Board {
 
-    static Pair<Integer, Integer>[] _dirs = new Pair[]{
+    static Pair[] _dirs = new Pair[]{
             new Pair(-1, 0),
             new Pair(1, 0),
             new Pair(0, -1),
@@ -20,7 +19,7 @@ public class Board {
 
     public Board(int size){
         _board = new Cell[size + 2][size + 2];
-        _totalUnassignedCells=0;
+        _totalUnassignedCells=1;
         _size = size;
         this._hint = new Hint(_board);
         _actions = new Stack<CellHint>();
@@ -145,15 +144,15 @@ public class Board {
     /**
      * @return pair of the first wrong cell. If all are correct, returns (-1, -1)
      */
-    public Pair<Integer, Integer> wrongCell() {
+    public Pair wrongCell() {
         return wrongCell(_board);
     }
 
-    public Pair<Integer, Integer> wrongCell(Cell[][] puzzle){
+    public Pair wrongCell(Cell[][] puzzle){
         for (int i = 1; i < _size + 1; ++i){
             for (int j = 1; j < _size + 1; ++j){
                 if(!isCellRight(i, j, puzzle))
-                    return new Pair<Integer, Integer>(i, j);
+                    return new Pair(i, j);
             }
         }
         return null;
@@ -200,7 +199,7 @@ public class Board {
                 }
                 if(h == null) continue;
 
-                h.pos = new Pair<Integer, Integer>(i, j);
+                h.pos = new Pair(i, j);
                 return h;
             }
         }
@@ -247,7 +246,7 @@ public class Board {
     }
 
     private int posibleSeeingDirection(Cell[][] puzzle, Dirs direction, int row, int col){
-        Pair<Integer,Integer> dir = _dirs[direction.ordinal()];
+        Pair dir = _dirs[direction.ordinal()];
 
         int seeing = 0;
         row = row + dir.fst;
@@ -267,7 +266,7 @@ public class Board {
     }
 
     private int lookDirection(Dirs direction, int row, int col, Cell[][] board){
-        Pair<Integer,Integer> dir = _dirs[direction.ordinal()];
+        Pair dir = _dirs[direction.ordinal()];
 
         int seeing = 0;
         row = row + dir.fst;

@@ -8,7 +8,6 @@ import es.ucm.gdv.engine.MyFont;
 
 public class AFont implements MyFont {
 
-
     public void loadFont(String filename, int size, boolean isBold, AssetManager assets) {
         this.size = size;
         this.isBold = isBold;

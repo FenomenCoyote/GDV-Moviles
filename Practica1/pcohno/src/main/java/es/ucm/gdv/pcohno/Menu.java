@@ -31,6 +31,8 @@ public class Menu extends State {
         clickablesCircles.add(new ClickCircle(red, 0, 90, 40, "7"));
         clickablesCircles.add(new ClickCircle(blue, 90, 90, 40, "8"));
         clickablesCircles.add(new ClickCircle(red, 180, 90, 40, "9"));
+
+        boardSize = 4;
     }
 
     @Override

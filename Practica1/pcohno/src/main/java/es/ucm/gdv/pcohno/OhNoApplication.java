@@ -28,9 +28,10 @@ public class OhNoApplication implements Application {
         states.add(new Menu(graphics, input));
         states.add(new Playing(graphics, input));
         graphics.setLogicalSize(400, 600);
-    }
 
-    private Image i;
+        state = State.Playing;
+        states.get(state.ordinal()).init(this);
+    }
 
     @Override
     public void update() {
@@ -42,11 +43,6 @@ public class OhNoApplication implements Application {
                 states.get(state.ordinal()).init(this);
             }
         }
-    }
-
-    private void startGame(int boardSize){
-        board = new Board(boardSize);
-        board.setForGame();
     }
 
     @Override
@@ -68,8 +64,6 @@ public class OhNoApplication implements Application {
 
     Graphics graphics;
     Input input;
-
-    Board board;
 
     private int boardSize;
 

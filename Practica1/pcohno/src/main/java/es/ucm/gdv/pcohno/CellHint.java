@@ -1,6 +1,7 @@
 package es.ucm.gdv.pcohno;
 
-import com.sun.tools.javac.util.Pair;
+
+import es.ucm.gdv.engine.Pair;
 
 public class CellHint{
 
@@ -10,16 +11,16 @@ public class CellHint{
 
     public CellHint(Cell.State hintState, int row, int col, Hint.Type t){
         this.state = hintState;
-        this.pos = new Pair<Integer, Integer>(row, col);
+        this.pos = new Pair(row, col);
         this.type = t;
     }
 
     public CellHint(){
         this.state = Cell.State.Unassigned;
-        this.pos = new Pair<Integer, Integer>(-1, -1);
+        this.pos = new Pair(-1, -1);
     }
 
     public Hint.Type type;
     public Cell.State state;
-    public Pair<Integer, Integer> pos;
+    public Pair pos;
 }

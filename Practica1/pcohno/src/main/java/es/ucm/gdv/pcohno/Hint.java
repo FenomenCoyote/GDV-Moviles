@@ -1,7 +1,6 @@
 package es.ucm.gdv.pcohno;
 
-
-import com.sun.tools.javac.util.Pair;
+import es.ucm.gdv.engine.Pair;
 
 import static es.ucm.gdv.pcohno.Board.Dirs;
 import static es.ucm.gdv.pcohno.Board._dirs;
@@ -32,7 +31,7 @@ public class Hint {
     }
 
     private int lookDirection(Dirs direction, int posRow, int posCol){
-        Pair<Integer,Integer> dir = _dirs[direction.ordinal()];
+        Pair dir = _dirs[direction.ordinal()];
 
         int row = posRow + dir.fst;
         int col = posCol + dir.snd;
@@ -120,7 +119,7 @@ public class Hint {
                 if (maxOthers < mustWatch){ //Minus 1 because i count myself in mustWatch
                     int n = lookDirection(dir, posRow, posCol);
                     if(maxOthers + n < mustWatch ){
-                        Pair<Integer, Integer> _dir = _dirs[dir.ordinal()];
+                        Pair _dir = _dirs[dir.ordinal()];
                         int posiblePosRow = posRow + _dir.fst * (n + 1);
                         int posiblePosCol = posCol + _dir.snd * (n + 1);
 
