@@ -50,6 +50,7 @@ public class Playing extends State {
             }
             graphics.restore();
         }
+        graphics.setFont(font1);
         board.render(graphics);
 
         graphics.scale(0.5f, 0.5f);
