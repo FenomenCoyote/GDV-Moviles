@@ -32,7 +32,7 @@ public class Start extends State {
         graphics.drawText("Creado por Martin Kool", 200, 440);
 
         graphics.scale(0.05f, 0.05f);
-        graphics.drawImage(imgQ, 200 * 20 - imgQ.getWidth() / 2, 480 * 20);
+        graphics.drawImage(imgQ, 200 * 20 - imgQ.getWidth() / 2, 480 * 20, 1);
         graphics.scale(20, 20);
     }
 

@@ -16,7 +16,7 @@ public interface Graphics {
 
     public void setLogicalSize(int width, int height);
 
-    public void drawImage(Image image, int x, int y);
+    public void drawImage(Image image, int x, int y, float alpha);
     public void setColor(int argb);
     public void setFont(MyFont font);
 

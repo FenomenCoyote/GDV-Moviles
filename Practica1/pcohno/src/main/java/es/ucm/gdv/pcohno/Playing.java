@@ -22,9 +22,9 @@ public class Playing extends State {
         imgUnDo = graphics.newImage("history.png");
         imgEye = graphics.newImage("eye.png");
 
-        clickableClose = new ClickImage(imgClose, 150 - imgClose.getWidth()/2, 1050, 100, 100);
-        clickableUnDo = new ClickImage(imgUnDo, 400 - imgUnDo.getWidth()/2, 1050, 100, 100);
-        clickableEye = new ClickImage(imgEye, 650 - imgEye.getWidth()/2, 1050, 100, 100);
+        clickableClose = new ClickImage(imgClose, 150 - imgClose.getWidth()/2, 1050, 100, 100, 0.5f);
+        clickableUnDo = new ClickImage(imgUnDo, 400 - imgUnDo.getWidth()/2, 1050, 100, 100, 0.5f);
+        clickableEye = new ClickImage(imgEye, 650 - imgEye.getWidth()/2, 1050, 100, 100, 0.5f);
 
         text = null;
 

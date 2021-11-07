@@ -19,7 +19,7 @@ public class Menu extends State {
         imgClose = graphics.newImage("close.png");
 
         clickablesCircles = new ArrayList<>();
-        clickableClose = new ClickImage(imgClose, 400 - imgClose.getWidth()/2, 1000, 100, 100);
+        clickableClose = new ClickImage(imgClose, 400 - imgClose.getWidth()/2, 1000, 100, 100, 1);
 
         int red = 0xffff384a;
         int blue = 0xff1cc0e0;

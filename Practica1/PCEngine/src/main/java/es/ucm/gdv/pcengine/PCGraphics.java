@@ -1,5 +1,6 @@
 package es.ucm.gdv.pcengine;
 
+import java.awt.AlphaComposite;
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.Graphics2D;
@@ -167,8 +168,13 @@ public class PCGraphics extends MyGraphics {
     }
 
     @Override
-    public void drawImage(Image image, int x, int y) {
+    public void drawImage(Image image, int x, int y, float alpha) {
+        AlphaComposite ac = AlphaComposite.getInstance(AlphaComposite.SRC_OVER, alpha);
+        Graphics2D g2d = (Graphics2D)this.awtGraphics;
+        g2d.setComposite(ac);
         awtGraphics.drawImage(((PCImage)image).getSprite(), x, y, null);
+        ac = AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 1.0f);
+        g2d.setComposite(ac);
     }
 
     @Override

@@ -110,7 +110,7 @@ public class Board {
                 if(showLocks && _board[i][j].getState() == Cell.State.Wall && _board[i][j].getLocked()){
                     graphics.scale(0.75f, 0.75f);
                     graphics.translate(-imgLock.getWidth()/2, -imgLock.getHeight()/2);
-                    graphics.drawImage(imgLock, 0, 0);
+                    graphics.drawImage(imgLock, 0, 0, 0.2f);
                     graphics.translate(imgLock.getWidth()/2, imgLock.getHeight()/2);
                     graphics.scale(1/0.75f, 1/0.75f);
                 }
