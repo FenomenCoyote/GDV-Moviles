@@ -101,7 +101,7 @@ public class Board {
         for(int i = 1; i < _size + 1; ++i){
             for (int j = 1; j < _size + 1; j++) {
                 _board[i][j].render(graphics);
-                if(showLocks && _board[i][j].getState() == Cell.State.Wall){
+                if(showLocks && (_board[i][j].getLocked() && _board[i][j].getState() == Cell.State.Wall)){
                     graphics.scale(0.75f, 0.75f);
                     graphics.translate(-imgLock.getWidth()/2, -imgLock.getHeight()/2);
                     graphics.drawImage(imgLock, 0, 0);
