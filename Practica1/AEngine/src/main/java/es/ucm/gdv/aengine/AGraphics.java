@@ -130,6 +130,11 @@ public class AGraphics extends MyGraphics {
         return _view.getHeight();
     }
 
+    public SurfaceView getSurfaceView()
+    {
+        return _view;
+    }
+
     private AFont _font;
 
     private Canvas canvas;
