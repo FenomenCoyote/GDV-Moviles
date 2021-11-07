@@ -27,7 +27,7 @@ public class OhNoApplication implements Application {
         states.add(new Start(graphics, input));
         states.add(new Menu(graphics, input));
         states.add(new Loading(graphics, input));
-        states.add(new Playing(graphics, input, 1));
+        states.add(new Playing(graphics, input, 0.5));
         graphics.setLogicalSize(400, 600);
 
         lastFrameTime = System.nanoTime();

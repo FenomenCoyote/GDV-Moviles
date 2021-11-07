@@ -7,6 +7,8 @@ import es.ucm.gdv.engine.Image;
 import es.ucm.gdv.engine.Input;
 import es.ucm.gdv.engine.MyFont;
 
+import static java.lang.Math.sin;
+
 public class Playing extends State {
 
     public Playing(Graphics graphics, Input input, double showLocksTime) {
@@ -134,15 +136,22 @@ public class Playing extends State {
             else
             {
                 if(!board.isOnMe(t.x, t.y)){
-                    board.setShowLocks(true);
+                    if(board.getShowLocks()){
+                        showLocksTime = initialShowLocksTime;
+                    }
+                    else board.setShowLocks(true);
                 }
             }
         }
 
         if(board.getShowLocks()){
             showLocksTime -= elapsedTime;
+            double s = showLocksTime/initialShowLocksTime;
+            s = 1 + (s * 0.2);
+            board.setBiggerCellScale(s);
             if(showLocksTime <= 0){
                 board.setShowLocks(false);
+                board.noBiggerCell();
                 showLocksTime = initialShowLocksTime;
             }
         }

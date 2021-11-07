@@ -29,6 +29,8 @@ public class Board {
 
         imgLock = lockImg;
         showLocks = false;
+        biggerCell = new Pair(-1, -1);
+        biggerCellScale = 1;
 
         for (int i = 0; i < size + 2; ++i){
             for (int j = 0; j < size + 2; ++j){
@@ -100,8 +102,12 @@ public class Board {
 
         for(int i = 1; i < _size + 1; ++i){
             for (int j = 1; j < _size + 1; j++) {
-                _board[i][j].render(graphics);
-                if(showLocks && (_board[i][j].getLocked() && _board[i][j].getState() == Cell.State.Wall)){
+                if(biggerCell.fst == i && biggerCell.snd == j){
+                    _board[i][j].render(graphics, biggerCellScale);
+                }
+                else _board[i][j].render(graphics, 1);
+
+                if(showLocks && _board[i][j].getState() == Cell.State.Wall && _board[i][j].getLocked()){
                     graphics.scale(0.75f, 0.75f);
                     graphics.translate(-imgLock.getWidth()/2, -imgLock.getHeight()/2);
                     graphics.drawImage(imgLock, 0, 0);
@@ -147,6 +153,8 @@ public class Board {
                 c.nextState();
             }
             else{
+                biggerCell.fst = fila;
+                biggerCell.snd = columna;
                 return false;
             }
         }
@@ -254,6 +262,13 @@ public class Board {
     public boolean getShowLocks(){
         return showLocks;
     }
+
+    public void noBiggerCell(){
+        biggerCell.fst = -1;
+        biggerCell.snd = -1;
+    }
+
+    public void setBiggerCellScale(double scale) { biggerCellScale = scale; }
 
     private int lookDirections(int row, int col, Cell[][] puzzle){
         int seeing = 0;
@@ -492,4 +507,6 @@ public class Board {
 
     private boolean showLocks;
     private Image imgLock;
+    Pair biggerCell;
+    double biggerCellScale;
 }

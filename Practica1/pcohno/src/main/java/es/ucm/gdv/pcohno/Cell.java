@@ -8,7 +8,7 @@ import es.ucm.gdv.engine.Graphics;
 
 public class Cell {
 
-    public void render(Graphics graphics) {
+    public void render(Graphics graphics, double scale) {
         switch (_state){
             case Unassigned:
                 graphics.setColor(0xffeeeeee);
@@ -20,7 +20,7 @@ public class Cell {
                 graphics.setColor(0xffff384a);
                 break;
         }
-        graphics.fillCircle(0, 0, 50);
+        graphics.fillCircle(0, 0, (int)(50 * scale));
         if(_mustWatch > 0){
             graphics.setColor(0xffffffff);
             graphics.drawText(Integer.toString(_mustWatch), 0, 20);
