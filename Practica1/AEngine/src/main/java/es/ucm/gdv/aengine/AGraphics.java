@@ -87,7 +87,10 @@ public class AGraphics extends MyGraphics {
     @Override
     public void drawImage(Image image, int x, int y, float alpha) {
         Bitmap img = ((AImage)image).getImage();
+        int a = (int)(alpha*255);
+        _paint.setAlpha(a);
         canvas.drawBitmap(img, x, y, _paint);
+        _paint.setAlpha(255);
     }
 
     @Override
