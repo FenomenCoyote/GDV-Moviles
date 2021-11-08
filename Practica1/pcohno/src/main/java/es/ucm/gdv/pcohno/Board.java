@@ -495,6 +495,17 @@ public class Board {
         return unassignedCells;
     }
 
+    public void setFinished(){
+        for (int i = 1; i < _size + 1; ++i){
+            for (int j = 1; j < _size + 1; ++j){
+                if(_board[i][j].getState() == Cell.State.Point && !_board[i][j].getLocked())
+                {
+                    _board[i][j].setMustWatch(lookDirections(i, j, _board));
+                }
+            }
+        }
+    }
+
     private Cell[][] _board;
     private int _size;
     private Hint _hint;

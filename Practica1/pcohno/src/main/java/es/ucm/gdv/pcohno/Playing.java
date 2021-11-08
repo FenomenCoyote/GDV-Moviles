@@ -7,8 +7,6 @@ import es.ucm.gdv.engine.Image;
 import es.ucm.gdv.engine.Input;
 import es.ucm.gdv.engine.MyFont;
 
-import static java.lang.Math.sin;
-
 public class Playing extends State {
 
     public Playing(Graphics graphics, Input input, double showLocksTime) {
@@ -158,6 +156,7 @@ public class Playing extends State {
 
         if(board.wrongCell() == null){
             text = "Splendid";
+            board.setFinished();
         }
 
         return null;
