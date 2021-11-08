@@ -81,33 +81,10 @@ public class Playing extends State {
             else if(clickableEye.isOnMe(t.x * 2, t.y * 2))
             {
                 CellHint hint = board.getHint();
-
                 if(hint == null)
                     text = "There is a mistake in the board";
                 else {
-                    switch (hint.type) {
-                        case First:
-                            text = "This number can see all its dots";
-                            break;
-                        case Second:
-                            text = "Looking further in one direction\nwould exceed this number";
-                            break;
-                        case Third:
-                            text = "One specific dot is included\nin all solutions imaginable";
-                            break;
-                        case Fourth:
-                            text = "This number sees a bit too\nmuch";
-                            break;
-                        case Fifth:
-                            text = "This number can't see enough";
-                            break;
-                        case Sixth:
-                            text = "This one cant see anyone";
-                            break;
-                        case Seventh:
-                            text = "A blue dot should always see\nat least one other";
-                            break;
-                    }
+                    getTextFromHint(hint);
                     board.highlightCircle(hint.pos.fst, hint.pos.snd, true);
                 }
             }
@@ -158,6 +135,11 @@ public class Playing extends State {
             text = "Splendid";
             board.setFinished();
         }
+        else if (board.getPercentage() == 100){
+            CellHint hint = board.getHint();
+            getTextFromHint(hint);
+            board.highlightCircle(hint.pos.fst, hint.pos.snd, true);
+        }
 
         return null;
     }
@@ -166,13 +148,41 @@ public class Playing extends State {
     public void init(OhNoApplication app) {
         boardSize = app.getBoardSize();
         board = new Board(boardSize, graphics.newImage("lock.png"));
-        board.setForGame();
+        boardGenerator = new BoardGenerator(boardSize, board);
+        boardGenerator.setForGame();
         text = null;
+    }
+
+    private void getTextFromHint(CellHint hint){
+        switch (hint.type) {
+            case First:
+                text = "This number can see all its dots";
+                break;
+            case Second:
+                text = "Looking further in one direction\nwould exceed this number";
+                break;
+            case Third:
+                text = "One specific dot is included\nin all solutions imaginable";
+                break;
+            case Fourth:
+                text = "This number sees a bit too\nmuch";
+                break;
+            case Fifth:
+                text = "This number can't see enough";
+                break;
+            case Sixth:
+                text = "This one cant see anyone";
+                break;
+            case Seventh:
+                text = "A blue dot should always see\nat least one other";
+                break;
+        }
     }
 
     private int boardSize;
 
     private Board board;
+    private BoardGenerator boardGenerator;
 
     private MyFont font1,font2, font3;
 
