@@ -74,8 +74,8 @@ public class Board {
                     graphics.scale(1/0.75f, 1/0.75f);
                 }
                 if (highlightedCircle && i == highlightedRow && j == highlightedCol){
-                    graphics.setColor(0xff000000);
-                    graphics.drawCircle(0,0,50, 3);
+                    graphics.setColor(0xff333333);
+                    graphics.drawCircle(0,0,50, 6);
                 }
                 graphics.translate(spacing, 0);
             }
