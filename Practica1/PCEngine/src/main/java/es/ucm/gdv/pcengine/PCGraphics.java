@@ -1,6 +1,7 @@
 package es.ucm.gdv.pcengine;
 
 import java.awt.AlphaComposite;
+import java.awt.BasicStroke;
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.Graphics2D;
@@ -163,8 +164,10 @@ public class PCGraphics extends MyGraphics {
     }
 
     @Override
-    public void drawCircle(int cx, int cy, int r) {
+    public void drawCircle(int cx, int cy, int r, int strokeWidth) {
+        awtGraphics.setStroke(new BasicStroke(strokeWidth));
         awtGraphics.drawOval(cx - r, cy - r, r * 2, r * 2);
+        awtGraphics.setStroke(new BasicStroke(1));
     }
 
     @Override

@@ -57,7 +57,7 @@ public class AEngine implements Engine, Runnable {
             // Informe de FPS
             if (currentTime - informePrevio > 1000000000l) {
                 long fps = frames * 1000000000l / (currentTime - informePrevio);
-                System.out.println("" + fps + " fps");
+                //System.out.println("" + fps + " fps");
                 frames = 0;
                 informePrevio = currentTime;
             }

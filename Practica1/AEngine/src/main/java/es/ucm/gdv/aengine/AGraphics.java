@@ -110,10 +110,12 @@ public class AGraphics extends MyGraphics {
     }
 
     @Override
-    public void drawCircle(int cx, int cy, int r) {
+    public void drawCircle(int cx, int cy, int r, int strokeWidth) {
+        _paint.setStrokeWidth(strokeWidth);
         _paint.setStyle(Paint.Style.STROKE);
         canvas.drawCircle(cx, cy, r, _paint);
         _paint.setStyle(Paint.Style.FILL);
+        _paint.setStrokeWidth(1);
     }
 
     @Override

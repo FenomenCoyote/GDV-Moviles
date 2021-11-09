@@ -19,15 +19,16 @@ public class OnTouchListener implements View.OnTouchListener {
     @Override
     public boolean onTouch(View v, MotionEvent event) {
 
-        Input.TouchEvent e = new Input.TouchEvent();
-
         Point p = translateCoordinates((int)event.getX(), (int)event.getY());
 
+        Input.TouchEvent e = new Input.TouchEvent();
         e.x = p.x;
         e.y = p.y;
-        e.id = event.getAction();
 
-        switch (e.id) {
+        for(int i = 0; i < event.getPointerCount(); i++)
+            e.id = event.getPointerId(i);
+
+        switch (event.getAction()) {
             case MotionEvent.ACTION_DOWN:
                 e.type = Input.TouchEvent.TouchEventType.Touch;
                 break;
@@ -38,6 +39,8 @@ public class OnTouchListener implements View.OnTouchListener {
                 e.type = Input.TouchEvent.TouchEventType.Release;
                 break;
         }
+
+        System.out.println("Id del dedo: " + e.id + " Tipo: " + e.type.toString());
 
         aInput.addEvent(e);
 
