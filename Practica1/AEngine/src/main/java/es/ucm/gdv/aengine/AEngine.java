@@ -41,9 +41,6 @@ public class AEngine implements Engine, Runnable {
 
         long lastFrameTime = System.nanoTime();
 
-        long informePrevio = lastFrameTime; // Informes de FPS
-        int frames = 0;
-
         _app.init(this);
 
         // Bucle principal.
@@ -52,16 +49,9 @@ public class AEngine implements Engine, Runnable {
             long currentTime = System.nanoTime();
             long nanoElapsedTime = currentTime - lastFrameTime;
             lastFrameTime = currentTime;
+            double elapsedTime = (double) nanoElapsedTime / 1.0E9;
 
-            _app.update();
-            // Informe de FPS
-            if (currentTime - informePrevio > 1000000000l) {
-                long fps = frames * 1000000000l / (currentTime - informePrevio);
-                //System.out.println("" + fps + " fps");
-                frames = 0;
-                informePrevio = currentTime;
-            }
-            ++frames;
+            _app.update(elapsedTime);
 
             _graphics.render(_app);
         }

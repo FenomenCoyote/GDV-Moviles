@@ -6,6 +6,10 @@ import es.ucm.gdv.engine.Graphics;
 import es.ucm.gdv.engine.Input;
 
 public class PCEngine implements Engine {
+
+    /**
+     * creates graphics and input and initializes app
+     */
     @Override
     public void init() {
 
@@ -18,14 +22,13 @@ public class PCEngine implements Engine {
         _app.init(this);
     }
 
+    /**
+     * Main loop
+     */
     @Override
     public void run() {
 
-        // Vamos allá.
         long lastFrameTime = System.nanoTime();
-
-        long informePrevio = lastFrameTime; // Informes de FPS
-        int frames = 0;
 
         // Bucle principal
         while(true) {
@@ -34,11 +37,15 @@ public class PCEngine implements Engine {
             lastFrameTime = currentTime;
             double elapsedTime = (double) nanoElapsedTime / 1.0E9;
 
-            _app.update();
+            _app.update(elapsedTime);
             _graphics.render(_app);
         } // while
     }
 
+    /**
+     * Should be called after the 'run' method has ended
+     * Tells the app to release in case it needs to do it
+     */
     @Override
     public void release() {
         //??

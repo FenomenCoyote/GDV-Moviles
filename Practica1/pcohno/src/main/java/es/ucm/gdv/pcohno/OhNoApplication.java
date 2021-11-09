@@ -5,9 +5,7 @@ import java.util.ArrayList;
 import es.ucm.gdv.engine.Application;
 import es.ucm.gdv.engine.Engine;
 import es.ucm.gdv.engine.Graphics;
-import es.ucm.gdv.engine.Image;
 import es.ucm.gdv.engine.Input;
-import es.ucm.gdv.engine.MyFont;
 
 public class OhNoApplication implements Application {
 
@@ -15,6 +13,10 @@ public class OhNoApplication implements Application {
         Start, Menu, Loading, Playing
     }
 
+    /**
+     * Called before the main loop
+     * @param engine
+     */
     @Override
     public void init(Engine engine) {
         graphics = engine.getGraphics();
@@ -28,19 +30,16 @@ public class OhNoApplication implements Application {
         states.add(new Menu(graphics, input));
         states.add(new Loading(graphics, input));
         states.add(new Playing(graphics, input, 0.5));
-        graphics.setLogicalSize(400, 600);
 
-        lastFrameTime = System.nanoTime();
+        graphics.setLogicalSize(400, 600);
     }
 
+    /**
+     * Called every frame
+     * @param elapsedTime: time since last frame
+     */
     @Override
-    public void update() {
-
-        long currentTime = System.nanoTime();
-        long nanoElapsedTime = currentTime - lastFrameTime;
-        lastFrameTime = currentTime;
-        double elapsedTime = (double) nanoElapsedTime / 1.0E9;
-
+    public void update(double elapsedTime) {
         State s = states.get(state.ordinal()).update(elapsedTime);
         if(s != null) {
             state = s;
@@ -51,16 +50,26 @@ public class OhNoApplication implements Application {
         }
     }
 
+    /**
+     * Called every frame after update
+     */
     @Override
     public void render() {
         states.get(state.ordinal()).render();
     }
 
+    /**
+     * Called after the main loop
+     */
     @Override
     public void release() {
 
     }
 
+    /**
+     * Used by Playing State to retrieve board size information gathered in Menu State
+     * @return
+     */
     public int getBoardSize(){
         return boardSize;
     }
@@ -72,9 +81,4 @@ public class OhNoApplication implements Application {
     Input input;
 
     private int boardSize;
-
-    Image imgClose, imgQ, imgEye, imgHistory, imgLock;
-    MyFont font1, font2;
-
-    long lastFrameTime;
 }

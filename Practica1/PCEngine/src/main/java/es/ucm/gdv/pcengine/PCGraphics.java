@@ -17,6 +17,12 @@ import es.ucm.gdv.engine.MyGraphics;
 
 public class PCGraphics extends MyGraphics {
 
+    /**
+     * Creates the window to render and the buffer strategy (2 buffers)
+     * @param width
+     * @param height
+     * @return
+     */
     public boolean init(int width, int height){
         window = new JFrame("OhNo!");
 
@@ -97,6 +103,11 @@ public class PCGraphics extends MyGraphics {
         } while(strategy.contentsLost());
     }
 
+    /**
+     * Creates an Image from name and loads it
+     * @param name
+     * @return
+     */
     @Override
     public Image newImage(String name) {
         PCImage img = new PCImage();
@@ -104,6 +115,13 @@ public class PCGraphics extends MyGraphics {
         return img;
     }
 
+    /**
+     * Creates a MyFont from filename and loads it
+     * @param filename
+     * @param size
+     * @param isBold
+     * @return
+     */
     @Override
     public MyFont newFont(String filename, int size, boolean isBold) {
         PCFont font = new PCFont();
@@ -111,6 +129,10 @@ public class PCGraphics extends MyGraphics {
         return font;
     }
 
+    /**
+     * Clear the window (in logical size)
+     * @param argb
+     */
     @Override
     public void clear(int argb) {
         setColor(argb);
@@ -127,6 +149,9 @@ public class PCGraphics extends MyGraphics {
         awtGraphics.scale(x, y);
     }
 
+    /**
+     * Saves current canvas state
+     */
     @Override
     public void save() {
         saveColor = awtGraphics.getColor();
@@ -136,6 +161,9 @@ public class PCGraphics extends MyGraphics {
         tr = awtGraphics.getTransform();
     }
 
+    /**
+     * Restores previous canvas state
+     */
     @Override
     public void restore() {
         awtGraphics.setColor(saveColor);
@@ -144,7 +172,6 @@ public class PCGraphics extends MyGraphics {
         awtGraphics.setTransform(tr);
         //awtGraphics.getTransform().setTransform(matrix[0], matrix[1],matrix[2],matrix[3],matrix[4],matrix[5]);
     }
-
 
     @Override
     public void setColor(int argb) {

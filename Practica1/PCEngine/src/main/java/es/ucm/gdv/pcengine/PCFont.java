@@ -8,9 +8,15 @@ import es.ucm.gdv.engine.MyFont;
 
 public class PCFont implements MyFont {
 
+    /**
+     * Loads font from $rootDir/data/fonts/
+     * @param route
+     * @param size
+     * @param isBold
+     */
     public void loadFont(String route, int size, boolean isBold) {
         Font baseFont = null;
-        try (InputStream is = new FileInputStream("Resources/fonts/" + route)) {
+        try (InputStream is = new FileInputStream("data/fonts/" + route)) {
             baseFont = Font.createFont(Font.TRUETYPE_FONT, is);
         }
         catch (Exception e) {

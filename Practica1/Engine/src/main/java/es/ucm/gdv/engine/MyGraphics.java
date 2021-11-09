@@ -2,6 +2,10 @@ package es.ucm.gdv.engine;
 
 public abstract class MyGraphics implements Graphics {
 
+    /**
+     * Adds bands at the top and at the bottom or in both sides
+     * to keep a logicalHeight/logicalWidth relation
+     */
     protected void calculateTranslationScale(){
         //Ajustar el alto para que sea exacto al height
         float heightRelation = (float)height/logicalHeight;
@@ -20,6 +24,11 @@ public abstract class MyGraphics implements Graphics {
         scale(scale, scale);
     }
 
+    /**
+     * Logical size setter
+     * @param width
+     * @param height
+     */
     @Override
     public void setLogicalSize(int width, int height) {
         logicalWidth = width;

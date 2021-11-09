@@ -11,9 +11,13 @@ public class PCImage implements Image {
         sprite = null;
     }
 
+    /**
+     * Loads image from $rootDir/data/sprites/
+     * @param route
+     */
     public void loadImage(String route) {
         try {
-            sprite = javax.imageio.ImageIO.read(new File("Resources/sprites/" + route));
+            sprite = javax.imageio.ImageIO.read(new File("data/sprites/" + route));
         } catch (IOException e) {
             System.out.println("No se pudo cargar la imagen: " + route);
         }
