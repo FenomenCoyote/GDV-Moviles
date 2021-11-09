@@ -1,11 +1,10 @@
 package es.ucm.gdv.pcohno;
 
-import java.util.Random;
 import java.util.Stack;
 
 import es.ucm.gdv.engine.Graphics;
-import es.ucm.gdv.engine.Pair;
 import es.ucm.gdv.engine.Image;
+import es.ucm.gdv.engine.Pair;
 
 public class Board {
 
@@ -27,6 +26,7 @@ public class Board {
         _totalUnassignedCells=1;
         _size = size;
         this._hint = new Hint(_board);
+        this._utils = new BoardUtils();
         _actions = new Stack<CellHint>();
         highlightedCircle = false;
         highlightedRow = highlightedCol = 0;
@@ -145,9 +145,9 @@ public class Board {
     private boolean isCellRight(int row, int col, Cell[][] puzzle){
         Cell c = puzzle[row][col];
         if(c.getLocked() && c.getState() == Cell.State.Point)
-            return c.getMustWatch() == lookDirections(row, col, puzzle);
+            return c.getMustWatch() == _utils.lookDirections(row, col, puzzle);
         else if(c.getState() == Cell.State.Point)
-            return lookDirections(row, col, puzzle) > 0;
+            return _utils.lookDirections(row, col, puzzle) > 0;
         else
             return c.getState() == Cell.State.Wall;
     }
@@ -217,56 +217,6 @@ public class Board {
 
     public void setBiggerCellScale(double scale) { biggerCellScale = scale; }
 
-    public int lookDirections(int row, int col, Cell[][] puzzle){
-        int seeing = 0;
-
-        //Look up
-        seeing += lookDirection(Dirs.Up, row, col, puzzle);
-        //Look down
-        seeing+= lookDirection(Dirs.Down, row, col, puzzle);
-        //Look left
-        seeing += lookDirection(Dirs.Left, row, col, puzzle);
-        //Look right
-        seeing += lookDirection(Dirs.Right, row, col, puzzle);
-
-        return seeing;
-    }
-
-    public int posibleSeeingDirection(Cell[][] puzzle, Dirs direction, int row, int col){
-        Pair dir = _dirs[direction.ordinal()];
-
-        int seeing = 0;
-        row = row + dir.fst;
-        col = col + dir.snd;
-
-        while(puzzle[row][col].getState() != Cell.State.Wall){
-            if(puzzle[row][col].getState() == Cell.State.Unassigned)
-                ++seeing;
-            row += dir.fst;
-            col += dir.snd;
-        }
-        return seeing;
-    }
-
-    private int lookDirection(Dirs direction, int row, int col){
-        return lookDirection(direction, row, col, _board);
-    }
-
-    public int lookDirection(Dirs direction, int row, int col, Cell[][] board){
-        Pair dir = _dirs[direction.ordinal()];
-
-        int seeing = 0;
-        row = row + dir.fst;
-        col = col + dir.snd;
-
-        while(board[row][col].getState() == Cell.State.Point){
-            ++seeing;
-            row += dir.fst;
-            col += dir.snd;
-        }
-        return seeing;
-    }
-
     public void copyToBoard(Cell[][] puzzle){
         for (int i = 1; i < _size + 1; ++i){
             for (int j = 1; j < _size + 1; ++j) {
@@ -324,7 +274,7 @@ public class Board {
             for (int j = 1; j < _size + 1; ++j){
                 if(_board[i][j].getState() == Cell.State.Point && !_board[i][j].getLocked())
                 {
-                    _board[i][j].setMustWatch(lookDirections(i, j, _board));
+                    _board[i][j].setMustWatch(_utils.lookDirections(i, j, _board));
                 }
             }
         }
@@ -336,6 +286,7 @@ public class Board {
 
     public Cell getCell(int row, int col){ return _board[row][col]; }
 
+    private BoardUtils _utils;
     private Cell[][] _board;
     private int _size;
     private Hint _hint;

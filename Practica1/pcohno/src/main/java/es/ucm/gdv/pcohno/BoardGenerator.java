@@ -2,13 +2,12 @@ package es.ucm.gdv.pcohno;
 
 import java.util.Random;
 
-import es.ucm.gdv.engine.Pair;
-
 public class BoardGenerator {
 
     public BoardGenerator(int size, Board board){
         _size = size;
         _board = board;
+        _utils = new BoardUtils();
     }
 
     public void setForGame() {
@@ -21,10 +20,11 @@ public class BoardGenerator {
         }
 
         //Hasta que haya un puzzle que tenga solucion
+        Random rng = new Random();
         while(true) {
             clean(puzzle);
-            randomize(puzzle);
-            if(!wrongInitialBoard(puzzle)) {
+            randomize(puzzle, rng);
+            if(!wrongInitialBoard(puzzle) && seesJustRight(puzzle)) {
                 prune(puzzle);
                 _board.copyToBoard(puzzle);
                 if (resolve(puzzle)) { //Si se puede resolver
@@ -33,6 +33,19 @@ public class BoardGenerator {
                 }
             }
         }
+    }
+
+    private boolean seesJustRight(Cell[][] puzzle){
+        for (int i = 1; i < _size + 1; ++i){
+            for (int j = 1; j < _size + 1; ++j){
+                if(puzzle[i][j].getState() == Cell.State.Point && !puzzle[i][j].getLocked())
+                {
+                    if(_utils.lookDirections(i, j, puzzle) > _size)
+                        return false;
+                }
+            }
+        }
+        return true;
     }
 
     private void prune(Cell[][] puzzle){
@@ -61,8 +74,8 @@ public class BoardGenerator {
             for (int j = 1; j < _size + 1; ++j){
                 Cell c = puzzle[i][j];
                 if(c.getState() == Cell.State.Point)
-                    return (c.getLocked() && (_board.lookDirections(i, j, puzzle) > c.getMustWatch())) ||
-                            (!c.getLocked() && (_board.lookDirections(i, j, puzzle) > 0));
+                    return (c.getLocked() && (_utils.lookDirections(i, j, puzzle) != c.getMustWatch())) ||
+                            (!c.getLocked() && (_utils.lookDirections(i, j, puzzle) == 0));
             }
         }
         return false;
@@ -79,8 +92,7 @@ public class BoardGenerator {
         }
     }
 
-    private void randomize(Cell[][] puzzle){
-        Random rng = new Random();
+    private void randomize(Cell[][] puzzle, Random rng){
         int rngWall = 2;
         int rngPoint = _size;
         for (int i = 1; i < _size + 1; i++) {
@@ -102,70 +114,63 @@ public class BoardGenerator {
     }
 
     private void putImportantPoint(Cell c, int i, int j, Cell[][] puzzle, Random rng){
-        int seeingDir[] = new int[4];
-
-        seeingDir[Board.Dirs.Up.ordinal()] = _board.lookDirection(Board.Dirs.Up ,i, j, puzzle);
-        seeingDir[Board.Dirs.Down.ordinal()]  = _board.lookDirection(Board.Dirs.Down ,i, j, puzzle);
-        seeingDir[Board.Dirs.Left.ordinal()]  = _board.lookDirection(Board.Dirs.Left ,i, j, puzzle);
-        seeingDir[Board.Dirs.Right.ordinal()]  = _board.lookDirection(Board.Dirs.Right ,i, j, puzzle);
+        int seeingDir[] = _utils.getView(i, j, puzzle);
         int seeing = seeingDir[0] + seeingDir[1] + seeingDir[2] + seeingDir[3];
 
         int posibleDir[] = new int[4];
 
-        posibleDir[Board.Dirs.Up.ordinal()] = _board.posibleSeeingDirection(puzzle, Board.Dirs.Up ,i, j);
-        posibleDir[Board.Dirs.Down.ordinal()]= _board.posibleSeeingDirection(puzzle, Board.Dirs.Down ,i, j);
-        posibleDir[Board.Dirs.Left.ordinal()] = _board.posibleSeeingDirection(puzzle, Board.Dirs.Left ,i, j);
-        posibleDir[Board.Dirs.Right.ordinal()] = _board.posibleSeeingDirection(puzzle, Board.Dirs.Right ,i, j);
+        posibleDir[Board.Dirs.Up.ordinal()] = _utils.posibleSeeingDirection(puzzle, Board.Dirs.Up ,i, j);
+        posibleDir[Board.Dirs.Down.ordinal()]= _utils.posibleSeeingDirection(puzzle, Board.Dirs.Down ,i, j);
+        posibleDir[Board.Dirs.Left.ordinal()] = _utils.posibleSeeingDirection(puzzle, Board.Dirs.Left ,i, j);
+        posibleDir[Board.Dirs.Right.ordinal()] = _utils.posibleSeeingDirection(puzzle, Board.Dirs.Right ,i, j);
         int posible = posibleDir[0] + posibleDir[1] + posibleDir[2] + posibleDir[3];
 
-        if(seeing + posible == 0){
+        c.setState(Cell.State.Point);
+
+        int extraWatch = posible == 0 ? 0 : rng.nextInt(posible);
+
+        if(seeing + extraWatch == 0){
             c.setState(Cell.State.Wall);
             c.setLocked(true);
             return;
         }
 
-        c.setState(Cell.State.Point);
-
-        int extraWatch = Math.max(1, rng.nextInt(_size + 1));
-
         if(seeing + extraWatch > _size)
             extraWatch = _size - seeing;
-
-        if(extraWatch > posible)
-            extraWatch = posible;
 
         c.setMustWatch(seeing + extraWatch);
         c.setLocked(true);
 
         //expandir a puntitos alrededors
-        int tries = 100;
-        while (extraWatch > 0 && tries-- > 0){
+        while (extraWatch > 0){
             for (Board.Dirs d : Board.Dirs.values()) {
-                int n = rng.nextInt(Math.min(posibleDir[d.ordinal()] + 1, extraWatch + 1));
-                if(n == 0 && extraWatch == 1 && posibleDir[d.ordinal()] > 0)
-                    n = 1;
+                if(posibleDir[d.ordinal()] == 0)
+                    continue;
+
+                int n = 1 + rng.nextInt(Math.min(extraWatch, posibleDir[d.ordinal()]));
                 expand(puzzle, i, j, seeingDir[d.ordinal()] + n, d);
                 seeingDir[d.ordinal()] += n;
                 posibleDir[d.ordinal()] -= n;
                 extraWatch -= n;
+
+                if(extraWatch == 0)
+                    break;
             }
         }
-        if(tries < 0){
-            System.out.print(".");
-            return;
+        for (Board.Dirs d : Board.Dirs.values()) {
+            int k = seeingDir[d.ordinal()];
+            puzzle[i + (k + 1) * Board._dirs[d.ordinal()].fst][j + (k + 1) * Board._dirs[d.ordinal()].snd].setState(Cell.State.Wall);
+            puzzle[i + (k + 1) * Board._dirs[d.ordinal()].fst][j + (k + 1) * Board._dirs[d.ordinal()].snd].setLocked(true);
         }
     }
 
     private void expand(Cell[][] puzzle, int i, int j, int k, Board.Dirs dir){
         Cell c;
-        Pair[] dirs = _board.getDirs();
         for (int l = 1; l <= k; l++) {
-            c = puzzle[i + l * dirs[dir.ordinal()].fst][j + l * dirs[dir.ordinal()].snd];
+            c = puzzle[i + l * Board._dirs[dir.ordinal()].fst][j + l * Board._dirs[dir.ordinal()].snd];
             if(!c.getLocked())
                 c.setState(Cell.State.Point);
         }
-        puzzle[i + (k + 1) * dirs[dir.ordinal()].fst][j + (k + 1) * dirs[dir.ordinal()].snd].setState(Cell.State.Wall);
-        puzzle[i + (k + 1) * dirs[dir.ordinal()].fst][j + (k + 1) * dirs[dir.ordinal()].snd].setLocked(true);
     }
 
     private boolean resolve(Cell[][] puzzle){
@@ -192,7 +197,7 @@ public class BoardGenerator {
         return _board.wrongCell(puzzle) == null;
     }
 
-
-    int _size;
-    Board _board;
+    private final BoardUtils _utils;
+    private int _size;
+    private Board _board;
 }

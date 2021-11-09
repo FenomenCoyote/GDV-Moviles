@@ -7,43 +7,15 @@ import static es.ucm.gdv.pcohno.Board._dirs;
 
 public class Hint {
 
+
     static enum Type{
         First, Second, Third, Fourth, Fifth, Sixth, Seventh
     }
 
     public Hint(Cell[][] board){
         this._board = board;
+        this._utils = new BoardUtils();
     }
-
-    //Devuelve un array de 4 con el numero de puntos que ve en cada direccion :)
-    private int[] getView(int row, int col) {
-        int[] view = new int[4];
-        view[0] = lookDirection(Dirs.Up, row, col);
-        view[1] = lookDirection(Dirs.Down, row, col);
-        view[2] = lookDirection(Dirs.Left, row, col);
-        view[3] = lookDirection(Dirs.Right, row, col);
-        return view;
-    }
-
-    private int lookDirections(int row, int col){
-        int[] view = getView(row, col);
-        return view[0] + view[1] + view[2] + view[3];
-    }
-
-    private int lookDirection(Dirs direction, int posRow, int posCol){
-        Pair dir = _dirs[direction.ordinal()];
-
-        int row = posRow + dir.fst;
-        int col = posCol + dir.snd;
-        int seeing = 0;
-        while(_board[row][col].getState() == Cell.State.Point){
-            ++seeing;
-            row += dir.fst;
-            col += dir.snd;
-        }
-        return seeing;
-    }
-
 
     private int[] maxWatchablePositions(int seeing, int mustWatch, int posRow, int posCol){
         int[] maxWatchablePoss = {0, 0, 0, 0};
@@ -98,7 +70,7 @@ public class Hint {
                     col += _dirs[dir.ordinal()].snd;
                 }
                 if(_board[row][col].getState() == Cell.State.Unassigned &&
-                        seeing + 1 + lookDirection(dir, row, col) > mustWatch)
+                        seeing + 1 + -_utils.lookDirection(dir, row, col, _board) > mustWatch)
                 {
                     return new CellHint(Cell.State.Wall, row, col, Type.Second);
                 }
@@ -117,7 +89,7 @@ public class Hint {
                         maxWatchablePoss[(dir.ordinal() +2) % 4] +
                         maxWatchablePoss[(dir.ordinal() +3) % 4];
                 if (maxOthers < mustWatch){ //Minus 1 because i count myself in mustWatch
-                    int n = lookDirection(dir, posRow, posCol);
+                    int n = _utils.lookDirection(dir, posRow, posCol, _board);
                     if(maxOthers + n < mustWatch ){
                         Pair _dir = _dirs[dir.ordinal()];
                         int posiblePosRow = posRow + _dir.fst * (n + 1);
@@ -182,7 +154,7 @@ public class Hint {
     }
 
     public CellHint getPositiveHint(int row, int col){
-        int seeing = lookDirections(row, col);
+        int seeing = _utils.lookDirections(row, col, _board);
         boolean locked = _board[row][col].getLocked();
         int mustWatch = _board[row][col].getMustWatch();
 
@@ -202,7 +174,7 @@ public class Hint {
     }
 
     public CellHint getNegativeHint(int row, int col){
-        int seeing = lookDirections(row, col);
+        int seeing = _utils.lookDirections(row, col, _board);
         boolean locked = _board[row][col].getLocked();
         int mustWatch = _board[row][col].getMustWatch();
 
@@ -219,4 +191,5 @@ public class Hint {
     }
 
     private Cell[][] _board;
+    private final BoardUtils _utils;
 }
