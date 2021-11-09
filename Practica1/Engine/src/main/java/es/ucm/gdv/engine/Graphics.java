@@ -21,7 +21,7 @@ public interface Graphics {
     public void setFont(MyFont font);
 
     public void fillCircle(int cx, int cy, int r);
-    public void drawCircle(int cx, int cy, int r);
+    public void drawCircle(int cx, int cy, int r, int strokeWidth);
     public void drawText(String text, int x, int y);
 
     int getWidth();
