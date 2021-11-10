@@ -19,32 +19,39 @@ public class Start extends State {
 
     @Override
     public void render() {
-        graphics.setColor(0xff333333);
+        int alpha = (int)(alphaTransition * 255f);
+
+        graphics.setColor((alpha << 24) | 0x00333333);
         graphics.setFont(font1);
         graphics.drawText("Oh no", 200, 125);
 
         graphics.setFont(font2);
         graphics.drawText("Jugar", 200, 300);
 
-        graphics.setColor(0xffaaaaaa);
+        graphics.setColor((alpha << 24) | 0x00aaaaaa);
         graphics.setFont(font3);
         graphics.drawText("Un juego copiado a Q42", 200, 410);
         graphics.drawText("Creado por Martin Kool", 200, 440);
 
         graphics.scale(0.05f, 0.05f);
-        graphics.drawImage(imgQ, 200 * 20 - imgQ.getWidth() / 2, 480 * 20, 1);
+        graphics.drawImage(imgQ, 200 * 20 - imgQ.getWidth() / 2, 480 * 20, alphaTransition);
         graphics.scale(20, 20);
     }
 
     @Override
     public OhNoApplication.State update(double elapsedTime) {
+        OhNoApplication.State s = super.update(elapsedTime);
+        if(s != null)
+            return s;
+
         ArrayList<Input.TouchEvent> events = input.getTouchEvents();
         while(!events.isEmpty()){
             if(events.remove(0).type != Input.TouchEvent.TouchEventType.Touch)
                 continue;
             events.clear();
-            return OhNoApplication.State.Menu;
+            setNextState(OhNoApplication.State.Menu);
         }
+
         return null;
     }
 

@@ -31,8 +31,8 @@ public class Playing extends State {
 
     @Override
     public void render() {
-
-        graphics.setColor(0xff333333);
+        int alpha = (int)(alphaTransition * 255f);
+        graphics.setColor((alpha << 24) | 0x00333333);
         graphics.setFont(font2);
         graphics.drawText(board.getPercentage() + "%",200,510);
         graphics.setFont(font1);
@@ -51,16 +51,20 @@ public class Playing extends State {
             graphics.restore();
         }
         graphics.setFont(font1);
-        board.render(graphics);
+        board.render(graphics, alphaTransition);
 
         graphics.scale(0.5f, 0.5f);
-        clickableClose.render(graphics);
-        clickableUnDo.render(graphics);
-        clickableEye.render(graphics);
+        clickableClose.render(graphics, alphaTransition);
+        clickableUnDo.render(graphics, alphaTransition);
+        clickableEye.render(graphics, alphaTransition);
     }
 
     @Override
     public OhNoApplication.State update(double elapsedTime) {
+        OhNoApplication.State st = super.update(elapsedTime);
+        if(st != null)
+            return st;
+
         ArrayList<Input.TouchEvent> events = input.getTouchEvents();
         while(!events.isEmpty()){
             Input.TouchEvent t = events.remove(0);
@@ -68,7 +72,7 @@ public class Playing extends State {
                 continue;
             if(text != null){
                 if(text == "Splendid")
-                    return OhNoApplication.State.Menu;
+                    setNextState(OhNoApplication.State.Menu);
                 else{
                     text = null;
                     board.highlightCircle(0, 0, false);
@@ -76,7 +80,7 @@ public class Playing extends State {
             }
             if(clickableClose.isOnMe(t.x * 2, t.y * 2)){
                 events.clear();
-                return OhNoApplication.State.Menu;
+                setNextState(OhNoApplication.State.Menu);
             }
             else if(clickableEye.isOnMe(t.x * 2, t.y * 2))
             {

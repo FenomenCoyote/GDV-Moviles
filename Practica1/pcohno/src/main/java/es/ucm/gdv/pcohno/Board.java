@@ -48,7 +48,7 @@ public class Board {
 
     }
 
-    public void render(Graphics graphics) {
+    public void render(Graphics graphics, float alphaTransition) {
         graphics.save();
 
         graphics.translate(10, 100);
@@ -62,19 +62,19 @@ public class Board {
         for(int i = 1; i < _size + 1; ++i){
             for (int j = 1; j < _size + 1; j++) {
                 if(biggerCell.fst == i && biggerCell.snd == j){
-                    _board[i][j].render(graphics, biggerCellScale);
+                    _board[i][j].render(graphics, biggerCellScale, (int) (alphaTransition * 255f));
                 }
-                else _board[i][j].render(graphics, 1);
+                else _board[i][j].render(graphics, 1, (int) (alphaTransition * 255));
 
                 if(showLocks && _board[i][j].getState() == Cell.State.Wall && _board[i][j].getLocked()){
                     graphics.scale(0.75f, 0.75f);
                     graphics.translate(-imgLock.getWidth()/2, -imgLock.getHeight()/2);
-                    graphics.drawImage(imgLock, 0, 0, 0.2f);
+                    graphics.drawImage(imgLock, 0, 0, 0.2f * alphaTransition);
                     graphics.translate(imgLock.getWidth()/2, imgLock.getHeight()/2);
                     graphics.scale(1/0.75f, 1/0.75f);
                 }
                 if (highlightedCircle && i == highlightedRow && j == highlightedCol){
-                    graphics.setColor(0xff333333);
+                    graphics.setColor(((int)(alphaTransition * 255) << 24) | 0xff333333);
                     graphics.drawCircle(0,0,50, 6);
                 }
                 graphics.translate(spacing, 0);

@@ -41,8 +41,10 @@ public class OhNoApplication implements Application {
     @Override
     public void update(double elapsedTime) {
         State s = states.get(state.ordinal()).update(elapsedTime);
+
         if(s != null) {
             state = s;
+            states.get(state.ordinal()).setInTransition(true, 0);
             if(state == State.Playing) {
                 boardSize = ((Menu)states.get(State.Menu.ordinal())).getBoardSize();
                 states.get(state.ordinal()).init(this);

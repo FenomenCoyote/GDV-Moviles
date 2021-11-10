@@ -16,6 +16,11 @@ public class ClickImage extends Clickable {
         graphics.drawImage(image, this.x, this.y, this.alpha);
     }
 
+    @Override
+    public void render(Graphics graphics, float alpha) {
+        graphics.drawImage(image, this.x, this.y, alpha);
+    }
+
     private Image image;
     float alpha;
 }

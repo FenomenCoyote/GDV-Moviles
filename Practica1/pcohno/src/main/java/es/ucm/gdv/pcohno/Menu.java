@@ -21,8 +21,8 @@ public class Menu extends State {
         clickablesCircles = new ArrayList<>();
         clickableClose = new ClickImage(imgClose, 400 - imgClose.getWidth()/2, 1000, 100, 100, 1);
 
-        int red = 0xffff384a;
-        int blue = 0xff1cc0e0;
+        int red = 0x00ff384a;
+        int blue = 0x001cc0e0;
 
         clickablesCircles.add(new ClickCircle(blue, 0, 0, 40, "4"));
         clickablesCircles.add(new ClickCircle(red, 90, 0, 40, "5"));
@@ -37,7 +37,8 @@ public class Menu extends State {
 
     @Override
     public void render() {
-        graphics.setColor(0xff333333);
+        int alpha = (int)(alphaTransition * 255f);
+        graphics.setColor((alpha << 24) | 0x00333333);
 
         graphics.setFont(font1);
         graphics.drawText("Oh no", 200, 100);
@@ -51,18 +52,22 @@ public class Menu extends State {
         graphics.translate(110, 300);
 
         for (Clickable c : clickablesCircles)
-            c.render(graphics);
+            c.render(graphics, alphaTransition);
 
         graphics.restore();
 
         graphics.scale(0.5f, 0.5f);
 
-        clickableClose.render(graphics);
+        clickableClose.render(graphics, alphaTransition);
 
     }
 
     @Override
     public OhNoApplication.State update(double elapsedTime) {
+        OhNoApplication.State s = super.update(elapsedTime);
+        if(s != null)
+            return s;
+
         ArrayList<Input.TouchEvent> events = input.getTouchEvents();
         while(!events.isEmpty()){
             Input.TouchEvent t = events.remove(0);
@@ -73,14 +78,14 @@ public class Menu extends State {
                 if (c.isOnMe(t.x - 100, t.y - 300)) {
                     boardSize = 4 + i;
                     events.clear();
-                    return OhNoApplication.State.Loading;
+                    setNextState(OhNoApplication.State.Loading);
                 }
                 ++i;
             }
 
             if(clickableClose.isOnMe(t.x * 2, t.y * 2)){
                 events.clear();
-                return OhNoApplication.State.Start;
+                setNextState(OhNoApplication.State.Start);
             }
 
         }

@@ -1,28 +1,24 @@
 package es.ucm.gdv.pcohno;
 
-import com.sun.tools.javac.util.Pair;
-
-import java.util.Stack;
-
 import es.ucm.gdv.engine.Graphics;
 
 public class Cell {
 
-    public void render(Graphics graphics, double scale) {
+    public void render(Graphics graphics, double scale, int alpha) {
         switch (_state){
             case Unassigned:
-                graphics.setColor(0xffeeeeee);
+                graphics.setColor((alpha << 24) | 0x00eeeeee);
                 break;
             case Point:
-                graphics.setColor(0xff1cc0e0);
+                graphics.setColor((alpha << 24) | 0x001cc0e0);
                 break;
             case Wall:
-                graphics.setColor(0xffff384a);
+                graphics.setColor((alpha << 24) | 0x00ff384a);
                 break;
         }
         graphics.fillCircle(0, 0, (int)(50 * scale));
         if(_mustWatch > 0){
-            graphics.setColor(0xffffffff);
+            graphics.setColor((alpha << 24) | 0x00ffffff);
             graphics.drawText(Integer.toString(_mustWatch), 0, 20);
         }
 

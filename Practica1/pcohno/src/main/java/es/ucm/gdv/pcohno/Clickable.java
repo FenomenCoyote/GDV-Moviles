@@ -13,6 +13,8 @@ public abstract class Clickable {
 
     abstract public void render(Graphics graphics);
 
+    abstract public void render(Graphics graphics, float alpha);
+
     public boolean isOnMe(int x, int y){
         return x > this.x && x < this.x+this.width && y > this.y && y < this.y+this.height;
     }
