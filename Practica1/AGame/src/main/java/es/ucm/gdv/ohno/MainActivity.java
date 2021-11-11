@@ -1,12 +1,10 @@
 package es.ucm.gdv.ohno;
 
+import android.os.Bundle;
+
 import androidx.appcompat.app.AppCompatActivity;
 
-import android.os.Bundle;
-import android.view.SurfaceView;
-
 import es.ucm.gdv.aengine.AEngine;
-import es.ucm.gdv.aengine.AGraphics;
 import es.ucm.gdv.pcohno.OhNoApplication;
 
 public class MainActivity extends AppCompatActivity {
@@ -17,6 +15,7 @@ public class MainActivity extends AppCompatActivity {
 
         _aEngine = new AEngine(this);
         _aEngine.setApplication(new OhNoApplication());
+        _aEngine.init();
 
     }
     @Override

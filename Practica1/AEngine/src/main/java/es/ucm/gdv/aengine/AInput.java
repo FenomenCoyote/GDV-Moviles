@@ -2,25 +2,51 @@ package es.ucm.gdv.aengine;
 
 import android.view.SurfaceView;
 
+import java.util.ArrayDeque;
 import java.util.ArrayList;
+import java.util.Queue;
+
 import es.ucm.gdv.engine.Input;
 
 public class AInput implements Input {
 
     AInput(SurfaceView view, AGraphics aGraphics)
     {
-        onTouchListener = new OnTouchListener(this, aGraphics);
-        touchEvents = new ArrayList<TouchEvent>();
+        _onTouchListener = new OnTouchListener(this, aGraphics);
+        _touchEvents = new ArrayList<TouchEvent>();
+
+        _readyTouchEvents = new ArrayDeque<>();
+
+        for (int i = 0; i < 16; i++) {
+            _readyTouchEvents.add(new TouchEvent());
+        }
     }
 
     @Override
-    public synchronized ArrayList<TouchEvent> getTouchEvents() {
-        return touchEvents;
+    synchronized public TouchEvent getTouchEvent() {
+        if(_touchEvents.isEmpty())
+            return null;
+        return _touchEvents.remove(0);
     }
 
     @Override
-    public synchronized void addEvent(TouchEvent e) { touchEvents.add(e); }
+    public void clearEvents() {
+        _touchEvents.clear();
+    }
 
-    ArrayList<TouchEvent> touchEvents;
-    OnTouchListener onTouchListener;
+    synchronized public TouchEvent getReadyTouchEvent() {
+        return _readyTouchEvents.poll();
+    }
+
+    @Override
+    public void releaseEvent(TouchEvent e) {
+        _readyTouchEvents.add(e);
+    }
+
+    @Override
+    public synchronized void addEvent(TouchEvent e) { _touchEvents.add(e); }
+
+    private ArrayList<TouchEvent> _touchEvents;
+    private Queue<TouchEvent> _readyTouchEvents;
+    private OnTouchListener _onTouchListener;
 }

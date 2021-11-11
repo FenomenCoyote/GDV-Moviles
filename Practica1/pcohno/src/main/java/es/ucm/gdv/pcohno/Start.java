@@ -1,7 +1,5 @@
 package es.ucm.gdv.pcohno;
 
-import java.util.ArrayList;
-
 import es.ucm.gdv.engine.Graphics;
 import es.ucm.gdv.engine.Image;
 import es.ucm.gdv.engine.Input;
@@ -44,12 +42,17 @@ public class Start extends State {
         if(s != null)
             return s;
 
-        ArrayList<Input.TouchEvent> events = input.getTouchEvents();
-        while(!events.isEmpty()){
-            if(events.remove(0).type != Input.TouchEvent.TouchEventType.Touch)
+        Input.TouchEvent e = input.getTouchEvent();
+        while(e != null){
+            input.releaseEvent(e);
+            if(e.type != Input.TouchEvent.TouchEventType.Touch){
+                e = input.getTouchEvent();
                 continue;
-            events.clear();
+            }
+
+            input.clearEvents();
             setNextState(OhNoApplication.State.Menu);
+            break;
         }
 
         return null;

@@ -1,7 +1,5 @@
 package es.ucm.gdv.pcohno;
 
-import java.util.ArrayList;
-
 import es.ucm.gdv.engine.Graphics;
 import es.ucm.gdv.engine.Image;
 import es.ucm.gdv.engine.Input;
@@ -65,11 +63,14 @@ public class Playing extends State {
         if(st != null)
             return st;
 
-        ArrayList<Input.TouchEvent> events = input.getTouchEvents();
-        while(!events.isEmpty()){
-            Input.TouchEvent t = events.remove(0);
-            if(t.type != Input.TouchEvent.TouchEventType.Touch)
+        Input.TouchEvent t = input.getTouchEvent();
+        while(t != null){
+            input.releaseEvent(t);
+            if(t.type != Input.TouchEvent.TouchEventType.Touch){
+                t = input.getTouchEvent();
                 continue;
+            }
+
             if(text != null){
                 if(text == "Splendid")
                     setNextState(OhNoApplication.State.Menu);
@@ -79,7 +80,7 @@ public class Playing extends State {
                 }
             }
             if(clickableClose.isOnMe(t.x * 2, t.y * 2)){
-                events.clear();
+                input.clearEvents();
                 setNextState(OhNoApplication.State.Menu);
             }
             else if(clickableEye.isOnMe(t.x * 2, t.y * 2))
@@ -121,6 +122,8 @@ public class Playing extends State {
                     else board.setShowLocks(true);
                 }
             }
+
+            t = input.getTouchEvent();
         }
 
         if(board.getShowLocks()){

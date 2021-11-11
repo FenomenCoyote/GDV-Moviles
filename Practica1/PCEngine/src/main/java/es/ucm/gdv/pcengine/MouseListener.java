@@ -4,7 +4,6 @@ import java.awt.Point;
 import java.awt.event.MouseEvent;
 
 import es.ucm.gdv.engine.Input;
-import sun.jvm.hotspot.debugger.SymbolLookup;
 
 public class MouseListener implements javax.swing.event.MouseInputListener{
 
@@ -21,7 +20,7 @@ public class MouseListener implements javax.swing.event.MouseInputListener{
         if(wasReleased){
             Point p = translateCoordinates(mouseEvent.getX(), mouseEvent.getY());
 
-            Input.TouchEvent e = new Input.TouchEvent();
+            Input.TouchEvent e = pcInput.getReadyTouchEvent();
             e.x = p.x;
             e.y = p.y;
             e.type = Input.TouchEvent.TouchEventType.Touch;
@@ -37,7 +36,7 @@ public class MouseListener implements javax.swing.event.MouseInputListener{
     public void mouseReleased(MouseEvent mouseEvent) {
         Point p = translateCoordinates(mouseEvent.getX(), mouseEvent.getY());
 
-        Input.TouchEvent e = new Input.TouchEvent();
+        Input.TouchEvent e = pcInput.getReadyTouchEvent();
         e.x = p.x;
         e.y = p.y;
         e.type = Input.TouchEvent.TouchEventType.Release;
@@ -51,7 +50,7 @@ public class MouseListener implements javax.swing.event.MouseInputListener{
     public void mouseDragged(MouseEvent mouseEvent) {
         Point p = translateCoordinates(mouseEvent.getX(), mouseEvent.getY());
 
-        Input.TouchEvent e = new Input.TouchEvent();
+        Input.TouchEvent e = pcInput.getReadyTouchEvent();
         e.x = p.x;
         e.y = p.y;
         e.type = Input.TouchEvent.TouchEventType.Slide;

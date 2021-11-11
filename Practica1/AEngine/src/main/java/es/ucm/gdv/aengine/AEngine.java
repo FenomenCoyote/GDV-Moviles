@@ -15,11 +15,12 @@ public class AEngine implements Engine, Runnable {
         c.setContentView(surfaceView);
         _graphics = new AGraphics(surfaceView, c.getAssets());
         _input = new AInput(surfaceView,_graphics);
+
     }
 
     @Override
     public void init() {
-
+        _app.init(this);
     }
 
     @Override
@@ -40,8 +41,6 @@ public class AEngine implements Engine, Runnable {
             ;
 
         long lastFrameTime = System.nanoTime();
-
-        _app.init(this);
 
         // Bucle principal.
         while(_running) {

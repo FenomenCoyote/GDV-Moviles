@@ -21,7 +21,7 @@ public class OnTouchListener implements View.OnTouchListener {
 
         Point p = translateCoordinates((int)event.getX(), (int)event.getY());
 
-        Input.TouchEvent e = new Input.TouchEvent();
+        Input.TouchEvent e = aInput.getReadyTouchEvent();
         e.x = p.x;
         e.y = p.y;
 

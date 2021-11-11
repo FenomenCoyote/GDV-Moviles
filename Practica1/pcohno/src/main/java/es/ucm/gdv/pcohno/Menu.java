@@ -68,26 +68,29 @@ public class Menu extends State {
         if(s != null)
             return s;
 
-        ArrayList<Input.TouchEvent> events = input.getTouchEvents();
-        while(!events.isEmpty()){
-            Input.TouchEvent t = events.remove(0);
-            if(t.type != Input.TouchEvent.TouchEventType.Touch)
+        Input.TouchEvent t = input.getTouchEvent();
+        while(t != null){
+            input.releaseEvent(t);
+            if(t.type != Input.TouchEvent.TouchEventType.Touch){
+                t = input.getTouchEvent();
                 continue;
+            }
+
             int i = 0;
             for (Clickable c : clickablesCircles) {
                 if (c.isOnMe(t.x - 100, t.y - 300)) {
                     boardSize = 4 + i;
-                    events.clear();
+                    input.clearEvents();
                     setNextState(OhNoApplication.State.Loading);
                 }
                 ++i;
             }
 
             if(clickableClose.isOnMe(t.x * 2, t.y * 2)){
-                events.clear();
+                input.clearEvents();
                 setNextState(OhNoApplication.State.Start);
             }
-
+            t = input.getTouchEvent();
         }
         return null;
     }

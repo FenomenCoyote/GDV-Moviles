@@ -1,32 +1,51 @@
 package es.ucm.gdv.pcengine;
 
+import java.util.ArrayDeque;
 import java.util.ArrayList;
-import java.util.List;
+import java.util.Queue;
 
 import es.ucm.gdv.engine.Input;
-import java.awt.event.ActionListener;
-import java.util.ListIterator;
 
 public class PCInput implements Input {
 
     public PCInput(PCGraphics graphics){
         _mouseListener = new MouseListener(this, graphics);
-        touchEvents = new ArrayList<TouchEvent>();
+        _touchEvents = new ArrayList<TouchEvent>();
+        _readyTouchEvents = new ArrayDeque<>();
+
+        for (int i = 0; i < 16; i++) {
+            _readyTouchEvents.add(new TouchEvent());
+        }
     }
 
     @Override
-    synchronized public ArrayList<TouchEvent> getTouchEvents() { return touchEvents; }
+    synchronized public TouchEvent getTouchEvent() {
+        if(_touchEvents.isEmpty())
+            return null;
+        return _touchEvents.remove(0);
+    }
+
+    @Override
+    synchronized public void clearEvents() {
+        _touchEvents.clear();
+    }
 
     @Override
     synchronized public void addEvent(TouchEvent e) {
-        touchEvents.add(e);
+        _touchEvents.add(e);
     }
 
-    /*synchronized public void releaseEvent(TouchEvent e){
+    synchronized public TouchEvent getReadyTouchEvent() {
+        return _readyTouchEvents.poll();
+    }
 
-    }*/
+    @Override
+    synchronized public void releaseEvent(TouchEvent e){
+        _readyTouchEvents.add(e);
+    }
 
-    ArrayList<TouchEvent> touchEvents;
+    private ArrayList<TouchEvent> _touchEvents;
+    private Queue<TouchEvent> _readyTouchEvents;
 
-    MouseListener _mouseListener;
+    private MouseListener _mouseListener;
 }
