@@ -24,7 +24,7 @@ public class Playing extends State {
 
         text = null;
 
-        this.showLocksTime = this.initialShowLocksTime = showLocksTime;
+        this.showLocksTime = showLocksTime;
     }
 
     @Override
@@ -115,28 +115,13 @@ public class Playing extends State {
             }
             else
             {
-                if(!board.isOnMe(t.x, t.y)){
-                    if(board.getShowLocks()){
-                        showLocksTime = initialShowLocksTime;
-                    }
-                    else board.setShowLocks(true);
-                }
+                board.isOnMe(t.x, t.y);
             }
 
             t = input.getTouchEvent();
         }
 
-        if(board.getShowLocks()){
-            showLocksTime -= elapsedTime;
-            double s = showLocksTime/initialShowLocksTime;
-            s = 1 + (s * 0.2);
-            board.setBiggerCellScale(s);
-            if(showLocksTime <= 0){
-                board.setShowLocks(false);
-                board.noBiggerCell();
-                showLocksTime = initialShowLocksTime;
-            }
-        }
+        board.update(elapsedTime);
 
         if(board.wrongCell() == null){
             text = "Splendid";
@@ -154,7 +139,7 @@ public class Playing extends State {
     @Override
     public void init(OhNoApplication app) {
         boardSize = app.getBoardSize();
-        board = new Board(boardSize, graphics.newImage("lock.png"));
+        board = new Board(boardSize, graphics.newImage("lock.png"), showLocksTime);
         boardGenerator = new BoardGenerator(boardSize, board);
         boardGenerator.setForGame();
         text = null;
@@ -197,8 +182,7 @@ public class Playing extends State {
 
     private ClickImage clickableClose,clickableUnDo, clickableEye;
 
-    private String text;
-
     private double showLocksTime;
-    private double initialShowLocksTime;
+
+    private String text;
 }

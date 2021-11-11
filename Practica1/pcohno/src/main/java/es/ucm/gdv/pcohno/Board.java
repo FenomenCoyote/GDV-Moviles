@@ -21,7 +21,7 @@ public class Board {
 
     static enum Dirs {Up, Down, Left, Right}
 
-    public Board(int size, Image lockImg){
+    public Board(int size, Image lockImg, double showLocksTime){
         _board = new Cell[size + 2][size + 2];
         _totalUnassignedCells=1;
         _size = size;
@@ -31,6 +31,7 @@ public class Board {
         highlightedCircle = false;
         highlightedRow = highlightedCol = 0;
 
+        this.showLocksTime = this.initialShowLocksTime = showLocksTime;
         imgLock = lockImg;
         showLocks = false;
         biggerCell = new Pair(-1, -1);
@@ -48,6 +49,26 @@ public class Board {
 
     }
 
+    public void update(double elapsedTime){
+        if(showLocks){
+            showLocksTime -= elapsedTime;
+            double s = showLocksTime/initialShowLocksTime;
+            s = 1 + (s * 0.2);
+            biggerCellScale = s;
+            if(showLocksTime <= 0){
+                showLocks = false;
+                biggerCell.fst = -1; biggerCell.snd = -1;
+                showLocksTime = initialShowLocksTime;
+            }
+        }
+
+        for(int i=1; i<_size+1; i++){
+            for(int j=1; j<_size+1; j++){
+                _board[i][j].update(elapsedTime);
+            }
+        }
+    }
+
     public void render(Graphics graphics, float alphaTransition) {
         graphics.save();
 
@@ -62,9 +83,9 @@ public class Board {
         for(int i = 1; i < _size + 1; ++i){
             for (int j = 1; j < _size + 1; j++) {
                 if(biggerCell.fst == i && biggerCell.snd == j){
-                    _board[i][j].render(graphics, biggerCellScale, (int) (alphaTransition * 255f));
+                    _board[i][j].render(graphics, biggerCellScale, alphaTransition);
                 }
-                else _board[i][j].render(graphics, 1, (int) (alphaTransition * 255));
+                else _board[i][j].render(graphics, 1, alphaTransition);
 
                 if(showLocks && _board[i][j].getState() == Cell.State.Wall && _board[i][j].getLocked()){
                     graphics.scale(0.75f, 0.75f);
@@ -85,7 +106,7 @@ public class Board {
         graphics.restore();
     }
 
-    public boolean isOnMe(int x, int y){
+    public void isOnMe(int x, int y){
 
         y -= 100;
         x -= 10;
@@ -109,15 +130,17 @@ public class Board {
             Cell c = _board[fila][columna];
             if(!c.getLocked()) {
                 _actions.push(new CellHint(c.getState(), fila, columna));
-                c.nextState();
+                c.nextStateTransition();
             }
             else{
                 biggerCell.fst = fila;
                 biggerCell.snd = columna;
-                return false;
+                if(showLocks){
+                    showLocksTime = initialShowLocksTime;
+                }
+                else showLocks = true;
             }
         }
-        return true;
     }
 
 
@@ -202,21 +225,6 @@ public class Board {
         highlightedCircle = enable;
     }
 
-    public void setShowLocks(boolean enable){
-        showLocks = enable;
-    }
-
-    public boolean getShowLocks(){
-        return showLocks;
-    }
-
-    public void noBiggerCell(){
-        biggerCell.fst = -1;
-        biggerCell.snd = -1;
-    }
-
-    public void setBiggerCellScale(double scale) { biggerCellScale = scale; }
-
     public void copyToBoard(Cell[][] puzzle){
         for (int i = 1; i < _size + 1; ++i){
             for (int j = 1; j < _size + 1; ++j) {
@@ -297,6 +305,8 @@ public class Board {
     private int highlightedRow;
     private int highlightedCol;
 
+    private double showLocksTime;
+    private double initialShowLocksTime;
     private boolean showLocks;
     private Image imgLock;
     Pair biggerCell;

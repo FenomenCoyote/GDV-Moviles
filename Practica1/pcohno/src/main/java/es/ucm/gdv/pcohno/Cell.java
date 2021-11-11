@@ -4,24 +4,39 @@ import es.ucm.gdv.engine.Graphics;
 
 public class Cell {
 
-    public void render(Graphics graphics, double scale, int alpha) {
+    public void render(Graphics graphics, double scale, double alpha) {
+        int actualAlpha = (int)((alpha * this._alpha) * 255f);
         switch (_state){
             case Unassigned:
-                graphics.setColor((alpha << 24) | 0x00eeeeee);
+                graphics.setColor((actualAlpha << 24) | 0x00eeeeee);
                 break;
             case Point:
-                graphics.setColor((alpha << 24) | 0x001cc0e0);
+                graphics.setColor((actualAlpha << 24) | 0x001cc0e0);
                 break;
             case Wall:
-                graphics.setColor((alpha << 24) | 0x00ff384a);
+                graphics.setColor((actualAlpha << 24) | 0x00ff384a);
                 break;
         }
         graphics.fillCircle(0, 0, (int)(50 * scale));
         if(_mustWatch > 0){
-            graphics.setColor((alpha << 24) | 0x00ffffff);
+            graphics.setColor((actualAlpha << 24) | 0x00ffffff);
             graphics.drawText(Integer.toString(_mustWatch), 0, 20);
         }
 
+    }
+
+    public void update(double elapsedTime){
+        if(_fading){
+            _alpha = Math.max(0f, Math.min(1f, _alpha + (float)elapsedTime * _fadeSpeed));
+            if(_alpha <= 0f){
+                _fadeSpeed = -_fadeSpeed;
+                nextState();
+            }
+            else if(_alpha >= 1f){
+                _fading = false;
+                _fadeSpeed = -_fadeSpeed;
+            }
+        }
     }
 
     public enum State {Null, Unassigned, Point, Wall}
@@ -30,18 +45,30 @@ public class Cell {
         this._locked = false;
         this._mustWatch = -1;
         this._state = State.Unassigned;
+
+        this._alpha = 1;
+        this._fadeSpeed = -10;
+        this._fading = false;
     }
 
     public Cell(boolean locked, int mustWatch, State state){
         this._locked = locked;
         this._mustWatch = mustWatch;
         this._state = state;
+
+        this._alpha = 1;
+        this._fadeSpeed = -10;
+        this._fading = false;
     }
 
     public Cell(Cell cell){
         this._locked = cell._locked;
         this._mustWatch = cell._mustWatch;
         this._state = cell._state;
+
+        this._alpha = 1;
+        this._fadeSpeed = -10;
+        this._fading = false;
     }
 
     public boolean setState(State state) {
@@ -52,8 +79,8 @@ public class Cell {
         return false;
     }
 
-    public void nextState(){
-        switch (_state){
+    private void nextState(){
+        switch (_state) {
             case Unassigned:
                 _state = State.Point;
                 break;
@@ -63,6 +90,12 @@ public class Cell {
             case Wall:
                 _state = State.Unassigned;
                 break;
+        }
+    }
+
+    public void nextStateTransition(){
+        if(!_fading){
+            _fading = true;
         }
     }
 
@@ -76,4 +109,8 @@ public class Cell {
     private boolean _locked;
     private int _mustWatch;
     private State _state;
+
+    private double _alpha;
+    private double _fadeSpeed;
+    private boolean _fading;
 }
