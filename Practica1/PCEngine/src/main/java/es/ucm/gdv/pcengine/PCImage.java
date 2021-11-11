@@ -8,7 +8,7 @@ import es.ucm.gdv.engine.Image;
 public class PCImage implements Image {
 
     public PCImage() {
-        sprite = null;
+        _sprite = null;
     }
 
     /**
@@ -17,7 +17,7 @@ public class PCImage implements Image {
      */
     public void loadImage(String route) {
         try {
-            sprite = javax.imageio.ImageIO.read(new File("data/sprites/" + route));
+            _sprite = javax.imageio.ImageIO.read(new File("data/sprites/" + route));
         } catch (IOException e) {
             System.out.println("No se pudo cargar la imagen: " + route);
         }
@@ -25,17 +25,17 @@ public class PCImage implements Image {
 
     @Override
     public int getWidth() {
-        return sprite.getWidth(null);
+        return _sprite.getWidth(null);
     }
 
     @Override
     public int getHeight() {
-        return sprite.getHeight(null);
+        return _sprite.getHeight(null);
     }
 
     public java.awt.Image getSprite(){
-        return sprite;
+        return _sprite;
     }
 
-    java.awt.Image sprite;
+    java.awt.Image _sprite;
 }

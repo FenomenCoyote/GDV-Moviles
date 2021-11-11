@@ -27,6 +27,8 @@ public class PCInput implements Input {
 
     @Override
     synchronized public void clearEvents() {
+        for(TouchEvent t : _touchEvents)
+            _readyTouchEvents.add(t);
         _touchEvents.clear();
     }
 
@@ -47,5 +49,6 @@ public class PCInput implements Input {
     private ArrayList<TouchEvent> _touchEvents;
     private Queue<TouchEvent> _readyTouchEvents;
 
+    //Needed to preserve the object in memory
     private MouseListener _mouseListener;
 }

@@ -8,6 +8,13 @@ import es.ucm.gdv.engine.MyFont;
 
 public class AFont implements MyFont {
 
+    /**
+     * Loads font from assets/fonts/ folder
+     * @param filename
+     * @param size
+     * @param isBold
+     * @param assets
+     */
     public void loadFont(String filename, int size, boolean isBold, AssetManager assets) {
         this.size = size;
         this.isBold = isBold;

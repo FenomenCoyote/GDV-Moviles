@@ -31,6 +31,8 @@ public class AInput implements Input {
 
     @Override
     public void clearEvents() {
+        for(TouchEvent t : _touchEvents)
+            _readyTouchEvents.add(t);
         _touchEvents.clear();
     }
 

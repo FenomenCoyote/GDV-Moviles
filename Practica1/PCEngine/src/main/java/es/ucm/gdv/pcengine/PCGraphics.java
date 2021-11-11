@@ -24,26 +24,24 @@ public class PCGraphics extends MyGraphics {
      * @return
      */
     public boolean init(int width, int height){
-        window = new JFrame("OhNo!");
+        _window = new JFrame("OhNo!");
 
         setLogicalSize(width, height);
-        window.setSize(width, height);
+        _window.setSize(width, height);
 
-        saveColor = Color.white;
-        saveFont = null;
+        _saveColor = Color.white;
+        _saveFont = null;
 
-        matrix = new double[6];
+        _window.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
-        window.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-
-        window.setIgnoreRepaint(true);
-        window.setVisible(true);
+        _window.setIgnoreRepaint(true);
+        _window.setVisible(true);
 
         // Intentamos crear el buffer strategy con 2 buffers.
         int intentos = 100;
         while(intentos-- > 0) {
             try {
-                window.createBufferStrategy(2);
+                _window.createBufferStrategy(2);
                 break;
             }
             catch(Exception e) {
@@ -59,48 +57,50 @@ public class PCGraphics extends MyGraphics {
         }
 
         // Obtenemos el Buffer Strategy que se supone que acaba de crearse.
-        strategy = window.getBufferStrategy();
+        _strategy = _window.getBufferStrategy();
 
         return true;
     }
 
+    /**
+     * Not needed for now
+     */
     @Override
     public void release() {
 
     }
 
+    /**
+     * Render in awtGraphics
+     * @param app
+     */
     public void render(Application app){
         // Pintamos el frame con el BufferStrategy
-        width = window.getWidth();
-        height = window.getHeight();
+        _width = _window.getWidth();
+        _height = _window.getHeight();
 
         do {
             do {
-                //try {
-                    awtGraphics = (Graphics2D)strategy.getDrawGraphics();
-                //}
-                //catch (Exception e){
-                    //awtGraphics = (Graphics2D)strategy.getDrawGraphics();
-                //}
+                _awtGraphics = (Graphics2D) _strategy.getDrawGraphics();
                 try {
                     //Clear de toda la pantalla
-                    Color previousColor = awtGraphics.getColor();
+                    Color previousColor = _awtGraphics.getColor();
 
                     setColor(0xffffffff);
-                    awtGraphics.fillRect(0, 0, width, height);
+                    _awtGraphics.fillRect(0, 0, _width, _height);
 
-                    awtGraphics.setColor(previousColor);
+                    _awtGraphics.setColor(previousColor);
 
                     calculateTranslationScale();
 
                     app.render();
                 }
                 finally {
-                    awtGraphics.dispose();
+                    _awtGraphics.dispose();
                 }
-            } while(strategy.contentsRestored());
-            strategy.show();
-        } while(strategy.contentsLost());
+            } while(_strategy.contentsRestored());
+            _strategy.show();
+        } while(_strategy.contentsLost());
     }
 
     /**
@@ -130,23 +130,33 @@ public class PCGraphics extends MyGraphics {
     }
 
     /**
-     * Clear the window (in logical size)
+     * Clear the window (not the white bands)
      * @param argb
      */
     @Override
     public void clear(int argb) {
         setColor(argb);
-        awtGraphics.fillRect(0, 0, logicalWidth, logicalHeight);
+        _awtGraphics.fillRect(0, 0, _logicalWidth, _logicalHeight);
     }
 
+    /**
+     * Canvas operation
+     * @param x
+     * @param y
+     */
     @Override
     public void translate(int x, int y) {
-        awtGraphics.translate(x, y);
+        _awtGraphics.translate(x, y);
     }
 
+    /**
+     * Canvas operation
+     * @param x
+     * @param y
+     */
     @Override
     public void scale(float x, float y) {
-        awtGraphics.scale(x, y);
+        _awtGraphics.scale(x, y);
     }
 
     /**
@@ -154,11 +164,11 @@ public class PCGraphics extends MyGraphics {
      */
     @Override
     public void save() {
-        saveColor = awtGraphics.getColor();
-        saveFont = awtGraphics.getFont();
+        _saveColor = _awtGraphics.getColor();
+        _saveFont = _awtGraphics.getFont();
 
         //awtGraphics.getTransform().getMatrix(matrix);
-        tr = awtGraphics.getTransform();
+        _tr = _awtGraphics.getTransform();
     }
 
     /**
@@ -166,76 +176,107 @@ public class PCGraphics extends MyGraphics {
      */
     @Override
     public void restore() {
-        awtGraphics.setColor(saveColor);
-        awtGraphics.setFont(saveFont);
+        _awtGraphics.setColor(_saveColor);
+        _awtGraphics.setFont(_saveFont);
 
-        awtGraphics.setTransform(tr);
+        _awtGraphics.setTransform(_tr);
         //awtGraphics.getTransform().setTransform(matrix[0], matrix[1],matrix[2],matrix[3],matrix[4],matrix[5]);
     }
 
+    /**
+     * Sets color to draw with
+     * @param argb
+     */
     @Override
     public void setColor(int argb) {
         Color c = new Color(argb, true);
-        awtGraphics.setColor(c);
+        _awtGraphics.setColor(c);
     }
 
+    /**
+     * Sets font to draw text with
+     * @param font
+     */
     @Override
     public void setFont(MyFont font) {
         Font f = ((PCFont)font).getFont();
-        awtGraphics.setFont(f);
+        _awtGraphics.setFont(f);
     }
 
+    /**
+     * Fills entire circle
+     * @param cx
+     * @param cy
+     * @param r
+     */
     @Override
     public void fillCircle(int cx, int cy, int r) {
-        awtGraphics.fillOval(cx - r, cy - r, r * 2, r * 2);
+        _awtGraphics.fillOval(cx - r, cy - r, r * 2, r * 2);
     }
 
+    /**
+     * Draws circumference
+     * @param cx
+     * @param cy
+     * @param r
+     * @param strokeWidth
+     */
     @Override
     public void drawCircle(int cx, int cy, int r, int strokeWidth) {
-        awtGraphics.setStroke(new BasicStroke(strokeWidth));
-        awtGraphics.drawOval(cx - r, cy - r, r * 2, r * 2);
-        awtGraphics.setStroke(new BasicStroke(1));
+        _awtGraphics.setStroke(new BasicStroke(strokeWidth));
+        _awtGraphics.drawOval(cx - r, cy - r, r * 2, r * 2);
+        _awtGraphics.setStroke(new BasicStroke(1));
     }
 
+    /**
+     * Draws image with alpha
+     * @param image
+     * @param x
+     * @param y
+     * @param alpha
+     */
     @Override
     public void drawImage(Image image, int x, int y, float alpha) {
         AlphaComposite ac = AlphaComposite.getInstance(AlphaComposite.SRC_OVER, alpha);
-        Graphics2D g2d = (Graphics2D)this.awtGraphics;
+        Graphics2D g2d = (Graphics2D)this._awtGraphics;
         g2d.setComposite(ac);
-        awtGraphics.drawImage(((PCImage)image).getSprite(), x, y, null);
+        _awtGraphics.drawImage(((PCImage)image).getSprite(), x, y, null);
         ac = AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 1.0f);
         g2d.setComposite(ac);
     }
 
+    /**
+     * Draws text using previous loaded font
+     * @param text
+     * @param x
+     * @param y
+     */
     @Override
     public void drawText(String text, int x, int y) {
-        int w = awtGraphics.getFontMetrics(awtGraphics.getFont()).stringWidth(text);
-        awtGraphics.drawString(text, x - w/2, y);
+        int w = _awtGraphics.getFontMetrics(_awtGraphics.getFont()).stringWidth(text);
+        _awtGraphics.drawString(text, x - w/2, y);
     }
 
-    @Override
     public int getWidth() {
-        return width;
+        return _width;
     }
 
-    @Override
     public int getHeight() {
-        return height;
+        return _height;
     }
 
     public JFrame getWindow() {
-        return window;
+        return _window;
     }
 
-    Color saveColor;
-    Font saveFont;
+    private Color _saveColor;
+    private Font _saveFont;
 
-    double[] matrix;
-    AffineTransform tr;
+    private AffineTransform _tr;
 
-    private java.awt.Graphics2D awtGraphics;
+    private java.awt.Graphics2D _awtGraphics;
 
-    private JFrame window;
-    private BufferStrategy strategy;
+    private JFrame _window;
+    private BufferStrategy _strategy;
 }
 

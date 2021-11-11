@@ -3,7 +3,9 @@ package es.ucm.gdv.engine;
 
 public interface Input
 {
-
+    /**
+     * Class which holds an input event information
+     */
     class TouchEvent
     {
         public TouchEvent(){

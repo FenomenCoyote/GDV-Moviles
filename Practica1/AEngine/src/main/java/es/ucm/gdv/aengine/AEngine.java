@@ -15,7 +15,6 @@ public class AEngine implements Engine, Runnable {
         c.setContentView(surfaceView);
         _graphics = new AGraphics(surfaceView, c.getAssets());
         _input = new AInput(surfaceView,_graphics);
-
     }
 
     @Override
@@ -56,8 +55,9 @@ public class AEngine implements Engine, Runnable {
         }
     }
 
-
-
+    /**
+     * Not currently needed
+     */
     @Override
     public void release() {
 
@@ -78,6 +78,9 @@ public class AEngine implements Engine, Runnable {
         return _input;
     }
 
+    /**
+     * When Android unpauses our game
+     */
     public void onResume()
     {
         if (!_running) {
@@ -92,6 +95,9 @@ public class AEngine implements Engine, Runnable {
         }
     }
 
+    /**
+     * When Android pauses our game
+     */
     public void onPause()
     {
         if (_running) {

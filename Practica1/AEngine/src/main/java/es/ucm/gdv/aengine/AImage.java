@@ -11,6 +11,11 @@ import es.ucm.gdv.engine.Image;
 
 public class AImage implements Image {
 
+    /**
+     * Loads image from Assets/sprites/ folder
+     * @param route
+     * @param assetManager
+     */
     public void loadImage(String route, AssetManager assetManager) {
         // load image
         try {

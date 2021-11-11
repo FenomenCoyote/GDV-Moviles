@@ -3,25 +3,24 @@ package es.ucm.gdv.engine;
 public abstract class MyGraphics implements Graphics {
 
     /**
-     * Adds bands at the top and at the bottom or in both sides
+     * Adds bands at the top and at the bottom, or in both sides
      * to keep a logicalHeight/logicalWidth relation
      */
     protected void calculateTranslationScale(){
-        //Ajustar el alto para que sea exacto al height
-        float heightRelation = (float)height/logicalHeight;
-
-        if(logicalWidth * heightRelation > width){ //Si el width es muy pequeño para eso, padding arriba y abajo
-            scale = (float)width/logicalWidth;
-            offsetX = 0;
-            offsetY = (height-(int)(logicalHeight*scale))/2;
+        //Adjust high to be exact to logicalHeight
+        float heightRelation = (float) _height / _logicalHeight;
+        if(_logicalWidth * heightRelation > _width){ //If width is too small, bands on top and bottom
+            _scale = (float) _width / _logicalWidth;
+            _offsetX = 0;
+            _offsetY = (_height -(int)(_logicalHeight * _scale))/2;
         }
-        else { //Si el width es grande padding izquierda y derecha
-            scale = heightRelation;
-            offsetY = 0;
-            offsetX = (width-(int)(logicalWidth*scale))/2;
+        else { //If width is wide enough, bands on the left and the right
+            _scale = heightRelation;
+            _offsetY = 0;
+            _offsetX = (_width -(int)(_logicalWidth * _scale))/2;
         }
-        translate(offsetX, offsetY);
-        scale(scale, scale);
+        translate(_offsetX, _offsetY);
+        scale(_scale, _scale);
     }
 
     /**
@@ -31,25 +30,25 @@ public abstract class MyGraphics implements Graphics {
      */
     @Override
     public void setLogicalSize(int width, int height) {
-        logicalWidth = width;
-        logicalHeight = height;
+        _logicalWidth = width;
+        _logicalHeight = height;
     }
 
     public int getOffsetX() {
-        return offsetX;
+        return _offsetX;
     }
 
     public int getOffsetY() {
-        return offsetY;
+        return _offsetY;
     }
 
     public float getScale() {
-        return scale;
+        return _scale;
     }
 
-    protected int width, height;
-    protected int logicalWidth, logicalHeight;
+    protected int _width, _height;
+    protected int _logicalWidth, _logicalHeight;
 
-    protected int offsetX, offsetY;
-    protected float scale;
+    protected int _offsetX, _offsetY;
+    protected float _scale;
 }

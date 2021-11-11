@@ -15,10 +15,8 @@ public class PCEngine implements Engine {
 
         _graphics = new PCGraphics();
         _graphics.init(400, 600);
-
         _input = new PCInput(_graphics);
 
-        //_input.init();
         _app.init(this);
     }
 
@@ -48,9 +46,7 @@ public class PCEngine implements Engine {
      */
     @Override
     public void release() {
-        //??
         _app.release();
-
         _graphics.release();
         //_input.release();
     }
@@ -73,5 +69,4 @@ public class PCEngine implements Engine {
     PCGraphics _graphics = null;
     PCInput _input = null;
     Application _app = null;
-    MouseListener _mouseListener = null;
 }

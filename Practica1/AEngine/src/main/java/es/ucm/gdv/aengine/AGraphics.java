@@ -14,6 +14,11 @@ import es.ucm.gdv.engine.MyGraphics;
 
 public class AGraphics extends MyGraphics {
 
+    /**
+     * Gets holder and creates Paint object
+     * @param view
+     * @param assets
+     */
     public AGraphics(SurfaceView view, AssetManager assets) {
         this._holder = view.getHolder();
         this._view = view;
@@ -23,6 +28,7 @@ public class AGraphics extends MyGraphics {
         _paint.setTextAlign(Paint.Align.CENTER);
     }
 
+
     public void render(Application a)
     {
         while (!_holder.getSurface().isValid())
@@ -30,8 +36,8 @@ public class AGraphics extends MyGraphics {
 
         canvas = _holder.lockCanvas();
 
-        width = canvas.getWidth();
-        height = canvas.getHeight();
+        _width = canvas.getWidth();
+        _height = canvas.getHeight();
         clear(0xffffffff);
 
         calculateTranslationScale();
@@ -40,6 +46,9 @@ public class AGraphics extends MyGraphics {
         _holder.unlockCanvasAndPost(canvas);
     }
 
+    /**
+     * Not currently needed
+     */
     @Override
     public void release() {
 
@@ -125,12 +134,10 @@ public class AGraphics extends MyGraphics {
         canvas.drawText(text, x, y, _paint);
     }
 
-    @Override
     public int getWidth() {
         return _view.getWidth();
     }
 
-    @Override
     public int getHeight() {
         return _view.getHeight();
     }
