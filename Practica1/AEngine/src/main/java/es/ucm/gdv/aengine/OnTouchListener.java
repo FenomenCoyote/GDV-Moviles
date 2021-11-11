@@ -19,33 +19,43 @@ public class OnTouchListener implements View.OnTouchListener {
     @Override
     public boolean onTouch(View v, MotionEvent event) {
 
-        Point p = translateCoordinates((int)event.getX(), (int)event.getY());
-
-        Input.TouchEvent e = aInput.getReadyTouchEvent();
-        if(e==null)
-            return false;
-        e.x = p.x;
-        e.y = p.y;
-
-        for(int i = 0; i < event.getPointerCount(); i++)
-            e.id = event.getPointerId(i);
-
-        switch (event.getAction()) {
-            case MotionEvent.ACTION_DOWN:
-                e.type = Input.TouchEvent.TouchEventType.Touch;
-                break;
-            case MotionEvent.ACTION_MOVE:
+        if(event.getAction() == MotionEvent.ACTION_MOVE){
+            for(int i=0; i<event.getPointerCount(); i++){
+                Point p = translateCoordinates((int)event.getX(i), (int)event.getY(i));
+                Input.TouchEvent e = aInput.getReadyTouchEvent();
+                if(e==null) return false;
+                e.x = p.x;
+                e.y = p.y;
+                e.id = event.getPointerId(i);
                 e.type = Input.TouchEvent.TouchEventType.Slide;
-                break;
-            case MotionEvent.ACTION_UP:
-                e.type = Input.TouchEvent.TouchEventType.Release;
-                break;
+                aInput.addEvent(e);
+            }
         }
-
-        System.out.println("Id del dedo: " + e.id + " Tipo: " + e.type.toString());
-
-        aInput.addEvent(e);
-
+        else{
+            int i = event.getActionIndex();
+            Point p = translateCoordinates((int)event.getX(i), (int)event.getY(i));
+            Input.TouchEvent e = aInput.getReadyTouchEvent();
+            if(e==null)
+                return false;
+            e.x = p.x;
+            e.y = p.y;
+            e.id = event.getPointerId(i);
+            switch (event.getActionMasked()) {
+                case MotionEvent.ACTION_DOWN:
+                    e.type = Input.TouchEvent.TouchEventType.Touch;
+                    break;
+                case MotionEvent.ACTION_UP:
+                    e.type = Input.TouchEvent.TouchEventType.Release;
+                    break;
+                case MotionEvent.ACTION_POINTER_UP:
+                    e.type = Input.TouchEvent.TouchEventType.Release;
+                    break;
+                case MotionEvent.ACTION_POINTER_DOWN:
+                    e.type = Input.TouchEvent.TouchEventType.Touch;
+                    break;
+            }
+            aInput.addEvent(e);
+        }
         return true;
     }
 
