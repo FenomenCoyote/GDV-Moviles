@@ -21,6 +21,8 @@ public class MouseListener implements javax.swing.event.MouseInputListener{
             Point p = translateCoordinates(mouseEvent.getX(), mouseEvent.getY());
 
             Input.TouchEvent e = pcInput.getReadyTouchEvent();
+            if(e == null)
+                return;
             e.x = p.x;
             e.y = p.y;
             e.type = Input.TouchEvent.TouchEventType.Touch;
@@ -37,6 +39,8 @@ public class MouseListener implements javax.swing.event.MouseInputListener{
         Point p = translateCoordinates(mouseEvent.getX(), mouseEvent.getY());
 
         Input.TouchEvent e = pcInput.getReadyTouchEvent();
+        if(e == null)
+            return;
         e.x = p.x;
         e.y = p.y;
         e.type = Input.TouchEvent.TouchEventType.Release;
@@ -51,6 +55,8 @@ public class MouseListener implements javax.swing.event.MouseInputListener{
         Point p = translateCoordinates(mouseEvent.getX(), mouseEvent.getY());
 
         Input.TouchEvent e = pcInput.getReadyTouchEvent();
+        if(e == null)
+            return;
         e.x = p.x;
         e.y = p.y;
         e.type = Input.TouchEvent.TouchEventType.Slide;

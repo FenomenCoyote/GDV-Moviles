@@ -22,9 +22,13 @@ public class Playing extends State {
         clickableUnDo = new ClickImage(imgUnDo, 400 - imgUnDo.getWidth()/2, 1050, 100, 100, 0.5f);
         clickableEye = new ClickImage(imgEye, 650 - imgEye.getWidth()/2, 1050, 100, 100, 0.5f);
 
-        text = null;
+        text = boardSize + " x " + boardSize;
+        nextText = boardSize + " x " + boardSize;
 
         this.showLocksTime = showLocksTime;
+        this.textAlpha = 0f;
+        this.textAlphaSpeed = 5f;
+        this.textTransition = true;
     }
 
     @Override
@@ -33,6 +37,7 @@ public class Playing extends State {
         graphics.setColor((alpha << 24) | 0x00333333);
         graphics.setFont(font2);
         graphics.drawText(board.getPercentage() + "%",200,510);
+        graphics.setColor(((int)(alpha * textAlpha) << 24) | 0x00333333);
         graphics.setFont(font1);
         if(text == null)
             graphics.drawText(boardSize + " x " + boardSize, 200, 80);
@@ -63,6 +68,18 @@ public class Playing extends State {
         if(st != null)
             return st;
 
+        if(textTransition){
+            textAlpha = Math.max(0f, Math.min(1f, textAlpha + (float)elapsedTime * textAlphaSpeed));
+            if(textAlpha <= 0f){
+                textAlphaSpeed = -textAlphaSpeed;
+                setNextText();
+            }
+            else if(textAlpha >= 1f){
+                textTransition = false;
+                textAlphaSpeed = -textAlphaSpeed;
+            }
+        }
+
         Input.TouchEvent t = input.getTouchEvent();
         while(t != null){
             input.releaseEvent(t);
@@ -75,7 +92,11 @@ public class Playing extends State {
                 if(text == "Splendid")
                     setNextState(OhNoApplication.State.Menu);
                 else{
-                    text = null;
+                    if(!textTransition){
+                        nextTextTransition();
+                        nextText = null;
+                    }
+
                     board.highlightCircle(0, 0, false);
                 }
             }
@@ -86,10 +107,13 @@ public class Playing extends State {
             else if(clickableEye.isOnMe(t.x * 2, t.y * 2))
             {
                 CellHint hint = board.getHint();
-                if(hint == null)
-                    text = "There is a mistake in the board";
+                if(hint == null){
+                    nextTextTransition();
+                    nextText = "There is a mistake in the board";
+                }
                 else {
-                    getTextFromHint(hint);
+                    nextTextTransition();
+                    nextText = getTextFromHint(hint);
                     board.highlightCircle(hint.pos.fst, hint.pos.snd, true);
                 }
             }
@@ -98,19 +122,23 @@ public class Playing extends State {
                 if (hint != null){
                     switch (hint.state) {
                         case Unassigned:
-                            text = "This tile was reversed to its\nempty state";
+                            nextTextTransition();
+                            nextText = "This tile was reversed to its\nempty state";
                             break;
                         case Point:
-                            text = "This tile was reversed to blue";
+                            nextTextTransition();
+                            nextText = "This tile was reversed to blue";
                             break;
                         case Wall:
-                            text = "This tile was reversed to red";
+                            nextTextTransition();
+                            nextText = "This tile was reversed to red";
                             break;
                     }
                     board.highlightCircle(hint.pos.fst, hint.pos.snd, true);
                 }
                 else {
-                    text = "Nothing to undo";
+                    nextTextTransition();
+                    nextText = "Nothing to undo";
                 }
             }
             else
@@ -124,16 +152,35 @@ public class Playing extends State {
         board.update(elapsedTime);
 
         if(board.wrongCell() == null){
-            text = "Splendid";
-            board.setFinished();
+            if(text != "Splendid") {
+                nextTextTransition();
+                nextText = "Splendid";
+                board.setFinished();
+                board.highlightCircle(0, 0, false);
+            }
         }
         else if (board.getPercentage() == 100){
             CellHint hint = board.getHint();
-            getTextFromHint(hint);
+
+            String auxText = getTextFromHint(hint);
+            if(!auxText.equals(nextText)){
+                nextText = auxText;
+                nextTextTransition();
+            }
             board.highlightCircle(hint.pos.fst, hint.pos.snd, true);
         }
 
         return null;
+    }
+
+    private void nextTextTransition(){
+        if(!textTransition){
+            textTransition = true;
+        }
+    }
+
+    private void setNextText(){
+        this.text = this.nextText;
     }
 
     @Override
@@ -145,30 +192,24 @@ public class Playing extends State {
         text = null;
     }
 
-    private void getTextFromHint(CellHint hint){
+    private String getTextFromHint(CellHint hint){
         switch (hint.type) {
             case First:
-                text = "This number can see all its dots";
-                break;
+                return "This number can see all its dots";
             case Second:
-                text = "Looking further in one direction\nwould exceed this number";
-                break;
+                return "Looking further in one direction\nwould exceed this number";
             case Third:
-                text = "One specific dot is included\nin all solutions imaginable";
-                break;
+                return "One specific dot is included\nin all solutions imaginable";
             case Fourth:
-                text = "This number sees a bit too\nmuch";
-                break;
+                return "This number sees a bit too\nmuch";
             case Fifth:
-                text = "This number can't see enough";
-                break;
+                return "This number can't see enough";
             case Sixth:
-                text = "This one cant see anyone";
-                break;
+                return "This one cant see anyone";
             case Seventh:
-                text = "A blue dot should always see\nat least one other";
-                break;
+                return "A blue dot should always see\nat least one other";
         }
+        return null;
     }
 
     private int boardSize;
@@ -183,6 +224,8 @@ public class Playing extends State {
     private ClickImage clickableClose,clickableUnDo, clickableEye;
 
     private double showLocksTime;
+    private float textAlpha, textAlphaSpeed;
+    private boolean textTransition;
 
-    private String text;
+    private String text, nextText;
 }

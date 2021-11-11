@@ -9,7 +9,7 @@ public abstract class State {
         this.graphics = graphics;
         this.input = input;
         this.alphaTransition = 0;
-        this.alphaTransitionSpeed = 5;
+        this.alphaTransitionSpeed = 10;
         this.inTransition = true;
     }
 
