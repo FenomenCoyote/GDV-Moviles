@@ -5,12 +5,15 @@ import java.util.Random;
 public class BoardGenerator {
 
     public BoardGenerator(int size, Board board, CellPool pool){
-        _size = size;
-        _board = board;
-        _utils = new BoardUtils();
-        _pool = pool;
+        this._size = size;
+        this._board = board;
+        this._utils = new BoardUtils();
+        this._pool = pool;
     }
 
+    /**
+     * Creates a puzzle and gives it to Board
+     */
     public void setForGame() {
         Cell[][] puzzle = new Cell[_size + 2][_size + 2];
 
@@ -21,15 +24,18 @@ public class BoardGenerator {
             }
         }
 
-        //Hasta que haya un puzzle que tenga solucion
+
         Random rng = new Random();
+        //Until a puzzle have been generated
         while(true) {
             clean(puzzle);
             randomize(puzzle, rng);
             if(!wrongInitialBoard(puzzle) && seesJustRight(puzzle)) {
+                //Puzzle is built correctly
                 prune(puzzle);
                 _board.copyToBoard(puzzle);
-                if (resolve(puzzle)) { //Si se puede resolver
+                if (resolve(puzzle)) {
+                    //Done
                     _board.setUnassignedCells(_board.countUnassignedCells());
                     _pool.releaseCell(puzzle);
                     return;
@@ -38,6 +44,31 @@ public class BoardGenerator {
         }
     }
 
+    /**
+     * If the board is built incorrectly
+     * @param puzzle
+     * @return
+     */
+    public boolean wrongInitialBoard(Cell[][] puzzle){
+        for (int i = 1; i < _size + 1; ++i){
+            for (int j = 1; j < _size + 1; ++j){
+                Cell c = puzzle[i][j];
+                if(c.getState() == Cell.State.Point)
+                    //If its placed incorrectly, returns true
+                    if ((c.getLocked() && (_utils.lookDirections(i, j, puzzle) != c.getMustWatch())) ||
+                            (!c.getLocked() && (_utils.lookDirections(i, j, puzzle) == 0)))
+                        return true;
+            }
+        }
+        //No mistakes were found
+        return false;
+    }
+
+    /**
+     * Checks if no blue point sees more than the board's size
+     * @param puzzle
+     * @return
+     */
     private boolean seesJustRight(Cell[][] puzzle){
         for (int i = 1; i < _size + 1; ++i){
             for (int j = 1; j < _size + 1; ++j){
@@ -51,13 +82,17 @@ public class BoardGenerator {
         return true;
     }
 
+    /**
+     * Prunes the puzzle leaving a few walls and the locked points.
+     * If later, the puzzle can be resolved, this will be the board the user has to complete
+     * @param puzzle
+     */
     private void prune(Cell[][] puzzle){
         Random rng = new Random();
         int changeWall = 4;
-        if(_size >= 6)
+        if(_size > 6)
             changeWall = 3;
-        else if(_size >= 8)
-            changeWall = 2;
+
         for (int i = 1; i < _size + 1; ++i){
             for (int j = 1; j < _size +1; ++j){
                 Cell c = puzzle[i][j];
@@ -72,18 +107,10 @@ public class BoardGenerator {
         }
     }
 
-    public boolean wrongInitialBoard(Cell[][] puzzle){
-        for (int i = 1; i < _size + 1; ++i){
-            for (int j = 1; j < _size + 1; ++j){
-                Cell c = puzzle[i][j];
-                if(c.getState() == Cell.State.Point)
-                    return (c.getLocked() && (_utils.lookDirections(i, j, puzzle) != c.getMustWatch())) ||
-                            (!c.getLocked() && (_utils.lookDirections(i, j, puzzle) == 0));
-            }
-        }
-        return false;
-    }
-
+    /**
+     * Prepares the puzzle for the next try
+     * @param puzzle
+     */
     private void clean(Cell[][] puzzle){
         for (int i = 1; i < _size + 1; ++i){
             for (int j = 1; j < _size + 1; ++j){
@@ -95,6 +122,11 @@ public class BoardGenerator {
         }
     }
 
+    /**
+     * At random, generates walls and points in an attempt to create a valid puzzle
+     * @param puzzle
+     * @param rng
+     */
     private void randomize(Cell[][] puzzle, Random rng){
         int rngWall = 2;
         int rngPoint = _size;
@@ -116,6 +148,14 @@ public class BoardGenerator {
         }
     }
 
+    /**
+     * Puts a locked point at i, j. Also puts blue points and walls at the end of them
+     * @param c
+     * @param i
+     * @param j
+     * @param puzzle
+     * @param rng
+     */
     private void putImportantPoint(Cell c, int i, int j, Cell[][] puzzle, Random rng){
         int seeingDir[] = _utils.getView(i, j, puzzle);
         int seeing = seeingDir[0] + seeingDir[1] + seeingDir[2] + seeingDir[3];
@@ -167,6 +207,14 @@ public class BoardGenerator {
         }
     }
 
+    /**
+     * Expands blue point in dir direction
+     * @param puzzle
+     * @param i
+     * @param j
+     * @param k
+     * @param dir
+     */
     private void expand(Cell[][] puzzle, int i, int j, int k, Board.Dirs dir){
         Cell c;
         for (int l = 1; l <= k; l++) {
@@ -176,6 +224,11 @@ public class BoardGenerator {
         }
     }
 
+    /**
+     * Tries to solve the puzzle using hints
+     * @param puzzle
+     * @return
+     */
     private boolean resolve(Cell[][] puzzle){
         boolean changed = true;
         Hint puzzleHint = new Hint(puzzle);
@@ -196,7 +249,6 @@ public class BoardGenerator {
                 }
             }
         }
-        //print(puzzle);
         return _board.wrongCell(puzzle) == null;
     }
 

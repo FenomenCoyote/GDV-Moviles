@@ -6,6 +6,14 @@ import static es.ucm.gdv.pcohno.Board._dirs;
 
 public class BoardUtils {
 
+    /**
+     * Looks for cell at row, col in direction to check how many cells does it see in that direction
+     * @param direction
+     * @param row
+     * @param col
+     * @param board
+     * @return
+     */
     public int lookDirection(Board.Dirs direction, int row, int col, Cell[][] board){
         Pair dir = _dirs[direction.ordinal()];
 
@@ -21,6 +29,13 @@ public class BoardUtils {
         return seeing;
     }
 
+    /**
+     * Looks in all direction of cell at row, col and returns how many cells that it sees
+     * @param row
+     * @param col
+     * @param board
+     * @return
+     */
     public int lookDirections(int row, int col, Cell[][] board){
         int seeing = 0;
 
@@ -36,6 +51,14 @@ public class BoardUtils {
         return seeing;
     }
 
+    /**
+     * Gets how many unassigned cells could potentially see in direction the cell at row, col
+     * @param puzzle
+     * @param direction
+     * @param row
+     * @param col
+     * @return
+     */
     public int posibleSeeingDirection(Cell[][] puzzle, Board.Dirs direction, int row, int col){
         Pair dir = _dirs[direction.ordinal()];
 
@@ -52,12 +75,19 @@ public class BoardUtils {
         return seeing;
     }
 
+    /**
+     * Gets an array of 4 indicating how many does it see in that direction
+     * @param row
+     * @param col
+     * @param puzzle
+     * @return
+     */
     public int[] getView(int row, int col, Cell[][] puzzle) {
         int[] view = new int[4];
-        view[0] = lookDirection(Board.Dirs.Up, row, col, puzzle);
-        view[1] = lookDirection(Board.Dirs.Down, row, col, puzzle);
-        view[2] = lookDirection(Board.Dirs.Left, row, col, puzzle);
-        view[3] = lookDirection(Board.Dirs.Right, row, col, puzzle);
+        view[Board.Dirs.Up.ordinal()] = lookDirection(Board.Dirs.Up, row, col, puzzle);
+        view[Board.Dirs.Down.ordinal()] = lookDirection(Board.Dirs.Down, row, col, puzzle);
+        view[Board.Dirs.Left.ordinal()] = lookDirection(Board.Dirs.Left, row, col, puzzle);
+        view[Board.Dirs.Right.ordinal()] = lookDirection(Board.Dirs.Right, row, col, puzzle);
         return view;
     }
 }

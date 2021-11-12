@@ -73,7 +73,12 @@ public class Board {
         pool.releaseCell(_board);
     }
 
+    /**
+     * Used for animations
+     * @param elapsedTime
+     */
     public void update(double elapsedTime){
+        //alpha management for the locks
         if(_showLocks){
             _showLocksTime -= elapsedTime;
             double s = _showLocksTime / _initialShowLocksTime;
@@ -86,6 +91,7 @@ public class Board {
             }
         }
 
+        //alpha management for each cell state
         for(int i=1; i<_size+1; i++){
             for(int j=1; j<_size+1; j++){
                 _board[i][j].update(elapsedTime);
@@ -93,6 +99,11 @@ public class Board {
         }
     }
 
+    /**
+     * Renders the board at the center. Also renders the locks if needed
+     * @param graphics
+     * @param alphaTransition
+     */
     public void render(Graphics graphics, float alphaTransition) {
         graphics.save();
 
@@ -130,6 +141,11 @@ public class Board {
         graphics.restore();
     }
 
+    /**
+     * Called from Playing to check if input is on some cell
+     * @param x
+     * @param y
+     */
     public void isOnMe(int x, int y){
 
         y -= 100;
@@ -167,18 +183,25 @@ public class Board {
         }
     }
 
-
+    /**
+     * Prints current board state (ignoring exterior walls)
+     */
     public void print() {
         print(_board);
     }
 
     /**
-     * @return pair of the first wrong cell. If all are correct, returns (-1, -1)
+     * @return pair of the first wrong cell. If all are correct, returns null
      */
     public Pair wrongCell() {
         return wrongCell(_board);
     }
 
+    /**
+     *
+     * @param puzzle
+     * @return pair of the first wrong cell. If all are correct, returns null
+     */
     public Pair wrongCell(Cell[][] puzzle){
         for (int i = 1; i < _size + 1; ++i){
             for (int j = 1; j < _size + 1; ++j){
@@ -189,6 +212,13 @@ public class Board {
         return null;
     }
 
+    /**
+     * Checks if cell at pos row, col is placed correctly
+     * @param row
+     * @param col
+     * @param puzzle
+     * @return
+     */
     private boolean isCellRight(int row, int col, Cell[][] puzzle){
         Cell c = puzzle[row][col];
         if(c.getLocked() && c.getState() == Cell.State.Point)
@@ -199,7 +229,11 @@ public class Board {
             return c.getState() == Cell.State.Wall;
     }
 
-    //Devolver nueva celda puesta o una cela mal muesta
+
+    /**
+     * Tries to get a hint, either positive or negative, from the board
+     * @return null if no hint was found
+     */
     public CellHint getHint() {
         for (int i = 1; i < _size + 1; ++i){
             for (int j = 1; j < _size + 1; ++j){
@@ -225,13 +259,20 @@ public class Board {
         return null;
     }
 
+    /**
+     * Calculates and returns current percentage
+     * @return
+     */
     public int getPercentage()
     {
         int unassignedCells = countUnassignedCells();
-
         return 100-((100*unassignedCells)/_totalUnassignedCells);
     }
 
+    /**
+     * Undoes last move
+     * @return
+     */
     public CellHint undo(){
         if(!_actions.empty()){
             CellHint last = _actions.pop();
@@ -241,12 +282,22 @@ public class Board {
         return null;
     }
 
+    /**
+     * Highlights row, col cell
+     * @param row
+     * @param col
+     * @param enable
+     */
     public void highlightCircle(int row, int col, boolean enable){
         _highlightedRow = row;
         _highlightedCol = col;
         _highlightedCircle = enable;
     }
 
+    /**
+     * Copies puzzle to board
+     * @param puzzle
+     */
     public void copyToBoard(Cell[][] puzzle){
         for (int i = 1; i < _size + 1; ++i){
             for (int j = 1; j < _size + 1; ++j) {
@@ -258,6 +309,10 @@ public class Board {
         }
     }
 
+    /**
+     * Prints board
+     * @param board
+     */
     private void print(Cell[][] board) {
         System.out.println("=============================");
         for (int i = 1; i < _size + 1; ++i) {
@@ -284,6 +339,10 @@ public class Board {
         }
     }
 
+    /**
+     * Counts how many unassigned cell there are
+     * @return
+     */
     public int countUnassignedCells()
     {
         int unassignedCells=0;
@@ -299,6 +358,9 @@ public class Board {
         return unassignedCells;
     }
 
+    /**
+     * Sets all cells mustWatch to what they see
+     */
     public void setFinished(){
         for (int i = 1; i < _size + 1; ++i){
             for (int j = 1; j < _size + 1; ++j){
@@ -310,10 +372,20 @@ public class Board {
         }
     }
 
+    /**
+     * Called to set how many unassigned cells the are on the board
+     * @param numberUnassigned
+     */
     public void setUnassignedCells(int numberUnassigned){
         _totalUnassignedCells = numberUnassigned;
     }
 
+    /**
+     * Gets cell at row, col
+     * @param row
+     * @param col
+     * @return
+     */
     public Cell getCell(int row, int col){ return _board[row][col]; }
 
     private BoardUtils _utils;
