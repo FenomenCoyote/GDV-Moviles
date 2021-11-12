@@ -6,9 +6,16 @@ import es.ucm.gdv.engine.Image;
 import es.ucm.gdv.engine.Input;
 import es.ucm.gdv.engine.MyFont;
 
-
+/**
+ * Class for Start screen state
+ */
 public class Start extends State {
 
+    /**
+     * Constructor
+     * @param graphics object for rendering
+     * @param input object to get input events
+     */
     public Start(Graphics graphics, Input input) {
         super(graphics, input);
         _font1 = graphics.newFont("Molle-Regular.ttf",96,false);
@@ -17,6 +24,9 @@ public class Start extends State {
         _imgQ = graphics.newImage("q42.png");
     }
 
+    /**
+     * Called every frame after update
+     */
     @Override
     public void render() {
         int alpha = (int)(alphaTransition * 255f);
@@ -38,6 +48,11 @@ public class Start extends State {
         graphics.scale(20, 20);
     }
 
+    /**
+     * Called every frame
+     * @param elapsedTime time since last frame
+     * @return returns next state if game should change to it, null either
+     */
     @Override
     public OhNoApplication.State update(double elapsedTime) {
         OhNoApplication.State s = super.update(elapsedTime);
@@ -60,6 +75,10 @@ public class Start extends State {
         return null;
     }
 
+    /**
+     * Called before first update
+     * @param app object representing the game
+     */
     @Override
     public void init(OhNoApplication app) {
 

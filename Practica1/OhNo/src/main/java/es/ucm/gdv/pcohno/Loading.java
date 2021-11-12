@@ -4,30 +4,50 @@ import es.ucm.gdv.engine.Graphics;
 import es.ucm.gdv.engine.Input;
 import es.ucm.gdv.engine.MyFont;
 
+/**
+ * Class for loading state
+ */
 public class Loading extends State {
 
+    /**
+     * Constructor
+     * @param graphics object for rendering
+     * @param input object to get input events
+     */
     public Loading(Graphics graphics, Input input) {
         super(graphics, input);
 
-        font1 = graphics.newFont("JosefinSans-Bold.ttf",64,true);
+        _font1 = graphics.newFont("JosefinSans-Bold.ttf",64,true);
     }
 
+    /**
+     * Called every frame after update
+     */
     @Override
     public void render() {
         graphics.setColor(0xff333333);
-        graphics.setFont(font1);
+        graphics.setFont(_font1);
         graphics.drawText("Loading...", 200, 300);
     }
 
+    /**
+     * Called every frame
+     * @param elapsedTime time since last frame
+     * @return returns next state if game should change to it, null either
+     */
     @Override
     public OhNoApplication.State update(double elapsedTime) {
         return OhNoApplication.State.Playing;
     }
 
+    /**
+     * Called before first update
+     * @param app object representing the game
+     */
     @Override
     public void init(OhNoApplication app) {
 
     }
 
-    private final MyFont font1;
+    private final MyFont _font1;
 }

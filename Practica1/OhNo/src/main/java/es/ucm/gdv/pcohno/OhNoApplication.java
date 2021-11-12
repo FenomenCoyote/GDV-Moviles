@@ -79,7 +79,7 @@ public class OhNoApplication implements Application {
      * Used by Playing State to retrieve board size information gathered in Menu State
      * @return
      */
-    public int get_boardSize(){
+    public int getBoardSize(){
         return _boardSize;
     }
 

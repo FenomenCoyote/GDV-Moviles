@@ -5,8 +5,17 @@ import es.ucm.gdv.engine.Image;
 import es.ucm.gdv.engine.Input;
 import es.ucm.gdv.engine.MyFont;
 
+/**
+ * Class for Playing state
+ */
 public class Playing extends State {
 
+    /**
+     * Constructor
+     * @param graphics object for rendering
+     * @param input object to get input events
+     * @param showLocksTime time to show locks when clicking a locked cell
+     */
     public Playing(Graphics graphics, Input input, double showLocksTime) {
         super(graphics, input);
 
@@ -34,6 +43,9 @@ public class Playing extends State {
         this._pool = new CellPool();
     }
 
+    /**
+     * Called every frame after update
+     */
     @Override
     public void render() {
         int alpha = (int)(alphaTransition * 255f);
@@ -65,6 +77,11 @@ public class Playing extends State {
         clickableEye.render(graphics, alphaTransition);
     }
 
+    /**
+     * Called every frame
+     * @param elapsedTime time since last frame
+     * @return returns next state if game should change to it, null either
+     */
     @Override
     public OhNoApplication.State update(double elapsedTime) {
         OhNoApplication.State st = super.update(elapsedTime);
@@ -176,19 +193,29 @@ public class Playing extends State {
         return null;
     }
 
+    /**
+     * Initiates transition to next text using animation
+     */
     private void nextTextTransition(){
         if(!_textTransition){
             _textTransition = true;
         }
     }
 
+    /**
+     * Sets text to next one
+     */
     private void setNextText(){
         this._text = this._nextText;
     }
 
+    /**
+     * Called before first update
+     * @param app
+     */
     @Override
     public void init(OhNoApplication app) {
-        _boardSize = app.get_boardSize();
+        _boardSize = app.getBoardSize();
         if(_board != null)
             _board.release(_pool);
         _board = new Board(_boardSize, graphics.newImage("lock.png"), _showLocksTime, _pool);
@@ -197,6 +224,11 @@ public class Playing extends State {
         _text = null;
     }
 
+    /**
+     * Change state depending on hint
+     * @param hint hint to know type
+     * @return text to show according to hint type
+     */
     private String getTextFromHint(CellHint hint){
         switch (hint.type) {
             case First:
