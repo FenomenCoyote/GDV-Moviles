@@ -21,44 +21,68 @@ public class Board {
 
     static enum Dirs {Up, Down, Left, Right}
 
-    public Board(int size, Image lockImg, double showLocksTime){
-        _board = new Cell[size + 2][size + 2];
-        _totalUnassignedCells=1;
-        _size = size;
-        this._hint = new Hint(_board);
-        this._utils = new BoardUtils();
-        _actions = new Stack<CellHint>();
-        highlightedCircle = false;
-        highlightedRow = highlightedCol = 0;
+     /**
+     * Creates board of size*size Cells (size+2*size+2 in logic)
+     * @param size
+     * @param lockImg
+     * @param showLocksTime
+     * @param pool
+     */
+    public Board(int size, Image lockImg, double showLocksTime, CellPool pool){
 
-        this.showLocksTime = this.initialShowLocksTime = showLocksTime;
-        imgLock = lockImg;
-        showLocks = false;
-        biggerCell = new Pair(-1, -1);
-        biggerCellScale = 1;
+        this._utils = new BoardUtils();
+        this._board = new Cell[size + 2][size + 2];
+        this._size = size;
+        this._hint = new Hint(_board);
+        this._totalUnassignedCells = 1;
+        this._actions = new Stack<CellHint>();
+
+        this._highlightedCircle = false;
+        this._highlightedRow = this._highlightedCol = 0;
+
+        this._showLocksTime = this._initialShowLocksTime = showLocksTime;
+        this._showLocks = false;
+        this._imgLock = lockImg;
+        this._biggerCell = new Pair(-1, -1);
+        this._biggerCellScale = 1;
 
         for (int i = 0; i < size + 2; ++i){
             for (int j = 0; j < size + 2; ++j){
-                _board[i][j] = new Cell();
+                Cell c = pool.retrieveCell();
                 if(i == 0 || j == 0 || i == size + 1 || j == size + 1){
-                    _board[i][j].setState(Cell.State.Wall);
-                    _board[i][j].setLocked(true);
+                    c.setLocked(false);
+                    c.setMustWatch(-1);
+                    c.setState(Cell.State.Wall);
+                    c.setLocked(true);
                 }
+                else {
+                    c.setLocked(false);
+                    c.setMustWatch(-1);
+                    c.setState(Cell.State.Unassigned);
+                }
+                _board[i][j] = c;
             }
         }
+    }
 
+    /**
+     * Must be called in order to release the cells to the CellPool
+     * @param pool
+     */
+    public void release(CellPool pool) {
+        pool.releaseCell(_board);
     }
 
     public void update(double elapsedTime){
-        if(showLocks){
-            showLocksTime -= elapsedTime;
-            double s = showLocksTime/initialShowLocksTime;
+        if(_showLocks){
+            _showLocksTime -= elapsedTime;
+            double s = _showLocksTime / _initialShowLocksTime;
             s = 1 + (s * 0.2);
-            biggerCellScale = s;
-            if(showLocksTime <= 0){
-                showLocks = false;
-                biggerCell.fst = -1; biggerCell.snd = -1;
-                showLocksTime = initialShowLocksTime;
+            _biggerCellScale = s;
+            if(_showLocksTime <= 0){
+                _showLocks = false;
+                _biggerCell.fst = -1; _biggerCell.snd = -1;
+                _showLocksTime = _initialShowLocksTime;
             }
         }
 
@@ -82,19 +106,19 @@ public class Board {
 
         for(int i = 1; i < _size + 1; ++i){
             for (int j = 1; j < _size + 1; j++) {
-                if(biggerCell.fst == i && biggerCell.snd == j){
-                    _board[i][j].render(graphics, biggerCellScale, alphaTransition);
+                if(_biggerCell.fst == i && _biggerCell.snd == j){
+                    _board[i][j].render(graphics, _biggerCellScale, alphaTransition);
                 }
                 else _board[i][j].render(graphics, 1, alphaTransition);
 
-                if(showLocks && _board[i][j].getState() == Cell.State.Wall && _board[i][j].getLocked()){
+                if(_showLocks && _board[i][j].getState() == Cell.State.Wall && _board[i][j].getLocked()){
                     graphics.scale(0.75f, 0.75f);
-                    graphics.translate(-imgLock.getWidth()/2, -imgLock.getHeight()/2);
-                    graphics.drawImage(imgLock, 0, 0, 0.2f * alphaTransition);
-                    graphics.translate(imgLock.getWidth()/2, imgLock.getHeight()/2);
+                    graphics.translate(-_imgLock.getWidth()/2, -_imgLock.getHeight()/2);
+                    graphics.drawImage(_imgLock, 0, 0, 0.2f * alphaTransition);
+                    graphics.translate(_imgLock.getWidth()/2, _imgLock.getHeight()/2);
                     graphics.scale(1/0.75f, 1/0.75f);
                 }
-                if (highlightedCircle && i == highlightedRow && j == highlightedCol){
+                if (_highlightedCircle && i == _highlightedRow && j == _highlightedCol){
                     graphics.setColor(((int)(alphaTransition * 255) << 24) | 0xff333333);
                     graphics.drawCircle(0,0,50, 6);
                 }
@@ -133,12 +157,12 @@ public class Board {
                 c.nextStateTransition();
             }
             else{
-                biggerCell.fst = fila;
-                biggerCell.snd = columna;
-                if(showLocks){
-                    showLocksTime = initialShowLocksTime;
+                _biggerCell.fst = fila;
+                _biggerCell.snd = columna;
+                if(_showLocks){
+                    _showLocksTime = _initialShowLocksTime;
                 }
-                else showLocks = true;
+                else _showLocks = true;
             }
         }
     }
@@ -205,9 +229,7 @@ public class Board {
     {
         int unassignedCells = countUnassignedCells();
 
-        int percentage = 100-((100*unassignedCells)/_totalUnassignedCells);
-
-        return percentage;
+        return 100-((100*unassignedCells)/_totalUnassignedCells);
     }
 
     public CellHint undo(){
@@ -220,9 +242,9 @@ public class Board {
     }
 
     public void highlightCircle(int row, int col, boolean enable){
-        highlightedRow = row;
-        highlightedCol = col;
-        highlightedCircle = enable;
+        _highlightedRow = row;
+        _highlightedCol = col;
+        _highlightedCircle = enable;
     }
 
     public void copyToBoard(Cell[][] puzzle){
@@ -301,14 +323,14 @@ public class Board {
     private int _totalUnassignedCells;
     private Stack<CellHint> _actions;
 
-    private boolean highlightedCircle;
-    private int highlightedRow;
-    private int highlightedCol;
+    private boolean _highlightedCircle;
+    private int _highlightedRow;
+    private int _highlightedCol;
 
-    private double showLocksTime;
-    private double initialShowLocksTime;
-    private boolean showLocks;
-    private Image imgLock;
-    Pair biggerCell;
-    double biggerCellScale;
+    private double _showLocksTime;
+    private double _initialShowLocksTime;
+    private boolean _showLocks;
+    private Image _imgLock;
+    private Pair _biggerCell;
+    private double _biggerCellScale;
 }

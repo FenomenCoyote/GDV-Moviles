@@ -4,10 +4,11 @@ import java.util.Random;
 
 public class BoardGenerator {
 
-    public BoardGenerator(int size, Board board){
+    public BoardGenerator(int size, Board board, CellPool pool){
         _size = size;
         _board = board;
         _utils = new BoardUtils();
+        _pool = pool;
     }
 
     public void setForGame() {
@@ -15,7 +16,8 @@ public class BoardGenerator {
 
         for (int i = 0; i < _size + 2; ++i){
             for (int j = 0; j < _size + 2; ++j){
-                puzzle[i][j] = new Cell(_board.getCell(i,j));
+                puzzle[i][j] = _pool.retrieveCell();
+                puzzle[i][j].init(_board.getCell(i,j));
             }
         }
 
@@ -29,6 +31,7 @@ public class BoardGenerator {
                 _board.copyToBoard(puzzle);
                 if (resolve(puzzle)) { //Si se puede resolver
                     _board.setUnassignedCells(_board.countUnassignedCells());
+                    _pool.releaseCell(puzzle);
                     return;
                 }
             }
@@ -200,4 +203,6 @@ public class BoardGenerator {
     private final BoardUtils _utils;
     private int _size;
     private Board _board;
+    private final CellPool _pool;
+
 }

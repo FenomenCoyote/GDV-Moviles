@@ -71,6 +71,16 @@ public class Cell {
         this._fading = false;
     }
 
+    public void init(Cell cell) {
+        this._locked = cell._locked;
+        this._mustWatch = cell._mustWatch;
+        this._state = cell._state;
+
+        this._alpha = 1;
+        this._fadeSpeed = -10;
+        this._fading = false;
+    }
+
     public boolean setState(State state) {
         if(!_locked){
             _state = state;

@@ -9,6 +9,9 @@ import es.ucm.gdv.engine.Input;
 
 public class OhNoApplication implements Application {
 
+    /**
+     * Possible states of this 'fsm'
+     */
     enum State {
         Start, Menu, Loading, Playing
     }
@@ -26,6 +29,7 @@ public class OhNoApplication implements Application {
 
         _states = new ArrayList<>();
 
+        //Resources loading
         _states.add(new Start(_graphics, _input));
         _states.add(new Menu(_graphics, _input));
         _states.add(new Loading(_graphics, _input));
@@ -40,12 +44,15 @@ public class OhNoApplication implements Application {
      */
     @Override
     public void update(double elapsedTime) {
+        //updates current state
         State s = _states.get(_state.ordinal()).update(elapsedTime);
-
+        //A transition ocurred
         if(s != null) {
             _state = s;
+            //Starts transition fade in animation
             _states.get(_state.ordinal()).setInTransition(true, 0);
             if(_state == State.Playing) {
+                //If i just got into Playing State, I retrieve boardSize chosen at Menu state
                 _boardSize = ((Menu) _states.get(State.Menu.ordinal())).getBoardSize();
                 _states.get(_state.ordinal()).init(this);
             }

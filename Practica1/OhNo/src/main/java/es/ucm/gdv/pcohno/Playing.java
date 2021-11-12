@@ -18,11 +18,11 @@ public class Playing extends State {
         _imgUnDo = graphics.newImage("history.png");
         _imgEye = graphics.newImage("eye.png");
 
-
         clickableClose = new ClickImage(_imgClose, 150 - _imgClose.getWidth()/2, 1050, 100, 100, 0.5f);
         clickableUnDo = new ClickImage(_imgUnDo, 400 - _imgUnDo.getWidth()/2, 1050, 100, 100, 0.5f);
         clickableEye = new ClickImage(_imgEye, 650 - _imgEye.getWidth()/2, 1050, 100, 100, 0.5f);
 
+        _boardSize = 4;
         _text = _boardSize + " x " + _boardSize;
         _nextText = _boardSize + " x " + _boardSize;
 
@@ -30,6 +30,8 @@ public class Playing extends State {
         this._textAlpha = 0f;
         this._textAlphaSpeed = 5f;
         this._textTransition = true;
+
+        this._pool = new CellPool();
     }
 
     @Override
@@ -187,8 +189,10 @@ public class Playing extends State {
     @Override
     public void init(OhNoApplication app) {
         _boardSize = app.get_boardSize();
-        _board = new Board(_boardSize, graphics.newImage("lock.png"), _showLocksTime);
-        _boardGenerator = new BoardGenerator(_boardSize, _board);
+        if(_board != null)
+            _board.release(_pool);
+        _board = new Board(_boardSize, graphics.newImage("lock.png"), _showLocksTime, _pool);
+        _boardGenerator = new BoardGenerator(_boardSize, _board, _pool);
         _boardGenerator.setForGame();
         _text = null;
     }
@@ -217,6 +221,7 @@ public class Playing extends State {
 
     private Board _board;
     private BoardGenerator _boardGenerator;
+    private CellPool _pool;
 
     private MyFont _font1, _font2, _font3;
 
