@@ -66,7 +66,8 @@ public class PCEngine implements Engine {
         return _input;
     }
 
-    PCGraphics _graphics = null;
-    PCInput _input = null;
-    Application _app = null;
+
+    private PCGraphics _graphics = null;
+    private PCInput _input = null;
+    private Application _app = null;
 }

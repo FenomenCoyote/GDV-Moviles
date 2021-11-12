@@ -10,6 +10,10 @@ import es.ucm.gdv.engine.Graphics;
 import es.ucm.gdv.engine.Input;
 
 public class AEngine implements Engine, Runnable {
+    /**
+     * We create the SurfaceView, AGraphics and AInput
+     * @param c class for android activities
+     */
     public AEngine(AppCompatActivity c) {
         SurfaceView surfaceView = new SurfaceView(c);
         c.setContentView(surfaceView);
@@ -17,11 +21,17 @@ public class AEngine implements Engine, Runnable {
         _input = new AInput(surfaceView,_graphics);
     }
 
+    /**
+     * We initialise the application
+     */
     @Override
     public void init() {
         _app.init(this);
     }
 
+    /**
+     * Main loop
+     */
     @Override
     public void run()
     {
@@ -118,7 +128,7 @@ public class AEngine implements Engine, Runnable {
     private AGraphics _graphics = null;
     private AInput _input = null;
     private Application _app = null;
-    private volatile boolean _running=false;
+    private volatile boolean _running = false;
 
 
 }

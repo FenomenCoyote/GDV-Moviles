@@ -19,19 +19,19 @@ public class OhNoApplication implements Application {
      */
     @Override
     public void init(Engine engine) {
-        graphics = engine.getGraphics();
-        input = engine.getInput();
+        _graphics = engine.getGraphics();
+        _input = engine.getInput();
 
-        state = State.Start;
+        _state = State.Start;
 
-        states = new ArrayList<>();
+        _states = new ArrayList<>();
 
-        states.add(new Start(graphics, input));
-        states.add(new Menu(graphics, input));
-        states.add(new Loading(graphics, input));
-        states.add(new Playing(graphics, input, 0.5));
+        _states.add(new Start(_graphics, _input));
+        _states.add(new Menu(_graphics, _input));
+        _states.add(new Loading(_graphics, _input));
+        _states.add(new Playing(_graphics, _input, 0.5));
 
-        graphics.setLogicalSize(400, 600);
+        _graphics.setLogicalSize(400, 600);
     }
 
     /**
@@ -40,14 +40,14 @@ public class OhNoApplication implements Application {
      */
     @Override
     public void update(double elapsedTime) {
-        State s = states.get(state.ordinal()).update(elapsedTime);
+        State s = _states.get(_state.ordinal()).update(elapsedTime);
 
         if(s != null) {
-            state = s;
-            states.get(state.ordinal()).setInTransition(true, 0);
-            if(state == State.Playing) {
-                boardSize = ((Menu)states.get(State.Menu.ordinal())).getBoardSize();
-                states.get(state.ordinal()).init(this);
+            _state = s;
+            _states.get(_state.ordinal()).setInTransition(true, 0);
+            if(_state == State.Playing) {
+                _boardSize = ((Menu) _states.get(State.Menu.ordinal())).getBoardSize();
+                _states.get(_state.ordinal()).init(this);
             }
         }
     }
@@ -57,7 +57,7 @@ public class OhNoApplication implements Application {
      */
     @Override
     public void render() {
-        states.get(state.ordinal()).render();
+        _states.get(_state.ordinal()).render();
     }
 
     /**
@@ -72,15 +72,15 @@ public class OhNoApplication implements Application {
      * Used by Playing State to retrieve board size information gathered in Menu State
      * @return
      */
-    public int getBoardSize(){
-        return boardSize;
+    public int get_boardSize(){
+        return _boardSize;
     }
 
-    OhNoApplication.State state;
-    ArrayList<es.ucm.gdv.pcohno.State> states;
+    private OhNoApplication.State _state;
+    private ArrayList<es.ucm.gdv.pcohno.State> _states;
 
-    Graphics graphics;
-    Input input;
+    private Graphics _graphics;
+    private Input _input;
 
-    private int boardSize;
+    private int _boardSize;
 }

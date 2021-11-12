@@ -29,21 +29,24 @@ public class AGraphics extends MyGraphics {
     }
 
 
+    /**
+     * Render the game
+     * @param a
+     */
     public void render(Application a)
     {
-        while (!_holder.getSurface().isValid())
-            ;
+        while (!_holder.getSurface().isValid());
 
-        canvas = _holder.lockCanvas();
+        _canvas = _holder.lockCanvas();
 
-        _width = canvas.getWidth();
-        _height = canvas.getHeight();
+        _width = _canvas.getWidth();
+        _height = _canvas.getHeight();
         clear(0xffffffff);
 
         calculateTranslationScale();
 
         a.render();
-        _holder.unlockCanvasAndPost(canvas);
+        _holder.unlockCanvasAndPost(_canvas);
     }
 
     /**
@@ -54,6 +57,11 @@ public class AGraphics extends MyGraphics {
 
     }
 
+    /**
+     * Creates an Image from name and loads it
+     * @param name
+     * @return
+     */
     @Override
     public Image newImage(String name) {
         AImage img = new AImage();
@@ -61,6 +69,13 @@ public class AGraphics extends MyGraphics {
         return img;
     }
 
+    /**
+     * Creates a MyFont from filename and loads it
+     * @param filename
+     * @param size
+     * @param isBold
+     * @return
+     */
     @Override
     public MyFont newFont(String filename, int size, boolean isBold) {
         AFont f = new AFont();
@@ -68,70 +83,125 @@ public class AGraphics extends MyGraphics {
         return f;
     }
 
+
+    /**
+     * Clear the window (not the white bands)
+     * @param color
+     */
     @Override
     public void clear(int color) {
-        canvas.drawColor(color);
+        _canvas.drawColor(color);
     }
 
+    /**
+     * Canvas operation
+     * @param x
+     * @param y
+     */
     @Override
     public void translate(int x, int y) {
-        canvas.translate(x, y);
+        _canvas.translate(x, y);
     }
 
+    /**
+     * Canvas operation
+     * @param x
+     * @param y
+     */
     @Override
     public void scale(float x, float y) {
-        canvas.scale(x, y);
+        _canvas.scale(x, y);
     }
 
+    /**
+     * Saves current canvas state
+     */
     @Override
     public void save() {
-        canvas.save();
+        _canvas.save();
     }
 
+    /**
+     * Restores previous canvas state
+     */
     @Override
     public void restore() {
-        canvas.restore();
+        _canvas.restore();
     }
 
+    /**
+     * Draws image with alpha
+     * @param image
+     * @param x
+     * @param y
+     * @param alpha
+     */
     @Override
     public void drawImage(Image image, int x, int y, float alpha) {
-        Bitmap img = ((AImage)image).getImage();
+        Bitmap img = ((AImage)image).get_image();
         int a = (int)(alpha*255);
         _paint.setAlpha(a);
-        canvas.drawBitmap(img, x, y, _paint);
+        _canvas.drawBitmap(img, x, y, _paint);
         _paint.setAlpha(255);
     }
 
+    /**
+     * Sets color to draw with
+     * @param argb
+     */
     @Override
     public void setColor(int argb) {
         _paint.setColor(argb);
     }
 
+    /**
+     * Sets font to draw text with
+     * @param font
+     */
     @Override
     public void setFont(MyFont font) {
         this._font = (AFont)font;
-        _paint.setTypeface(_font.getFont());
+        _paint.setTypeface(_font.get_font());
     }
 
+    /**
+     * Fills entire circle
+     * @param cx
+     * @param cy
+     * @param r
+     */
     @Override
     public void fillCircle(int cx, int cy, int r) {
-        canvas.drawCircle(cx, cy, r, _paint);
+        _canvas.drawCircle(cx, cy, r, _paint);
     }
 
+    /**
+     * Draws circumference
+     * @param cx
+     * @param cy
+     * @param r
+     * @param strokeWidth
+     */
     @Override
     public void drawCircle(int cx, int cy, int r, int strokeWidth) {
         _paint.setStrokeWidth(strokeWidth);
         _paint.setStyle(Paint.Style.STROKE);
-        canvas.drawCircle(cx, cy, r, _paint);
+        _canvas.drawCircle(cx, cy, r, _paint);
         _paint.setStyle(Paint.Style.FILL);
         _paint.setStrokeWidth(1);
     }
 
+    /**
+     * Draws text using previous loaded font
+     * @param text
+     * @param x
+     * @param y
+     */
     @Override
     public void drawText(String text, int x, int y) {
-        _paint.setTextSize(_font.getSize());
-        _paint.setFakeBoldText(_font.isBold());
-        canvas.drawText(text, x, y, _paint);
+        _paint.setTextSize(_font.get_size());
+        _paint.setFakeBoldText(_font.is_isBold());
+        _canvas.drawText(text, x, y, _paint);
     }
 
     public int getWidth() {
@@ -149,7 +219,7 @@ public class AGraphics extends MyGraphics {
 
     private AFont _font;
 
-    private Canvas canvas;
+    private Canvas _canvas;
     private SurfaceHolder _holder;
     private SurfaceView _view;
     private AssetManager _assets;

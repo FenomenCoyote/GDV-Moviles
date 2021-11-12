@@ -20,7 +20,7 @@ public class AImage implements Image {
         // load image
         try {
             InputStream is = assetManager.open("sprites/" + route);
-            image = BitmapFactory.decodeStream(is);
+            _image = BitmapFactory.decodeStream(is);
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -28,17 +28,17 @@ public class AImage implements Image {
 
     @Override
     public int getWidth() {
-        return image.getWidth();
+        return _image.getWidth();
     }
 
     @Override
     public int getHeight() {
-        return image.getHeight();
+        return _image.getHeight();
     }
 
-    public Bitmap getImage(){
-        return image;
+    public Bitmap get_image(){
+        return _image;
     }
 
-    private Bitmap image;
+    private Bitmap _image;
 }

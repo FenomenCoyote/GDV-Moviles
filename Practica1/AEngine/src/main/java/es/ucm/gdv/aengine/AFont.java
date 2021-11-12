@@ -16,24 +16,24 @@ public class AFont implements MyFont {
      * @param assets
      */
     public void loadFont(String filename, int size, boolean isBold, AssetManager assets) {
-        this.size = size;
-        this.isBold = isBold;
-        font = Typeface.createFromAsset(assets, "fonts/" + filename);
+        this._size = size;
+        this._isBold = isBold;
+        _font = Typeface.createFromAsset(assets, "fonts/" + filename);
     }
 
-    public Typeface getFont() {
-        return font;
+    public Typeface get_font() {
+        return _font;
     }
 
-    public int getSize() {
-        return size;
+    public int get_size() {
+        return _size;
     }
 
-    public boolean isBold() {
-        return isBold;
+    public boolean is_isBold() {
+        return _isBold;
     }
 
-    private int size;
-    private boolean isBold;
-    private Typeface font;
+    private int _size;
+    private boolean _isBold;
+    private Typeface _font;
 }
