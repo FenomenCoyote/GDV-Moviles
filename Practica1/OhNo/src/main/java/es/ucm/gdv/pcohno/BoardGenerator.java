@@ -47,7 +47,7 @@ public class BoardGenerator {
     /**
      * If the board is built incorrectly
      * @param puzzle
-     * @return
+     * @return true if yes, false either
      */
     public boolean wrongInitialBoard(Cell[][] puzzle){
         for (int i = 1; i < _size + 1; ++i){
@@ -67,7 +67,7 @@ public class BoardGenerator {
     /**
      * Checks if no blue point sees more than the board's size
      * @param puzzle
-     * @return
+     * @return true if yes, false either
      */
     private boolean seesJustRight(Cell[][] puzzle){
         for (int i = 1; i < _size + 1; ++i){
@@ -227,7 +227,7 @@ public class BoardGenerator {
     /**
      * Tries to solve the puzzle using hints
      * @param puzzle
-     * @return
+     * @return true if puzzle can be solved, false either
      */
     private boolean resolve(Cell[][] puzzle){
         boolean changed = true;
