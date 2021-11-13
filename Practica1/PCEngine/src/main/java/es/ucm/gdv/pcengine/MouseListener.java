@@ -7,6 +7,11 @@ import es.ucm.gdv.engine.Input;
 
 public class MouseListener implements javax.swing.event.MouseInputListener{
 
+    /**
+     * Initializes input receival
+     * @param input
+     * @param graphics
+     */
     MouseListener(PCInput input, PCGraphics graphics){
         this._pcInput = input;
         this._graphics = graphics;
@@ -15,8 +20,13 @@ public class MouseListener implements javax.swing.event.MouseInputListener{
         graphics.getWindow().addMouseMotionListener(this);
     }
 
+    /**
+     * Called by swing when a mouse pressed event occurs
+     * @param mouseEvent
+     */
     @Override
     public void mousePressed(MouseEvent mouseEvent) {
+        //Only when mouse isn't already pressed
         if(_wasReleased){
             Point p = translateCoordinates(mouseEvent.getX(), mouseEvent.getY());
 
@@ -34,6 +44,10 @@ public class MouseListener implements javax.swing.event.MouseInputListener{
         }
     }
 
+    /**
+     * Called by swing when the mouse stopped being pressed
+     * @param mouseEvent
+     */
     @Override
     public void mouseReleased(MouseEvent mouseEvent) {
         Point p = translateCoordinates(mouseEvent.getX(), mouseEvent.getY());
@@ -50,6 +64,10 @@ public class MouseListener implements javax.swing.event.MouseInputListener{
         _wasReleased = true;
     }
 
+    /**
+     * Called by swing when the mouse is being dragged
+     * @param mouseEvent
+     */
     @Override
     public void mouseDragged(MouseEvent mouseEvent) {
         Point p = translateCoordinates(mouseEvent.getX(), mouseEvent.getY());
@@ -77,6 +95,12 @@ public class MouseListener implements javax.swing.event.MouseInputListener{
     @Override
     public void mouseMoved(MouseEvent mouseEvent) { }
 
+    /**
+     * Translates physical coordinates to logical coordinates
+     * @param x
+     * @param y
+     * @return
+     */
     private Point translateCoordinates(int x, int y){
         x-= _graphics.getOffsetX();
         y-= _graphics.getOffsetY();
