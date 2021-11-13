@@ -29,23 +29,23 @@ public class Start extends State {
      */
     @Override
     public void render() {
-        int alpha = (int)(alphaTransition * 255f);
+        int alpha = (int)(_alphaTransition * 255f);
 
-        graphics.setColor((alpha << 24) | 0x00333333);
-        graphics.setFont(_font1);
-        graphics.drawText("Oh no", 200, 125);
+        _graphics.setColor((alpha << 24) | 0x00333333);
+        _graphics.setFont(_font1);
+        _graphics.drawText("Oh no", 200, 125);
 
-        graphics.setFont(_font2);
-        graphics.drawText("Jugar", 200, 300);
+        _graphics.setFont(_font2);
+        _graphics.drawText("Jugar", 200, 300);
 
-        graphics.setColor((alpha << 24) | 0x00aaaaaa);
-        graphics.setFont(_font3);
-        graphics.drawText("Un juego copiado a Q42", 200, 410);
-        graphics.drawText("Creado por Martin Kool", 200, 440);
+        _graphics.setColor((alpha << 24) | 0x00aaaaaa);
+        _graphics.setFont(_font3);
+        _graphics.drawText("Un juego copiado a Q42", 200, 410);
+        _graphics.drawText("Creado por Martin Kool", 200, 440);
 
-        graphics.scale(0.05f, 0.05f);
-        graphics.drawImage(_imgQ, 200 * 20 - _imgQ.getWidth() / 2, 480 * 20, alphaTransition);
-        graphics.scale(20, 20);
+        _graphics.scale(0.05f, 0.05f);
+        _graphics.drawImage(_imgQ, 200 * 20 - _imgQ.getWidth() / 2, 480 * 20, _alphaTransition);
+        _graphics.scale(20, 20);
     }
 
     /**
@@ -59,29 +59,20 @@ public class Start extends State {
         if(s != null)
             return s;
 
-        Input.TouchEvent e = input.getTouchEvent();
+        Input.TouchEvent e = _input.getTouchEvent();
         while(e != null){
-            input.releaseEvent(e);
+            _input.releaseEvent(e);
             if(e.type != Input.TouchEvent.TouchEventType.Touch){
-                e = input.getTouchEvent();
+                e = _input.getTouchEvent();
                 continue;
             }
 
-            input.clearEvents();
+            _input.clearEvents();
             setNextState(OhNoApplication.State.Menu);
             break;
         }
 
         return null;
-    }
-
-    /**
-     * Called before first update
-     * @param app object representing the game
-     */
-    @Override
-    public void init(OhNoApplication app) {
-
     }
 
     private final MyFont _font1;

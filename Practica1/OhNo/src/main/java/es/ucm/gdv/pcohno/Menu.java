@@ -48,28 +48,28 @@ public class Menu extends State {
      */
     @Override
     public void render() {
-        int alpha = (int)(alphaTransition * 255f);
-        graphics.setColor((alpha << 24) | 0x00333333);
+        int alpha = (int)(_alphaTransition * 255f);
+        _graphics.setColor((alpha << 24) | 0x00333333);
 
-        graphics.setFont(_font1);
-        graphics.drawText("Oh no", 200, 100);
+        _graphics.setFont(_font1);
+        _graphics.drawText("Oh no", 200, 100);
 
-        graphics.setFont(_font2);
-        graphics.drawText("Eliga el tamaño a jugar", 200, 200);
+        _graphics.setFont(_font2);
+        _graphics.drawText("Eliga el tamaño a jugar", 200, 200);
 
-        graphics.save();
+        _graphics.save();
 
-        graphics.setFont(_font3);
-        graphics.translate(110, 300);
+        _graphics.setFont(_font3);
+        _graphics.translate(110, 300);
 
         for (Clickable c : _clickablesCircles)
-            c.render(graphics, alphaTransition);
+            c.render(_graphics, _alphaTransition);
 
-        graphics.restore();
+        _graphics.restore();
 
-        graphics.scale(0.5f, 0.5f);
+        _graphics.scale(0.5f, 0.5f);
 
-        _clickableClose.render(graphics, alphaTransition);
+        _clickableClose.render(_graphics, _alphaTransition);
 
     }
 
@@ -84,11 +84,11 @@ public class Menu extends State {
         if(s != null)
             return s;
 
-        Input.TouchEvent t = input.getTouchEvent();
+        Input.TouchEvent t = _input.getTouchEvent();
         while(t != null){
-            input.releaseEvent(t);
+            _input.releaseEvent(t);
             if(t.type != Input.TouchEvent.TouchEventType.Touch){
-                t = input.getTouchEvent();
+                t = _input.getTouchEvent();
                 continue;
             }
 
@@ -96,31 +96,22 @@ public class Menu extends State {
             for (Clickable c : _clickablesCircles) {
                 if (c.isOnMe(t.x - 100, t.y - 300)) {
                     _boardSize = 4 + i;
-                    input.clearEvents();
+                    _input.clearEvents();
                     setNextState(OhNoApplication.State.Loading);
                 }
                 ++i;
             }
 
             if(_clickableClose.isOnMe(t.x * 2, t.y * 2)){
-                input.clearEvents();
+                _input.clearEvents();
                 setNextState(OhNoApplication.State.Start);
             }
-            t = input.getTouchEvent();
+            t = _input.getTouchEvent();
         }
         return null;
     }
 
-    /**
-     * Called before first update
-     * @param app object representing the game
-     */
-    @Override
-    public void init(OhNoApplication app) {
-
-    }
-
-    /**
+      /**
      * BoardSize getter
      * @return board size
      */

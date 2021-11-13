@@ -25,9 +25,9 @@ public class Loading extends State {
      */
     @Override
     public void render() {
-        graphics.setColor(0xff333333);
-        graphics.setFont(_font1);
-        graphics.drawText("Loading...", 200, 300);
+        _graphics.setColor(0xff333333);
+        _graphics.setFont(_font1);
+        _graphics.drawText("Loading...", 200, 300);
     }
 
     /**
@@ -40,14 +40,5 @@ public class Loading extends State {
         return OhNoApplication.State.Playing;
     }
 
-    /**
-     * Called before first update
-     * @param app object representing the game
-     */
-    @Override
-    public void init(OhNoApplication app) {
-
-    }
-
-    private final MyFont _font1;
+       private final MyFont _font1;
 }

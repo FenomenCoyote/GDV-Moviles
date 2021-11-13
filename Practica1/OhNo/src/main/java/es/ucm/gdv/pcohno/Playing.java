@@ -19,27 +19,30 @@ public class Playing extends State {
     public Playing(Graphics graphics, Input input, double showLocksTime) {
         super(graphics, input);
 
-        _font1 = graphics.newFont("JosefinSans-Bold.ttf",64,false);
-        _font2 = graphics.newFont("JosefinSans-Bold.ttf",16,false);
-        _font3 = graphics.newFont("JosefinSans-Bold.ttf",26,false);
+        this._font1 = graphics.newFont("JosefinSans-Bold.ttf",64,false);
+        this._font2 = graphics.newFont("JosefinSans-Bold.ttf",16,false);
+        this._font3 = graphics.newFont("JosefinSans-Bold.ttf",26,false);
+        this._font4 = graphics.newFont("JosefinSans-Bold.ttf",36,false);
 
-        _imgClose = graphics.newImage("close.png");
-        _imgUnDo = graphics.newImage("history.png");
-        _imgEye = graphics.newImage("eye.png");
+        this._imgClose = graphics.newImage("close.png");
+        this._imgUnDo = graphics.newImage("history.png");
+        this._imgEye = graphics.newImage("eye.png");
 
-        clickableClose = new ClickImage(_imgClose, 150 - _imgClose.getWidth()/2, 1050, 100, 100, 0.5f);
-        clickableUnDo = new ClickImage(_imgUnDo, 400 - _imgUnDo.getWidth()/2, 1050, 100, 100, 0.5f);
-        clickableEye = new ClickImage(_imgEye, 650 - _imgEye.getWidth()/2, 1050, 100, 100, 0.5f);
+        this._clickableClose = new ClickImage(this._imgClose, 150 - this._imgClose.getWidth()/2, 1050, 100, 100, 0.5f);
+        this._clickableUnDo = new ClickImage(this._imgUnDo, 400 - this._imgUnDo.getWidth()/2, 1050, 100, 100, 0.5f);
+        this._clickableEye = new ClickImage(this._imgEye, 650 - this._imgEye.getWidth()/2, 1050, 100, 100, 0.5f);
 
-        _boardSize = 4;
-        _text = _boardSize + " x " + _boardSize;
-        _nextText = _boardSize + " x " + _boardSize;
+        this._boardSize = 4;
+        this._text = this._boardSize + " x " + this._boardSize;
+        this._nextText = this._boardSize + " x " + this._boardSize;
 
         this._showLocksTime = showLocksTime;
         this._textAlpha = 0f;
         this._textAlphaSpeed = 5f;
         this._textTransition = true;
 
+        this._board = null;
+        this._boardGenerator = null;
         this._pool = new CellPool();
     }
 
@@ -48,33 +51,43 @@ public class Playing extends State {
      */
     @Override
     public void render() {
-        int alpha = (int)(alphaTransition * 255f);
-        graphics.setColor((alpha << 24) | 0x00333333);
-        graphics.setFont(_font2);
-        graphics.drawText(_board.getPercentage() + "%",200,510);
-        graphics.setColor(((int)(alpha * _textAlpha) << 24) | 0x00333333);
-        graphics.setFont(_font1);
+        int alpha = (int)(_alphaTransition * 255f);
+
+        //Bottom Percentage
+        _graphics.setColor((alpha << 24) | 0x00333333);
+        _graphics.setFont(_font2);
+        _graphics.drawText(_board.getPercentage() + "%",200,510);
+
+        //Top title
+        _graphics.setColor(((int)(alpha * _textAlpha) << 24) | 0x00333333);
+        _graphics.setFont(_font1);
+
+        //If _text is null, means no special text is needed, thus we render size x size
         if(_text == null)
-            graphics.drawText(_boardSize + " x " + _boardSize, 200, 80);
-        else{
-            graphics.save();
+            _graphics.drawText(_boardSize + " x " + _boardSize, 200, 80);
+        else {
+            _graphics.save();
             if(_text == "Splendid")
-                graphics.setFont(_font2);
-            graphics.setFont(_font3);
+                _graphics.setFont(_font4);
+            else
+                _graphics.setFont(_font3);
+            //Draw text lines separated by '\n' character
             String texts[] = _text.split("\n");
             for (String t_ : texts) {
-                graphics.drawText(t_, 200, 60 );
-                graphics.translate(0, 25);
+                _graphics.drawText(t_, 200, 60 );
+                _graphics.translate(0, 25);
             }
-            graphics.restore();
+            _graphics.restore();
         }
-        graphics.setFont(_font1);
-        _board.render(graphics, alphaTransition);
+        //Render the board
+        _graphics.setFont(_font1);
+        _board.render(_graphics, _alphaTransition);
 
-        graphics.scale(0.5f, 0.5f);
-        clickableClose.render(graphics, alphaTransition);
-        clickableUnDo.render(graphics, alphaTransition);
-        clickableEye.render(graphics, alphaTransition);
+        //Render the bottom images
+        _graphics.scale(0.5f, 0.5f);
+        _clickableClose.render(_graphics, _alphaTransition);
+        _clickableUnDo.render(_graphics, _alphaTransition);
+        _clickableEye.render(_graphics, _alphaTransition);
     }
 
     /**
@@ -88,89 +101,14 @@ public class Playing extends State {
         if(st != null)
             return st;
 
-        if(_textTransition){
-            _textAlpha = Math.max(0f, Math.min(1f, _textAlpha + (float)elapsedTime * _textAlphaSpeed));
-            if(_textAlpha <= 0f){
-                _textAlphaSpeed = -_textAlphaSpeed;
-                setNextText();
-            }
-            else if(_textAlpha >= 1f){
-                _textTransition = false;
-                _textAlphaSpeed = -_textAlphaSpeed;
-            }
-        }
+        updateTextTransition(elapsedTime);
 
-        Input.TouchEvent t = input.getTouchEvent();
-        while(t != null){
-            input.releaseEvent(t);
-            if(t.type != Input.TouchEvent.TouchEventType.Touch){
-                t = input.getTouchEvent();
-                continue;
-            }
+        updateInputs();
 
-            if(_text != null){
-                if(_text == "Splendid")
-                    setNextState(OhNoApplication.State.Menu);
-                else{
-                    if(!_textTransition){
-                        nextTextTransition();
-                        _nextText = null;
-                    }
-
-                    _board.highlightCircle(0, 0, false);
-                }
-            }
-            if(clickableClose.isOnMe(t.x * 2, t.y * 2)){
-                input.clearEvents();
-                setNextState(OhNoApplication.State.Menu);
-            }
-            else if(clickableEye.isOnMe(t.x * 2, t.y * 2))
-            {
-                CellHint hint = _board.getHint();
-                if(hint == null){
-                    nextTextTransition();
-                    _nextText = "There is a mistake in the board";
-                }
-                else {
-                    nextTextTransition();
-                    _nextText = getTextFromHint(hint);
-                    _board.highlightCircle(hint.pos.fst, hint.pos.snd, true);
-                }
-            }
-            else if(clickableUnDo.isOnMe(t.x * 2, t.y * 2)) {
-                CellHint hint = _board.undo();
-                if (hint != null){
-                    switch (hint.state) {
-                        case Unassigned:
-                            nextTextTransition();
-                            _nextText = "This tile was reversed to its\nempty state";
-                            break;
-                        case Point:
-                            nextTextTransition();
-                            _nextText = "This tile was reversed to blue";
-                            break;
-                        case Wall:
-                            nextTextTransition();
-                            _nextText = "This tile was reversed to red";
-                            break;
-                    }
-                    _board.highlightCircle(hint.pos.fst, hint.pos.snd, true);
-                }
-                else {
-                    nextTextTransition();
-                    _nextText = "Nothing to undo";
-                }
-            }
-            else
-            {
-                _board.isOnMe(t.x, t.y);
-            }
-
-            t = input.getTouchEvent();
-        }
-
+        //Updates board for the animations timer
         _board.update(elapsedTime);
 
+        //If its gameOver
         if(_board.wrongCell() == null){
             if(_text != "Splendid") {
                 nextTextTransition();
@@ -179,6 +117,7 @@ public class Playing extends State {
                 _board.highlightCircle(0, 0, false);
             }
         }
+        //If there are no unassigned cells yet there is a mistake
         else if (_board.getPercentage() == 100){
             CellHint hint = _board.getHint();
 
@@ -191,6 +130,118 @@ public class Playing extends State {
         }
 
         return null;
+    }
+
+    /**
+     * Checks for every input if there is something to do
+     */
+    private void updateInputs(){
+        Input.TouchEvent t = _input.getTouchEvent();
+        while(t != null){
+            _input.releaseEvent(t);
+            //Only accept Touch events
+            if(t.type != Input.TouchEvent.TouchEventType.Touch){
+                t = _input.getTouchEvent();
+                continue;
+            }
+
+            //Nothing special setted
+            if(_text != null){
+                //Game over
+                if(_text == "Splendid")
+                    setNextState(OhNoApplication.State.Menu);
+                else {
+                    //Fade in to default text
+                    if(!_textTransition){
+                        nextTextTransition();
+                        _nextText = null;
+                    }
+                    _board.highlightCircle(0, 0, false);
+                }
+            }
+
+            if(_clickableClose.isOnMe(t.x * 2, t.y * 2))
+                onClose();
+            else if(_clickableEye.isOnMe(t.x * 2, t.y * 2))
+                onEye();
+            else if(_clickableUnDo.isOnMe(t.x * 2, t.y * 2))
+                onUndo();
+            else
+                _board.isOnMe(t.x, t.y);
+
+            //Get next event
+            t = _input.getTouchEvent();
+        }
+    }
+
+    /**
+     * When user hits close image
+     */
+    private void onClose(){
+        _input.clearEvents();
+        setNextState(OhNoApplication.State.Menu);
+    }
+
+    /**
+     * When user hits hint image
+     */
+    private void onEye(){
+        CellHint hint = _board.getHint();
+        if(hint == null){
+            nextTextTransition();
+            _nextText = "There is a mistake in the board";
+        }
+        else {
+            nextTextTransition();
+            _nextText = getTextFromHint(hint);
+            _board.highlightCircle(hint.pos.fst, hint.pos.snd, true);
+        }
+    }
+
+    /**
+     * When user hits undo image
+     */
+    private void onUndo(){
+        CellHint hint = _board.undo();
+        if (hint != null){
+            switch (hint.state) {
+                case Unassigned:
+                    nextTextTransition();
+                    _nextText = "This tile was reversed to its\nempty state";
+                    break;
+                case Point:
+                    nextTextTransition();
+                    _nextText = "This tile was reversed to blue";
+                    break;
+                case Wall:
+                    nextTextTransition();
+                    _nextText = "This tile was reversed to red";
+                    break;
+            }
+            _board.highlightCircle(hint.pos.fst, hint.pos.snd, true);
+        }
+        else {
+            nextTextTransition();
+            _nextText = "Nothing to undo";
+        }
+    }
+
+    /**
+     * Texts fade in/out animations
+     * @param elapsedTime
+     */
+    private void updateTextTransition(double elapsedTime){
+        if(_textTransition) {
+            _textAlpha = Math.max(0f, Math.min(1f, _textAlpha + (float)elapsedTime * _textAlphaSpeed));
+            if(_textAlpha <= 0f){
+                _textAlphaSpeed = -_textAlphaSpeed;
+                setNextText();
+            }
+            else if(_textAlpha >= 1f){
+                _textTransition = false;
+                _textAlphaSpeed = -_textAlphaSpeed;
+            }
+        }
     }
 
     /**
@@ -218,7 +269,7 @@ public class Playing extends State {
         _boardSize = app.getBoardSize();
         if(_board != null)
             _board.release(_pool);
-        _board = new Board(_boardSize, graphics.newImage("lock.png"), _showLocksTime, _pool);
+        _board = new Board(_boardSize, _graphics.newImage("lock.png"), _showLocksTime, _pool);
         _boardGenerator = new BoardGenerator(_boardSize, _board, _pool);
         _boardGenerator.setForGame();
         _text = null;
@@ -255,11 +306,11 @@ public class Playing extends State {
     private BoardGenerator _boardGenerator;
     private CellPool _pool;
 
-    private MyFont _font1, _font2, _font3;
+    private MyFont _font1, _font2, _font3, _font4;
 
     private Image _imgClose, _imgUnDo, _imgEye;
 
-    private ClickImage clickableClose,clickableUnDo, clickableEye;
+    private ClickImage _clickableClose, _clickableUnDo, _clickableEye;
 
     private double _showLocksTime;
     private float _textAlpha, _textAlphaSpeed;
