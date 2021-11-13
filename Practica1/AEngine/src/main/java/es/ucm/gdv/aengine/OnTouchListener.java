@@ -6,9 +6,16 @@ import android.view.View;
 
 import es.ucm.gdv.engine.Input;
 
+/**
+ * Listener class to add recognized events to Input queue
+ */
 public class OnTouchListener implements View.OnTouchListener {
 
-
+    /**
+     * Constructor
+     * @param aInput Input class to add events
+     * @param aGraphics rendering object, used to add listener
+     */
     OnTouchListener(AInput aInput, AGraphics aGraphics)
     {
         this._aInput =aInput;
@@ -16,6 +23,12 @@ public class OnTouchListener implements View.OnTouchListener {
         aGraphics.getSurfaceView().setOnTouchListener(this);
     }
 
+    /**
+     * Inherited method, called when an event is generated
+     * @param v View object
+     * @param event event detected
+     * @return true if event was generated, false if pool was finished
+     */
     @Override
     public boolean onTouch(View v, MotionEvent event) {
 
@@ -59,6 +72,12 @@ public class OnTouchListener implements View.OnTouchListener {
         return true;
     }
 
+    /**
+     * Translate event coordinates on screen to logical coordinates
+     * @param x event x position on screen coordinates
+     * @param y event y position on screen coordinates
+     * @return a point meaning x an y position on logical coordinates
+     */
     private Point translateCoordinates(int x, int y){
         x-= _graphics.getOffsetX();
         y-= _graphics.getOffsetY();

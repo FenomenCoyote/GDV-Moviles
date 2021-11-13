@@ -18,7 +18,7 @@ public class AEngine implements Engine, Runnable {
         SurfaceView surfaceView = new SurfaceView(c);
         c.setContentView(surfaceView);
         _graphics = new AGraphics(surfaceView, c.getAssets());
-        _input = new AInput(surfaceView,_graphics);
+        _input = new AInput(_graphics);
     }
 
     /**
