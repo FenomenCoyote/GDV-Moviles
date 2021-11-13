@@ -8,6 +8,10 @@ import es.ucm.gdv.engine.Input;
 
 public class PCInput implements Input {
 
+    /**
+     * We initialize the mouseListener,the touchEvents list and
+     * the readyTouchEvents with 16 touchEvents
+     */
     public PCInput(PCGraphics graphics){
         _mouseListener = new MouseListener(this, graphics);
         _touchEvents = new ArrayList<TouchEvent>();
@@ -18,6 +22,9 @@ public class PCInput implements Input {
         }
     }
 
+    /**
+     * Gets the first element (index 0) from the touchEvents list
+     */
     @Override
     synchronized public TouchEvent getTouchEvent() {
         if(_touchEvents.isEmpty())
@@ -32,15 +39,24 @@ public class PCInput implements Input {
         _touchEvents.clear();
     }
 
+    /**
+     * Adds an event to the touchEvents list
+     */
     @Override
     synchronized public void addEvent(TouchEvent e) {
         _touchEvents.add(e);
     }
 
+    /**
+     * Gets the first touchEvent from the readyTouchEvents queue
+     */
     synchronized public TouchEvent getReadyTouchEvent() {
         return _readyTouchEvents.poll();
     }
 
+    /**
+     * Adds an event to the readyTouchEvents queue
+     */
     @Override
     synchronized public void releaseEvent(TouchEvent e){
         _readyTouchEvents.add(e);

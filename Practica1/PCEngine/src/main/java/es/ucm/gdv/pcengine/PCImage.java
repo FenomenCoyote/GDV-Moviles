@@ -37,5 +37,5 @@ public class PCImage implements Image {
         return _sprite;
     }
 
-    java.awt.Image _sprite;
+    private java.awt.Image _sprite;
 }
