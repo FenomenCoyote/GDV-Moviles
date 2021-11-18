@@ -6,7 +6,17 @@ namespace flow
 {
     public class Tile : MonoBehaviour
     {
+        
         [SerializeField] private SpriteRenderer circle;
+
+        [Tooltip("Scale used when this tile is an initial or ending pipe")]
+        [Range(0f, 1f)]
+        [SerializeField] private float circleBigSize = 0.8f;
+
+        [Tooltip("Scale used when this tile is in a half pipe")]
+        [Range(0f, 1f)]
+        [SerializeField] private float circleSmallSize = 0.4f;
+
         [SerializeField] private SpriteRenderer up;
         [SerializeField] private SpriteRenderer down;
         [SerializeField] private SpriteRenderer left;
@@ -21,7 +31,7 @@ namespace flow
 
         private Color color;
 
-        #if UNITY_EDITOR
+#if UNITY_EDITOR
         void Start()
         {
             if (circle == null || up == null || down == null || 
@@ -32,7 +42,10 @@ namespace flow
                 return;
             }
         }
-        #endif
+#endif
+
+
+        //TODO: Algo para hacer el shake
 
         public void setColor(Color c)
         {
@@ -86,6 +99,15 @@ namespace flow
             check.enabled = false;
         }
 
+        public void setCircleBig()
+        {
+            circle.transform.localScale = Vector2.one * circleBigSize;
+        }
+
+        public void setCircleSmall()
+        {
+            circle.transform.localScale = Vector2.one * circleSmallSize;
+        }
 
         private void updateSpritesColor()
         {
