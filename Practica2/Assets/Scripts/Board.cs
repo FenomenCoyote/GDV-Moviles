@@ -7,6 +7,7 @@ namespace flow
     public class Board : MonoBehaviour
     {
         [SerializeField] private Tile tile;
+        private Tile[,] tiles;
 
 #if UNITY_EDITOR
         void Start()
@@ -25,16 +26,43 @@ namespace flow
         public void setForGame(Logic.Map map)
         {
             Vector3 pos = transform.position;
-            pos.y = -2f;
-            for (int i = 0; i < 5; i++)
+            pos.y = 2f;
+            tiles = new Tile[map.getLevelHeight(), map.getLevelWidth()];
+            for (int i = 0; i < map.getLevelHeight(); i++)
             {
                 pos.x = -2f;
-                for (float j = 0; j < 5; j++)
+                for (int j = 0; j < map.getLevelWidth(); j++)
                 {
-                    Instantiate<Tile>(tile, pos, Quaternion.identity, transform);
+                    tiles[i,j] = Instantiate<Tile>(tile, pos, Quaternion.identity, transform);
                     pos.x++;
                 }
-                pos.y++;
+                pos.y--;
+            }
+
+            List<List<uint>> pipes = map.getPipes();
+            uint nPipes = map.getNPipes();
+
+            uint boardWidth = map.getLevelWidth();
+            uint boardHeight = map.getLevelHeight();
+
+            for (int i=0; i<nPipes; ++i)
+            {
+                int pipeLength = pipes[i].Count;
+                uint color = Logic.Colors.ClassicColors[i];
+                
+                //Inicial
+                uint initial = pipes[i][0];
+                int row = (int)(initial / boardHeight);
+                int col = (int)(initial % boardWidth);
+                Tile initTile = tiles[row, col];
+                initTile.setColor(color);
+                initTile.setCircleBig();
+
+                //Final
+                uint final = pipes[i][pipeLength-1];
+                Tile endTile = tiles[final / boardHeight, final % boardWidth];
+                endTile.setColor(color);
+                endTile.setCircleBig();
             }
         }
     }

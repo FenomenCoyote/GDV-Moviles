@@ -2,7 +2,7 @@ namespace flow.Logic
 {
     public class Colors
     {
-        public static uint[] ClasicColors =
+        public static uint[] ClassicColors =
         {
             0xFF0000FF,
             0x008D00FF,
@@ -24,7 +24,5 @@ namespace flow.Logic
             0x008080FF,
             0xFE7CECFF,
         };
-    
-    
     }
 }
