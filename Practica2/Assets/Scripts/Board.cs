@@ -16,6 +16,10 @@ namespace flow
                 Debug.LogError("Prefab of board not setted");
                 return;
             }
+
+            Logic.Map map = new Logic.Map();
+            map.loadLevel("5,0,1,5;18,17,12;21,16,11,6;3,4,9;0,1,2,7,8,13,14,19,24,23,22;20,15,10,5");
+            setForGame(map);
         }
 #endif
         public void setForGame(Logic.Map map)
