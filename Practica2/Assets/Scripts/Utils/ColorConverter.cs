@@ -12,7 +12,7 @@ namespace flow.Utils
             byte G = (byte)((HexVal >> 16) & 0xFF);
             byte B = (byte)((HexVal >> 08) & 0xFF);
             byte A = (byte)(HexVal & 0xFF);
-            return new Color(R, G, B, A);
+            return new Color32(R, G, B, A);
         }
     }
 

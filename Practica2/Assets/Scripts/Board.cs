@@ -26,14 +26,22 @@ namespace flow
         public void setForGame(Logic.Map map)
         {
             Vector3 pos = transform.position;
-            pos.y = 2f;
-            tiles = new Tile[map.getLevelHeight(), map.getLevelWidth()];
-            for (int i = 0; i < map.getLevelHeight(); i++)
+            uint height = map.getLevelHeight(), width = map.getLevelWidth();
+
+            pos.y = height / 2;
+            tiles = new Tile[height, width];
+            for (int i = 0; i < height; i++)
             {
-                pos.x = -2f;
-                for (int j = 0; j < map.getLevelWidth(); j++)
+                pos.x = -width / 2;
+                for (int j = 0; j < width; j++)
                 {
-                    tiles[i,j] = Instantiate<Tile>(tile, pos, Quaternion.identity, transform);
+                    tiles[i,j] = Instantiate(tile, pos, Quaternion.identity, transform);
+
+                    Vector3 aux = tiles[i, j].transform.localPosition;
+                    aux.y = pos.y;
+                    aux.x = pos.x;
+                    tiles[i, j].transform.localPosition = aux;
+
                     pos.x++;
                 }
                 pos.y--;
@@ -52,17 +60,17 @@ namespace flow
                 
                 //Inicial
                 uint initial = pipes[i][0];
-                int row = (int)(initial / boardHeight);
-                int col = (int)(initial % boardWidth);
-                Tile initTile = tiles[row, col];
+                Tile initTile = tiles[initial / boardHeight, initial % boardWidth];
                 initTile.setColor(color);
                 initTile.setCircleBig();
+                initTile.enableCircle();
 
                 //Final
                 uint final = pipes[i][pipeLength-1];
                 Tile endTile = tiles[final / boardHeight, final % boardWidth];
                 endTile.setColor(color);
                 endTile.setCircleBig();
+                endTile.enableCircle();
             }
         }
     }
