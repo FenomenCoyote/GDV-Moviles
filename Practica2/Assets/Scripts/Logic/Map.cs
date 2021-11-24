@@ -15,7 +15,7 @@ namespace flow.Logic
             bridges = new List<uint>();
             emptyTiles = new List<uint>();
             walls = new List<Tuple<uint, uint>>();
-            pipes = new List<List<uint>>();
+            pipes = new List<List<Tuple<uint, uint>>>();
         }
 
         public void loadLevel(string levelInfo)
@@ -43,14 +43,16 @@ namespace flow.Logic
             //TODO::Leer campos opcionales
 
             //Soluciones tuberias
-            pipes = new List<List<uint>>(splitedInfo.Length - 1);
+            pipes = new List<List<Tuple<uint, uint>>>(splitedInfo.Length - 1);
             for (int i = 1; i < splitedInfo.Length; ++i)
             {
                 string[] pipe = splitedInfo[i].Split(',');
-                pipes.Add(new List<uint>(pipe.Length));
+                pipes.Add(new List<Tuple<uint, uint>>(pipe.Length));
                 for (int j = 0; j < pipe.Length; ++j)
                 {
-                    pipes[i-1].Add(uint.Parse(pipe[j]));
+                    uint value = uint.Parse(pipe[j]);
+                    Tuple<uint,uint> tile = new Tuple<uint,uint>(uint.Parse(pipe[j])/levelHeight, uint.Parse(pipe[j])%levelHeight);
+                    pipes[i-1].Add(tile);
                 }
             }
         }
@@ -62,7 +64,7 @@ namespace flow.Logic
         public List<uint> getBridges() { return bridges; }
         public List<uint> getEmptyTiles() { return emptyTiles; }
         List<Tuple<uint, uint>> getWalls() { return walls; }
-        public List<List<uint>> getPipes() { return pipes; }
+        public List<List<Tuple<uint, uint>>> getPipes() { return pipes; }
 
         private uint levelWidth;
         private uint levelHeight;
@@ -72,6 +74,6 @@ namespace flow.Logic
         List<uint> bridges;
         List<uint> emptyTiles;
         List<Tuple<uint, uint>> walls;
-        List<List<uint>> pipes;
+        List<List<Tuple<uint, uint>>> pipes;
     }
 }

@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -47,27 +48,23 @@ namespace flow
                 pos.y--;
             }
 
-            List<List<uint>> pipes = map.getPipes();
+            List<List<Tuple<uint,uint>>> pipes = map.getPipes();
             uint nPipes = map.getNPipes();
-
-            uint boardWidth = map.getLevelWidth();
-            uint boardHeight = map.getLevelHeight();
-
-            for (int i=0; i<nPipes; ++i)
+            for (int i = 0; i < nPipes; ++i)
             {
                 int pipeLength = pipes[i].Count;
                 uint color = Logic.Colors.ClassicColors[i];
-                
+
                 //Inicial
-                uint initial = pipes[i][0];
-                Tile initTile = tiles[initial / boardHeight, initial % boardWidth];
+                Tuple<uint,uint> initial = pipes[i][0];
+                Tile initTile = tiles[initial.Item1, initial.Item2];
                 initTile.setColor(color);
                 initTile.setCircleBig();
                 initTile.enableCircle();
 
                 //Final
-                uint final = pipes[i][pipeLength-1];
-                Tile endTile = tiles[final / boardHeight, final % boardWidth];
+                Tuple<uint, uint> final = pipes[i][pipeLength - 1];
+                Tile endTile = tiles[final.Item1, final.Item2];
                 endTile.setColor(color);
                 endTile.setCircleBig();
                 endTile.enableCircle();
