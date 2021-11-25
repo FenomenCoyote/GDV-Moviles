@@ -14,20 +14,70 @@ namespace flow
         [SerializeField] private Tile tile;
         private Tile[,] tiles;
 
-#if UNITY_EDITOR
+        private Vector2 lastCursorTilePos;
+
+        private BoardInput input;
+
+
+
         void Start()
         {
-            if(tile == null)
+            input = GetComponent<BoardInput>();
+
+#if UNITY_EDITOR
+            if (tile == null)
             {
                 Debug.LogError("Prefab of board not setted");
                 return;
             }
-        }
+            if(input == null)
+            {
+                Debug.LogError("Input board not setted in Board");
+                return;
+            }
 #endif
+        }
+
 
         void Update()
         {
-            Tile t = getClickedCell();                     
+            if (input.justDown())
+            { 
+                Vector2 t = input.getMouseTilePos();
+
+                if (t != Vector2.negativeInfinity && getTile(t).isActive())
+                {
+                    lastCursorTilePos = t;
+                }
+            }
+            else if (Input.GetMouseButtonUp(0))
+            {
+                lastCursorTilePos = Vector2.negativeInfinity;
+            }
+            else if (input.isPressed() && input.getMouseTilePos() != Vector2.negativeInfinity)
+            {
+                Vector2 t = input.getMouseTilePos();
+
+                Tile tileActual = getTile(t);
+
+                //I dragged the tile
+                if(t != lastCursorTilePos)
+                {
+                    Tile lastCursorTile = getTile(lastCursorTilePos);
+
+                    Vector2 delta = t - lastCursorTilePos;
+                    delta = Vector2.Perpendicular(delta) * -1;
+                    Logic.Dir dir = Logic.Direction.GetDirectionFromVector(delta);
+
+                    lastCursorTile.enableDirectionSprite(dir);
+                    tileActual.setColor(lastCursorTile.getColor());
+                    tileActual.enableDirectionSprite(Logic.Direction.Opposite(dir));
+
+                    lastCursorTilePos = t;
+                }
+            }
+
+            
         }
 
         public void setForGame(Logic.Map map, Color[] colors)
@@ -37,6 +87,8 @@ namespace flow
             height = map.getLevelHeight();
             width = map.getLevelWidth();
 
+            input.init(width, height);
+            
             pos.y = height / 2;
             tiles = new Tile[height, width];
             for (int i = 0; i < height; i++)
@@ -68,6 +120,7 @@ namespace flow
                 Tile initTile = tiles[initial.Item1, initial.Item2];
                 initTile.setColor(color);
                 initTile.setCircleBig();
+                initTile.setActiveTile(true);
                 initTile.enableCircle();
 
                 //Final
@@ -75,30 +128,14 @@ namespace flow
                 Tile endTile = tiles[final.Item1, final.Item2];
                 endTile.setColor(color);
                 endTile.setCircleBig();
+                endTile.setActiveTile(true);
                 endTile.enableCircle();
             }
         }
 
-        Tile getClickedCell()
+        private Tile getTile(Vector2 mousePos)
         {
-            Vector2 offset = new Vector3((-width) / 2.0f, (height) / 2.0f);
-            Vector2 worldMousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-            Vector2 cursorPos = (offset - worldMousePos) + new Vector2(0.2f, -0.2f);
-            cursorPos = new Vector2(cursorPos.x - 0.1f, cursorPos.y + 0.1f);
-
-            if (cursorPos.x < 0 && cursorPos.y > 0 && cursorPos.y < height && cursorPos.x > -width)
-            {
-                //Debug.Log(cursorPos);
-
-                if (Input.GetMouseButtonDown(0))
-                {
-                    Debug.Log("Celda [" + Math.Abs((int)cursorPos.y) + " , " + Math.Abs((int)cursorPos.x) + "]");
-                    return tiles[Math.Abs((int)cursorPos.y), Math.Abs((int)cursorPos.x)];
-                }
-                
-            }
-
-            return null;
+            return tiles[(int)mousePos.x, (int)mousePos.y];
         }
     }
 }

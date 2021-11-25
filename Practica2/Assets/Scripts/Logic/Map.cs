@@ -58,12 +58,19 @@ namespace flow.Logic
         }
 
         public uint getLevelWidth() { return levelWidth; }
+
         public uint getLevelHeight() { return levelHeight; }
+
         public uint getNLevel() { return nLevel; }
+
         public uint getNPipes() { return nPipes; }
+
         public List<uint> getBridges() { return bridges; }
+
         public List<uint> getEmptyTiles() { return emptyTiles; }
+
         List<Tuple<uint, uint>> getWalls() { return walls; }
+
         public List<List<Tuple<uint, uint>>> getPipes() { return pipes; }
 
         private uint levelWidth;

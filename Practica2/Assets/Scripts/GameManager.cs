@@ -24,16 +24,16 @@ namespace flow
         [SerializeField]
         private LevelManager levelMngr;
 
-        private static GameManager instance;
-        public static GameManager Instance { get { return instance; } }
+        public static GameManager Instance { get; private set; }
 
         private void Awake()
         {
-            if (instance != null) {
-                getInfo(instance);
+            if (Instance != null) {
+                setInfo(levelMngr);
+                Destroy(this);
             }
 
-            instance = this;
+            Instance = this;
             DontDestroyOnLoad(this.gameObject);
         }
 
@@ -43,13 +43,13 @@ namespace flow
             levelMngr.initLevel(categories[0].levelPacks[0], 0);
         }
 
-        private void getInfo(GameManager gm)
+        private void setInfo(LevelManager lm)
         {
-            hints = gm.getNHints();
-            categories = gm.getPackCategories();
+            levelMngr = lm;
         }
 
         public uint getNHints() { return hints; }
+
         public PackCategory[] getPackCategories() { return categories; }
     }
 }

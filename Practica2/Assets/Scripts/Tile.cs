@@ -29,8 +29,9 @@ namespace flow
 
         [SerializeField] private SpriteRenderer check;
 
+        private bool activeTile = false;
+
         private Color color;
-        //private uint colorNumber;
 
 #if UNITY_EDITOR
         void Start()
@@ -48,13 +49,6 @@ namespace flow
 
         //TODO: Algo para hacer el shake
 
-        //public void setColor(uint c)
-        //{
-        //    colorNumber = c;
-        //    color = Utils.ColorConverter.intToColor(c);
-            
-        //    updateSpritesColor();
-        //}
 
         public void setColor(Color c)
         {
@@ -62,22 +56,17 @@ namespace flow
             updateSpritesColor();
         }
 
-        //public uint getColor()
-        //{
-        //    return colorNumber;
-        //}
-
         public Color getColor()
         {
             return color;
         }
 
-        public void enableDirectionSprite(Logic.Direction dir)
+        public void enableDirectionSprite(Logic.Dir dir)
         {
             setEnabledDirectionSprite(dir, true);
         }
 
-        public void disableDirectionSprite(Logic.Direction dir)
+        public void disableDirectionSprite(Logic.Dir dir)
         {
             setEnabledDirectionSprite(dir, false);
         }
@@ -123,6 +112,16 @@ namespace flow
             circle.transform.localScale = Vector2.one * circleSmallSize;
         }
 
+        public void setActiveTile(bool b)
+        {
+            activeTile = b;
+        }
+
+        public bool isActive()
+        {
+            return activeTile;
+        }
+
         private void updateSpritesColor()
         {
             circle.color = color;
@@ -137,20 +136,20 @@ namespace flow
             color.a = colorAlpha;
         }
 
-        private void setEnabledDirectionSprite(Logic.Direction dir, bool e)
+        private void setEnabledDirectionSprite(Logic.Dir dir, bool e)
         {
             switch (dir)
             {
-                case Logic.Direction.Up:
+                case Logic.Dir.Up:
                     up.enabled = e;
                     break;
-                case Logic.Direction.Down:
+                case Logic.Dir.Down:
                     down.enabled = e;
                     break;
-                case Logic.Direction.Left:
+                case Logic.Dir.Left:
                     left.enabled = e;
                     break;
-                case Logic.Direction.Right:
+                case Logic.Dir.Right:
                     right.enabled = e;
                     break;
                 default:
