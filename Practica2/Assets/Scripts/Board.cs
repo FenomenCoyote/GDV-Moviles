@@ -9,6 +9,7 @@ namespace flow
     {
         [SerializeField] private Tile tile;
         private Tile[,] tiles;
+        private Logic.Map map;
 
 #if UNITY_EDITOR
         void Start()
@@ -19,12 +20,18 @@ namespace flow
                 return;
             }
 
-            Logic.Map map = new Logic.Map();
+            map = new Logic.Map();
             map.loadLevel("5,0,1,5;18,17,12;21,16,11,6;3,4,9;0,1,2,7,8,13,14,19,24,23,22;20,15,10,5");
-            setForGame(map);
+            setForGame();
         }
 #endif
-        public void setForGame(Logic.Map map)
+
+        void Update()
+        {
+            Tile t = getClickedCell();                     
+        }
+
+        public void setForGame()
         {
             Vector3 pos = transform.position;
             uint height = map.getLevelHeight(), width = map.getLevelWidth();
@@ -69,6 +76,28 @@ namespace flow
                 endTile.setCircleBig();
                 endTile.enableCircle();
             }
+        }
+
+        Tile getClickedCell()
+        {
+            Vector2 offset = new Vector3((-map.getLevelWidth()) / 2.0f, (map.getLevelHeight()) / 2.0f);
+            Vector2 worldMousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+            Vector2 cursorPos = (offset - worldMousePos) + new Vector2(0.2f, -0.2f);
+            cursorPos = new Vector2(cursorPos.x - 0.1f, cursorPos.y + 0.1f);
+
+            if (cursorPos.x < 0 && cursorPos.y > 0 && cursorPos.y < map.getLevelHeight() && cursorPos.x > -map.getLevelWidth())
+            {
+                //Debug.Log(cursorPos);
+
+                if (Input.GetMouseButtonDown(0))
+                {
+                    Debug.Log("Celda [" + Math.Abs((int)cursorPos.y) + " , " + Math.Abs((int)cursorPos.x) + "]");
+                    return tiles[Math.Abs((int)cursorPos.y), Math.Abs((int)cursorPos.x)];
+                }
+                
+            }
+
+            return null;
         }
     }
 }
