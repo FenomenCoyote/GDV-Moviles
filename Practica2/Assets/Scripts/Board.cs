@@ -7,9 +7,12 @@ namespace flow
 {
     public class Board : MonoBehaviour
     {
+        private Color[] themeColors;
+        private uint width;
+        private uint height;
+
         [SerializeField] private Tile tile;
         private Tile[,] tiles;
-        private Logic.Map map;
 
 #if UNITY_EDITOR
         void Start()
@@ -19,10 +22,6 @@ namespace flow
                 Debug.LogError("Prefab of board not setted");
                 return;
             }
-
-            map = new Logic.Map();
-            map.loadLevel("5,0,1,5;18,17,12;21,16,11,6;3,4,9;0,1,2,7,8,13,14,19,24,23,22;20,15,10,5");
-            setForGame();
         }
 #endif
 
@@ -31,10 +30,12 @@ namespace flow
             Tile t = getClickedCell();                     
         }
 
-        public void setForGame()
+        public void setForGame(Logic.Map map, Color[] colors)
         {
             Vector3 pos = transform.position;
-            uint height = map.getLevelHeight(), width = map.getLevelWidth();
+
+            height = map.getLevelHeight();
+            width = map.getLevelWidth();
 
             pos.y = height / 2;
             tiles = new Tile[height, width];
@@ -60,7 +61,7 @@ namespace flow
             for (int i = 0; i < nPipes; ++i)
             {
                 int pipeLength = pipes[i].Count;
-                uint color = Logic.Colors.ClassicColors[i];
+                Color color = colors[i];
 
                 //Inicial
                 Tuple<uint,uint> initial = pipes[i][0];
@@ -80,12 +81,12 @@ namespace flow
 
         Tile getClickedCell()
         {
-            Vector2 offset = new Vector3((-map.getLevelWidth()) / 2.0f, (map.getLevelHeight()) / 2.0f);
+            Vector2 offset = new Vector3((-width) / 2.0f, (height) / 2.0f);
             Vector2 worldMousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
             Vector2 cursorPos = (offset - worldMousePos) + new Vector2(0.2f, -0.2f);
             cursorPos = new Vector2(cursorPos.x - 0.1f, cursorPos.y + 0.1f);
 
-            if (cursorPos.x < 0 && cursorPos.y > 0 && cursorPos.y < map.getLevelHeight() && cursorPos.x > -map.getLevelWidth())
+            if (cursorPos.x < 0 && cursorPos.y > 0 && cursorPos.y < height && cursorPos.x > -width)
             {
                 //Debug.Log(cursorPos);
 

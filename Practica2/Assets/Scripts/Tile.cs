@@ -30,7 +30,7 @@ namespace flow
         [SerializeField] private SpriteRenderer check;
 
         private Color color;
-        private uint colorNumber;
+        //private uint colorNumber;
 
 #if UNITY_EDITOR
         void Start()
@@ -48,17 +48,28 @@ namespace flow
 
         //TODO: Algo para hacer el shake
 
-        public void setColor(uint c)
-        {
-            colorNumber = c;
-            color = Utils.ColorConverter.intToColor(c);
+        //public void setColor(uint c)
+        //{
+        //    colorNumber = c;
+        //    color = Utils.ColorConverter.intToColor(c);
             
+        //    updateSpritesColor();
+        //}
+
+        public void setColor(Color c)
+        {
+            color = c;
             updateSpritesColor();
         }
 
-        public uint getColor()
+        //public uint getColor()
+        //{
+        //    return colorNumber;
+        //}
+
+        public Color getColor()
         {
-            return colorNumber;
+            return color;
         }
 
         public void enableDirectionSprite(Logic.Direction dir)
