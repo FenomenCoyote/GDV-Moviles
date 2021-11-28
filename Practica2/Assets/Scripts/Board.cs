@@ -56,7 +56,6 @@ namespace flow
                 {
                     lastCursorTilePos = t;
                     draging = true;
-                    path.Add(t);
                 }
                 else
                 {
@@ -87,7 +86,9 @@ namespace flow
                             tile.disableAll();
                             path.RemoveAt(path.Count - 1);
                         }
-                        tileActual.disableAll();
+                        getTile(lastCursorTilePos).disableAll();
+                        lastCursorTilePos = t;
+                        path.RemoveAt(path.Count - 1);
                     }
                     else
                     {
