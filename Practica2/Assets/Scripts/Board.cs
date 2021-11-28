@@ -15,16 +15,23 @@ namespace flow
         private Tile[,] tiles;
 
         private Vector2 lastCursorTilePos;
+        private List<Vector2> path;
 
         private BoardInput input;
 
+        private bool draging;
 
-
-        void Start()
+        private void Awake()
         {
             input = GetComponent<BoardInput>();
+            lastCursorTilePos = Vector2.negativeInfinity;
+            draging = false;
+            path = new List<Vector2>();
+        }
 
 #if UNITY_EDITOR
+        void Start()
+        {
             if (tile == null)
             {
                 Debug.LogError("Prefab of board not setted");
@@ -35,8 +42,8 @@ namespace flow
                 Debug.LogError("Input board not setted in Board");
                 return;
             }
-#endif
         }
+#endif
 
 
         void Update()
@@ -44,36 +51,60 @@ namespace flow
             if (input.justDown())
             { 
                 Vector2 t = input.getMouseTilePos();
-
-                if (t != Vector2.negativeInfinity && getTile(t).isActive())
+                path.Clear();
+                if (getTile(t).isActive())
                 {
                     lastCursorTilePos = t;
+                    draging = true;
+                    path.Add(t);
+                }
+                else
+                {
+                    lastCursorTilePos = Vector2.negativeInfinity;
+                    draging = false;
                 }
             }
-            else if (Input.GetMouseButtonUp(0))
+            else if (input.justUp())
             {
+                draging = false;
                 lastCursorTilePos = Vector2.negativeInfinity;
+                path.Clear();
             }
-            else if (input.isPressed() && input.getMouseTilePos() != Vector2.negativeInfinity)
+
+            if (draging && input.isPressed())
             {
                 Vector2 t = input.getMouseTilePos();
-
                 Tile tileActual = getTile(t);
 
                 //I dragged the tile
                 if(t != lastCursorTilePos)
                 {
-                    Tile lastCursorTile = getTile(lastCursorTilePos);
+                    if (path.Contains(t))
+                    {
+                        while(path[path.Count - 1] != t)
+                        {
+                            Tile tile = getTile(path[path.Count - 1]);
+                            tile.disableAll();
+                            path.RemoveAt(path.Count - 1);
+                        }
+                        tileActual.disableAll();
+                    }
+                    else
+                    {
+                        Tile lastCursorTile = getTile(lastCursorTilePos);
 
-                    Vector2 delta = t - lastCursorTilePos;
-                    delta = Vector2.Perpendicular(delta) * -1;
-                    Logic.Dir dir = Logic.Direction.GetDirectionFromVector(delta);
+                        Vector2 delta = t - lastCursorTilePos;
+                        delta = Vector2.Perpendicular(delta) * -1;
+                        Logic.Dir dir = Logic.Direction.GetDirectionFromVector(delta);
 
-                    lastCursorTile.enableDirectionSprite(dir);
-                    tileActual.setColor(lastCursorTile.getColor());
-                    tileActual.enableDirectionSprite(Logic.Direction.Opposite(dir));
+                        lastCursorTile.enableDirectionSprite(dir);
+                        tileActual.setColor(lastCursorTile.getColor());
+                        tileActual.enableDirectionSprite(Logic.Direction.Opposite(dir));
 
-                    lastCursorTilePos = t;
+                        path.Add(lastCursorTilePos);
+                        lastCursorTilePos = t;
+                    }
+                   
                 }
             }
 

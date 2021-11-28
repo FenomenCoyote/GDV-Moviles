@@ -24,10 +24,12 @@ namespace flow
         {
             if (Input.GetMouseButtonDown(0))
             {
-                pressed = true;
+                //Pressed if user clicked inside the board
+                pressed = calculateMouseTilePos();
             }
             else if (Input.GetMouseButtonUp(0))
             {
+                //Only stop pressing after mouseUp
                 pressed = false;
             }
             else if (pressed)
@@ -63,17 +65,17 @@ namespace flow
             return mouseTilePos;
         }
 
-        private void calculateMouseTilePos()
+        private bool calculateMouseTilePos()
         {
             Vector2 offset = new Vector3((-width) / 2.0f, (height) / 2.0f);
             Vector2 worldMousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
             Vector2 cursorPos = (offset - worldMousePos) + new Vector2(0.2f, -0.2f);
             cursorPos = new Vector2(cursorPos.x - 0.1f, cursorPos.y + 0.1f);
 
-            if (cursorPos.x < 0 && cursorPos.y > 0 && cursorPos.y < height && cursorPos.x > -width)
+            bool inside = cursorPos.x < 0 && cursorPos.y > 0 && cursorPos.y < height && cursorPos.x > -width;
+            if (inside)
                 mouseTilePos = new Vector2(Mathf.Abs((int)cursorPos.y), Mathf.Abs((int)cursorPos.x));
-            else 
-                pressed = false;
+            return inside;
         }
 
         public bool isPressed()

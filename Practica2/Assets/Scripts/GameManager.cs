@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 namespace flow
 {
@@ -26,6 +27,8 @@ namespace flow
 
         public static GameManager Instance { get; private set; }
 
+        private LevelPack selectedPack;
+
         private void Awake()
         {
             if (Instance != null) {
@@ -40,7 +43,11 @@ namespace flow
         private void Start()
         {
             //TODO: temporal
-            levelMngr.initLevel(categories[0].levelPacks[0], 0);
+            if (levelMngr)
+            {
+                levelMngr.initLevel(categories[0].levelPacks[0], 0);
+                selectedPack = categories[0].levelPacks[0];
+            }
         }
 
         private void setInfo(LevelManager lm)
@@ -51,5 +58,11 @@ namespace flow
         public uint getNHints() { return hints; }
 
         public PackCategory[] getPackCategories() { return categories; }
+
+        public void selectPack(LevelPack pack)
+        {
+            selectedPack = pack;
+            SceneManager.LoadScene((int)Scene.ChooseLevel);
+        }
     }
 }
