@@ -30,8 +30,10 @@ namespace flow
         [SerializeField] private SpriteRenderer check;
 
         private bool activeTile = false;
-
+        private bool initialOrEnd = false;
         private Color color;
+
+        private Logic.Dir origen, dest;
 
 #if UNITY_EDITOR
         void Start()
@@ -61,9 +63,33 @@ namespace flow
             return color;
         }
 
+        public void enableDestDirectionSprite(Logic.Dir dir)
+        {
+            setEnabledDirectionSprite(dir, true);
+            dest = dir;
+        }
+
+        public void enableSourceDirectionSprite(Logic.Dir dir)
+        {
+            setEnabledDirectionSprite(dir, true);
+            origen = dir;
+        }
+
         public void enableDirectionSprite(Logic.Dir dir)
         {
             setEnabledDirectionSprite(dir, true);
+        }
+
+        public void disableDestDirectionSprite()
+        {
+            setEnabledDirectionSprite(dest, false);
+            dest = Logic.Dir.None;
+        }
+
+        public void disableSourceDirectionSprite()
+        {
+            setEnabledDirectionSprite(origen, true);
+            origen = Logic.Dir.None;
         }
 
         public void disableDirectionSprite(Logic.Dir dir)
@@ -105,11 +131,13 @@ namespace flow
         public void setCircleBig()
         {
             circle.transform.localScale = Vector2.one * circleBigSize;
+            initialOrEnd = true;
         }
 
         public void setCircleSmall()
         {
             circle.transform.localScale = Vector2.one * circleSmallSize;
+            initialOrEnd = false;
         }
 
         public void setActiveTile(bool b)
@@ -120,6 +148,11 @@ namespace flow
         public bool isActive()
         {
             return activeTile;
+        }
+
+        public bool isInitialOrEnd()
+        {
+            return initialOrEnd;
         }
 
         private void updateSpritesColor()

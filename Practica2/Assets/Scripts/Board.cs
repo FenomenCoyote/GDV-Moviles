@@ -48,6 +48,8 @@ namespace flow
 
         void Update()
         {
+            input.updateInput();
+
             if (input.justDown())
             { 
                 Vector2 t = input.getMouseTilePos();
@@ -76,7 +78,7 @@ namespace flow
                 Tile tileActual = getTile(t);
 
                 //I dragged the tile
-                if(t != lastCursorTilePos)
+                if(t != lastCursorTilePos && Vector2.Distance(t, lastCursorTilePos) <= 1.1f)
                 {
                     if (path.Contains(t))
                     {
@@ -84,13 +86,15 @@ namespace flow
                         {
                             Tile tile = getTile(path[path.Count - 1]);
                             tile.disableAll();
+                            tileActual.setActiveTile(false);
                             path.RemoveAt(path.Count - 1);
                         }
                         getTile(lastCursorTilePos).disableAll();
+                        getTile(t).disableDestDirectionSprite();
                         lastCursorTilePos = t;
                         path.RemoveAt(path.Count - 1);
                     }
-                    else
+                    else 
                     {
                         Tile lastCursorTile = getTile(lastCursorTilePos);
 
@@ -98,12 +102,27 @@ namespace flow
                         delta = Vector2.Perpendicular(delta) * -1;
                         Logic.Dir dir = Logic.Direction.GetDirectionFromVector(delta);
 
-                        lastCursorTile.enableDirectionSprite(dir);
-                        tileActual.setColor(lastCursorTile.getColor());
-                        tileActual.enableDirectionSprite(Logic.Direction.Opposite(dir));
-
-                        path.Add(lastCursorTilePos);
-                        lastCursorTilePos = t;
+                        //Si he llegado a una final
+                        if(tileActual.isInitialOrEnd())
+                        {
+                            // y del mismo color
+                            if (tileActual.getColor() == lastCursorTile.getColor())
+                            {
+                                lastCursorTile.enableDestDirectionSprite(dir);
+                                tileActual.enableSourceDirectionSprite(Logic.Direction.Opposite(dir));
+                                lastCursorTilePos = Vector2.negativeInfinity;
+                                draging = false;
+                            }
+                        }
+                        else
+                        {
+                            lastCursorTile.enableDestDirectionSprite(dir);
+                            tileActual.setColor(lastCursorTile.getColor());
+                            tileActual.enableSourceDirectionSprite(Logic.Direction.Opposite(dir));
+                            tileActual.setActiveTile(true);
+                            path.Add(lastCursorTilePos);
+                            lastCursorTilePos = t;
+                        }
                     }
                    
                 }

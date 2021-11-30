@@ -20,12 +20,13 @@ namespace flow
         }
 #endif
 
-        void Update()
+        public void updateInput()
         {
             if (Input.GetMouseButtonDown(0))
             {
                 //Pressed if user clicked inside the board
                 pressed = calculateMouseTilePos();
+                Debug.Log(mouseTilePos);
             }
             else if (Input.GetMouseButtonUp(0))
             {
