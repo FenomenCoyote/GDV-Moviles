@@ -9,7 +9,7 @@ namespace flow
     {
         private uint width, height;
 
-        private bool pressed = false;
+        private bool pressed = false, inside = false;
 
         private Vector2 mouseTilePos;
 
@@ -26,7 +26,6 @@ namespace flow
             {
                 //Pressed if user clicked inside the board
                 pressed = calculateMouseTilePos();
-                Debug.Log(mouseTilePos);
             }
             else if (Input.GetMouseButtonUp(0))
             {
@@ -73,7 +72,7 @@ namespace flow
             Vector2 cursorPos = (offset - worldMousePos) + new Vector2(0.2f, -0.2f);
             cursorPos = new Vector2(cursorPos.x - 0.1f, cursorPos.y + 0.1f);
 
-            bool inside = cursorPos.x < 0 && cursorPos.y > 0 && cursorPos.y < height && cursorPos.x > -width;
+            inside = cursorPos.x < 0 && cursorPos.y > 0 && cursorPos.y < height && cursorPos.x > -width;
             if (inside)
                 mouseTilePos = new Vector2(Mathf.Abs((int)cursorPos.y), Mathf.Abs((int)cursorPos.x));
             return inside;
@@ -82,6 +81,11 @@ namespace flow
         public bool isPressed()
         {
             return pressed;
+        }
+
+        public bool isInside()
+        {
+            return inside;
         }
     }
 }

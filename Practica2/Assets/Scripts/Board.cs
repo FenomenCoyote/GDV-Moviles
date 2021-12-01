@@ -7,6 +7,8 @@ namespace flow
 {
     public class Board : MonoBehaviour
     {
+        private BoardInput input;
+
         private Color[] themeColors;
         private uint width;
         private uint height;
@@ -15,18 +17,19 @@ namespace flow
         private Tile[,] tiles;
 
         private Vector2 lastCursorTilePos;
-        private List<Vector2> path;
 
-        private BoardInput input;
+        private Dictionary<Color, Logic.Pipe> pipes;
 
         private bool draging;
+        private Color dragingColor;
+        private Logic.Pipe currentPipe;
 
         private void Awake()
         {
             input = GetComponent<BoardInput>();
             lastCursorTilePos = Vector2.negativeInfinity;
             draging = false;
-            path = new List<Vector2>();
+            pipes = new Dictionary<Color, Logic.Pipe>();
         }
 
 #if UNITY_EDITOR
@@ -53,78 +56,81 @@ namespace flow
             if (input.justDown())
             { 
                 Vector2 t = input.getMouseTilePos();
-                path.Clear();
                 if (getTile(t).isActive())
                 {
                     lastCursorTilePos = t;
                     draging = true;
+                    dragingColor = getTile(t).getColor();
+                    currentPipe = pipes[dragingColor];
+
+                    currentPipe.cutMyself(t);
                 }
                 else
                 {
                     lastCursorTilePos = Vector2.negativeInfinity;
                     draging = false;
+                    dragingColor = Color.black;
+                    currentPipe = null;
                 }
             }
             else if (input.justUp())
             {
-                draging = false;
                 lastCursorTilePos = Vector2.negativeInfinity;
-                path.Clear();
+                draging = false;
+                dragingColor = Color.black;
+                currentPipe = null;
             }
 
-            if (draging && input.isPressed())
+            if (draging && input.isPressed() && input.isInside())
             {
                 Vector2 t = input.getMouseTilePos();
                 Tile tileActual = getTile(t);
 
-                //I dragged the tile
-                if(t != lastCursorTilePos && Vector2.Distance(t, lastCursorTilePos) <= 1.1f)
+                //I moved
+                if (Vector2.Distance(t, lastCursorTilePos) >= 0.1)
                 {
-                    if (path.Contains(t))
-                    {
-                        while(path[path.Count - 1] != t)
-                        {
-                            Tile tile = getTile(path[path.Count - 1]);
-                            tile.disableAll();
-                            tileActual.setActiveTile(false);
-                            path.RemoveAt(path.Count - 1);
-                        }
-                        getTile(lastCursorTilePos).disableAll();
-                        getTile(t).disableDestDirectionSprite();
-                        lastCursorTilePos = t;
-                        path.RemoveAt(path.Count - 1);
+                    //If i moved to an active tile that is not my type, i need to cut that pipe
+                    if (tileActual.isActive() && tileActual.getColor() != dragingColor) { //cortar
+                        pipes[tileActual.getColor()].cut(t);
+                        return;
                     }
-                    else 
+                    // If i didnt cut myself and i moved only 1 position 
+                    if (!currentPipe.cutMyself(t))
                     {
-                        Tile lastCursorTile = getTile(lastCursorTilePos);
-
-                        Vector2 delta = t - lastCursorTilePos;
-                        delta = Vector2.Perpendicular(delta) * -1;
-                        Logic.Dir dir = Logic.Direction.GetDirectionFromVector(delta);
-
-                        //Si he llegado a una final
-                        if(tileActual.isInitialOrEnd())
+                        if (Vector2.Distance(t, lastCursorTilePos) <= 1.1f)
                         {
-                            // y del mismo color
-                            if (tileActual.getColor() == lastCursorTile.getColor())
+                            Tile lastCursorTile = getTile(lastCursorTilePos);
+
+                            Vector2 delta = t - lastCursorTilePos;
+                            delta = Vector2.Perpendicular(delta) * -1;
+                            Logic.Dir dir = Logic.Direction.GetDirectionFromVector(delta);
+
+                            //Si he llegado a una final
+                            if (tileActual.isInitialOrEnd())
+                            {
+                                // y del mismo color
+                                if (tileActual.getColor() == lastCursorTile.getColor())
+                                {
+                                    lastCursorTile.enableDestDirectionSprite(dir);
+                                    tileActual.enableSourceDirectionSprite(Logic.Direction.Opposite(dir));
+                                    lastCursorTilePos = Vector2.negativeInfinity;
+                                    draging = false;
+                                    currentPipe.close();
+                                }
+                            }
+                            else
                             {
                                 lastCursorTile.enableDestDirectionSprite(dir);
+                                tileActual.setColor(lastCursorTile.getColor());
                                 tileActual.enableSourceDirectionSprite(Logic.Direction.Opposite(dir));
-                                lastCursorTilePos = Vector2.negativeInfinity;
-                                draging = false;
+                                tileActual.setActiveTile(true);
+                                currentPipe.add(t, tileActual);
+                                lastCursorTilePos = t;
                             }
                         }
-                        else
-                        {
-                            lastCursorTile.enableDestDirectionSprite(dir);
-                            tileActual.setColor(lastCursorTile.getColor());
-                            tileActual.enableSourceDirectionSprite(Logic.Direction.Opposite(dir));
-                            tileActual.setActiveTile(true);
-                            path.Add(lastCursorTilePos);
-                            lastCursorTilePos = t;
-                        }
                     }
-                   
+                    else
+                        lastCursorTilePos = t;
                 }
             }
 
@@ -159,15 +165,17 @@ namespace flow
                 pos.y--;
             }
 
-            List<List<Tuple<uint,uint>>> pipes = map.getPipes();
+            List<List<Tuple<uint,uint>>> _pipes = map.getPipes();
             uint nPipes = map.getNPipes();
             for (int i = 0; i < nPipes; ++i)
             {
-                int pipeLength = pipes[i].Count;
+                int pipeLength = _pipes[i].Count;
                 Color color = colors[i];
 
+                this.pipes.Add(color, new Logic.Pipe());
+
                 //Inicial
-                Tuple<uint,uint> initial = pipes[i][0];
+                Tuple<uint,uint> initial = _pipes[i][0];
                 Tile initTile = tiles[initial.Item1, initial.Item2];
                 initTile.setColor(color);
                 initTile.setCircleBig();
@@ -175,7 +183,7 @@ namespace flow
                 initTile.enableCircle();
 
                 //Final
-                Tuple<uint, uint> final = pipes[i][pipeLength - 1];
+                Tuple<uint, uint> final = _pipes[i][pipeLength - 1];
                 Tile endTile = tiles[final.Item1, final.Item2];
                 endTile.setColor(color);
                 endTile.setCircleBig();
