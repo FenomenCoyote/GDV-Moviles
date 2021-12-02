@@ -33,7 +33,7 @@ namespace flow
         private bool initialOrEnd = false;
         private Color color;
 
-        private Logic.Dir origen, dest;
+        private Logic.Dir origen = Logic.Dir.Right, dest = Logic.Dir.Left;
 
 #if UNITY_EDITOR
         void Start()
@@ -88,7 +88,7 @@ namespace flow
 
         public void disableSourceDirectionSprite()
         {
-            setEnabledDirectionSprite(origen, true);
+            setEnabledDirectionSprite(origen, false);
             origen = Logic.Dir.None;
         }
 
@@ -119,7 +119,7 @@ namespace flow
 
         public void disableAll()
         {
-            circle.enabled = false;
+            //circle.enabled = false;
             up.enabled = false;
             down.enabled = false;
             left.enabled = false;
