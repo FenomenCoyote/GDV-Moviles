@@ -84,7 +84,7 @@ namespace flow.Logic
         {
             int it = positions.IndexOf(pos);
 
-            if (it < 0)
+            if (it < 0 || positions.Count <= 1)
                 return false;
 
             int i = it + 1;
@@ -204,6 +204,13 @@ namespace flow.Logic
 
             while(positionsFromFinal.Count > 1)
             {
+                if (positionsFromInitial[positionsFromInitial.Count - 1] == positionsFromFinal[positionsFromFinal.Count - 1])
+                {
+                    tilesFromFinal.RemoveAt(tilesFromFinal.Count - 1);
+                    positionsFromFinal.RemoveAt(positionsFromFinal.Count - 1);
+                    continue;
+                }
+
                 tilesFromInitial.Add(tilesFromFinal[tilesFromFinal.Count - 1]);
                 positionsFromInitial.Add(positionsFromFinal[positionsFromFinal.Count - 1]);
 

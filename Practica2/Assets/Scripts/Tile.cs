@@ -83,13 +83,13 @@ namespace flow
         public void disableDestDirectionSprite()
         {
             setEnabledDirectionSprite(dest, false);
-            dest = Logic.Dir.None;
+            dest = Logic.Dir.Right;
         }
 
         public void disableSourceDirectionSprite()
         {
             setEnabledDirectionSprite(origen, false);
-            origen = Logic.Dir.None;
+            origen = Logic.Dir.Right;
         }
 
         public void disableDirectionSprite(Logic.Dir dir)
