@@ -18,9 +18,16 @@ namespace flow.UI
         [SerializeField]
         MenuButton categoryButton;
 
-        // Start is called before the first frame update
         void Start()
         {
+
+            nivelesText.text = "<color=red>n</color>" +
+                               "<color=green>i</color>"+
+                               "<color=blue>v</color>"+
+                               "<color=yellow>e</color>"+
+                               "<color=orange>l</color>"+
+                               "<color=red>e</color>"+
+                               "<color=green>s</color>";
 
             categories = GameManager.Instance.getPackCategories();
 

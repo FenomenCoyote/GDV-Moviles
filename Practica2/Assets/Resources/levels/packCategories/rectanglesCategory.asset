@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 91572697709d69044962e6f13b93137f, type: 3}
   m_Name: rectanglesCategory
   m_EditorClassIdentifier: 
-  categoryName: Rectangulos
+  categoryName: "Rect\xE1ngulos"
   levelPacks:
   - {fileID: 11400000, guid: 8eabdb9fd3c2b264ba906225d3196f49, type: 2}
   - {fileID: 11400000, guid: 4702cdd95b969844a9bad44a50e867c5, type: 2}

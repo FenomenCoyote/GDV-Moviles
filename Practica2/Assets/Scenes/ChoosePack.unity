@@ -201,7 +201,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   nivelesText: {fileID: 1527274719}
   categoryHeader: {fileID: 6621999297182245064, guid: b4e9f3b87baefee4b8729bec9942aca2, type: 3}
-  categoryButton: {fileID: 0}
+  categoryButton: {fileID: -8947032083130238934, guid: dac07249a91b1ee43a494514267b9fbf, type: 3}
 --- !u!1 &686703097
 GameObject:
   m_ObjectHideFlags: 0
@@ -597,9 +597,9 @@ RectTransform:
   m_Father: {fileID: 11949041}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: 0, y: 0}
+  m_AnchorMin: {x: 0, y: 1}
+  m_AnchorMax: {x: 0, y: 1}
+  m_AnchoredPosition: {x: 540, y: -100}
   m_SizeDelta: {x: 1080, y: 200}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1527274719
