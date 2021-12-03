@@ -58,54 +58,51 @@ namespace flow.Logic
             color = c;
         }
 
+        public void startDrag(Vector2 pos)
+        {
+            if (positionsFromInitial.Contains(pos))
+                lastAddedFrom = PipeDir.Initial;
+
+            if (positionsFromFinal.Contains(pos))
+                lastAddedFrom = PipeDir.Final;
+        }
+
         public bool cutMyself(Vector2 pos)
         {
             if (!checkIfICutMyself(pos))
                 return false;
 
-            int it = positionsFromInitial.IndexOf(pos);
+            if (closed) {
+                openPipe(pos);
+                return true;
+            }
 
-            if(it >= 0)
+            return cutFromDirection(pos, ref positionsFromInitial, ref tilesFromInitial) || cutFromDirection(pos, ref positionsFromFinal, ref tilesFromFinal);
+        }
+
+        private bool cutFromDirection(Vector2 pos, ref List<Vector2> positions, ref List<Tile> tiles)
+        {
+            int it = positions.IndexOf(pos);
+
+            if (it < 0)
+                return false;
+
+            int i = it + 1;
+            Tile removeTile;
+            while (i < positions.Count && positions[i] != pos)
             {
-                int i = it + 1;
-                Tile removeTile;
-                while (i < positionsFromInitial.Count && positionsFromInitial[i] != pos)
-                {
-                    removeTile = tilesFromInitial[i];
-                    removeTile.disableAll();
-                    removeTile.setActiveTile(false);
+                removeTile = tiles[i];
+                removeTile.disableAll();
+                removeTile.setActiveTile(false);
 
-                    positionsFromInitial.RemoveAt(i);
-                    tilesFromInitial.RemoveAt(i);
-                }
-
-                removeTile = tilesFromInitial[it];
-                removeTile.disableDestDirectionSprite();
-
-                return true;
+                positions.RemoveAt(i);
+                tiles.RemoveAt(i);
             }
-            else { 
-                it = positionsFromFinal.IndexOf(pos);
-                if (it < 0)
-                    return false;
 
-                int i = it + 1;
-                Tile removeTile;
-                while (i < positionsFromFinal.Count && positionsFromFinal[i] != pos)
-                {
-                    removeTile = tilesFromFinal[i];
-                    removeTile.disableAll();
-                    removeTile.setActiveTile(false);
+            removeTile = tiles[it];
+            removeTile.disableDestDirectionSprite();
 
-                    positionsFromFinal.RemoveAt(i);
-                    tilesFromFinal.RemoveAt(i);
-                }
-
-                removeTile = tilesFromFinal[it];
-                removeTile.disableSourceDirectionSprite();
-
-                return true;
-            }
+            return true;
         }
 
         private bool checkIfICutMyself(Vector2 pos)
@@ -120,7 +117,7 @@ namespace flow.Logic
 
                 //join last one from initial to this new one
                 join(tiles[tiles.Count - 1], t,
-                    positions[positions.Count - 1], pos, dir);
+                    positions[positions.Count - 1], pos);
 
                 positions.Add(pos);
                 tiles.Add(t);
@@ -146,7 +143,7 @@ namespace flow.Logic
             if (t.isInitialOrEnd())
             {
                 if (t.getColor() != color)
-                    return false;
+                    return false;   
             }
 
             if (checkIfICutMyself(pos))
@@ -154,14 +151,21 @@ namespace flow.Logic
                 cutMyself(pos);
             }
 
+
             bool added = false;
 
             //Si llego desde la pipe desde el principio
             if(lastAddedFrom == PipeDir.None)
             {
-                if(tryAdd(ref positionsFromInitial, ref tilesFromInitial, PipeDir.Initial, pos, t) || tryAdd(ref positionsFromFinal, ref tilesFromFinal, PipeDir.Final, pos, t))
+                if(tryAdd(ref positionsFromInitial, ref tilesFromInitial, PipeDir.Initial, pos, t))
                 {
                     added = true;
+                    lastAddedFrom = PipeDir.Initial;
+                }
+                else if(tryAdd(ref positionsFromFinal, ref tilesFromFinal, PipeDir.Final, pos, t))
+                {
+                    added = true;
+                    lastAddedFrom = PipeDir.Final;
                 }
             }
             else
@@ -176,7 +180,7 @@ namespace flow.Logic
                 }
             }
 
-            if(added && checkPipeClosed())
+            if (added && checkPipeClosed())
             {
                 close();
             }
@@ -197,6 +201,93 @@ namespace flow.Logic
         private void close()
         {
             closed = true;
+
+            while(positionsFromFinal.Count > 1)
+            {
+                tilesFromInitial.Add(tilesFromFinal[tilesFromFinal.Count - 1]);
+                positionsFromInitial.Add(positionsFromFinal[positionsFromFinal.Count - 1]);
+
+                tilesFromFinal.RemoveAt(tilesFromFinal.Count - 1);
+                positionsFromFinal.RemoveAt(positionsFromFinal.Count - 1);
+            }
+
+            for(int i = 0; i < positionsFromInitial.Count-1; ++i)
+            {
+                join(tilesFromInitial[i],
+                    tilesFromInitial[i+1],
+                    positionsFromInitial[i],
+                    positionsFromInitial[i+1]);
+            }
+
+            if (positionsFromInitial[positionsFromInitial.Count - 1] == positionsFromFinal[positionsFromFinal.Count - 1])
+            {
+                tilesFromInitial.RemoveAt(tilesFromInitial.Count - 1);
+                positionsFromInitial.RemoveAt(positionsFromInitial.Count - 1);
+            }
+
+            highLight(ref tilesFromInitial, true);
+            highLight(ref tilesFromFinal, true);
+
+            tilesFromInitial[0].enableCheck();
+            tilesFromFinal[0].enableCheck();
+
+            lastAddedFrom = PipeDir.None;
+        }
+
+
+        private void openPipe(Vector2 pos)
+        {
+            int it = positionsFromInitial.IndexOf(pos);
+
+            if(it > -1 && it < positionsFromInitial.Count / 2)
+            {
+                cutFromDirection(pos, ref positionsFromInitial, ref tilesFromInitial);
+                tilesFromFinal[0].disableDestDirectionSprite();
+                tilesFromFinal[0].disableSourceDirectionSprite();
+                lastAddedFrom = PipeDir.Initial;
+            }
+            else
+            {
+                while (positionsFromInitial.Count > 1)
+                {
+                    join(tilesFromFinal[tilesFromFinal.Count - 1],
+                        tilesFromInitial[tilesFromInitial.Count - 1],
+                        positionsFromFinal[positionsFromFinal.Count - 1],
+                        positionsFromInitial[positionsFromInitial.Count - 1]);
+
+                    tilesFromFinal.Add(tilesFromInitial[tilesFromInitial.Count - 1]);
+                    positionsFromFinal.Add(positionsFromInitial[positionsFromInitial.Count - 1]);
+
+                    tilesFromInitial.RemoveAt(tilesFromInitial.Count - 1);
+                    positionsFromInitial.RemoveAt(positionsFromInitial.Count - 1);
+                }
+
+                cutFromDirection(pos, ref positionsFromFinal, ref tilesFromFinal);
+
+                tilesFromInitial[0].disableSourceDirectionSprite();
+                tilesFromInitial[0].disableDestDirectionSprite();
+                lastAddedFrom = PipeDir.Final;
+            }
+
+            tilesFromInitial[0].disableCheck();
+            tilesFromFinal[0].disableCheck();
+
+            highLight(ref tilesFromInitial, false);
+            highLight(ref tilesFromFinal, false);
+
+
+            closed = false;
+        }
+
+        private void highLight(ref List<Tile> tiles, bool highLight)
+        {
+            foreach(Tile t in tiles)
+            {
+                if (highLight)
+                    t.enableHightLight();
+                else
+                    t.disableHighLight();
+            }
         }
 
         private bool checkPipeClosed()
@@ -204,22 +295,15 @@ namespace flow.Logic
             return positionsFromInitial[positionsFromInitial.Count - 1] == positionsFromFinal[positionsFromFinal.Count - 1];
         }
 
-        private void join(Tile t1, Tile t2, Vector2 p1, Vector2 p2, PipeDir fromInital)
+
+        private void join(Tile t1, Tile t2, Vector2 p1, Vector2 p2)
         {
             Vector2 delta = p2 - p1;
             delta = Vector2.Perpendicular(delta) * -1;
             Dir dir = Direction.GetDirectionFromVector(delta);
 
-            if (fromInital == PipeDir.Initial)
-            {
-                t1.enableDestDirectionSprite(dir);
-                t2.enableSourceDirectionSprite(Direction.Opposite(dir));
-            }
-            else
-            {
-                t1.enableSourceDirectionSprite(dir);
-                t2.enableDestDirectionSprite(Direction.Opposite(dir));
-            }
+            t1.enableDestDirectionSprite(dir);
+            t2.enableSourceDirectionSprite(Direction.Opposite(dir));         
         }
 
         private bool canGoTo(Vector2 pos1, Vector2 pos2)

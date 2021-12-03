@@ -112,6 +112,16 @@ namespace flow
             check.enabled = true;
         }
 
+        public void enableHightLight()
+        {
+            backGroundHighlight.enabled = true;
+        }
+
+        public void disableHighLight()
+        {
+            backGroundHighlight.enabled = false;
+        }
+
         public void disableCheck()
         {
             check.enabled = false;

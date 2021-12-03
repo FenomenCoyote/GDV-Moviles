@@ -9,7 +9,6 @@ namespace flow
     {
         private BoardInput input;
 
-        private Color[] themeColors;
         private uint width;
         private uint height;
 
@@ -64,6 +63,7 @@ namespace flow
                     currentPipe = pipes[dragingColor];
 
                     currentPipe.cutMyself(t);
+                    currentPipe.startDrag(t);
                 }
                 else
                 {
