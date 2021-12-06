@@ -9,10 +9,12 @@ public class MenuPanel : MonoBehaviour
     Text panelText;
 
     Image img;
+    RectTransform rectTransform;
 
     private void Awake()
     {
         img = GetComponent<Image>();
+        rectTransform = GetComponent<RectTransform>();
     }
 
     public void setText(string text)
@@ -23,5 +25,10 @@ public class MenuPanel : MonoBehaviour
     public void setColor(Color color)
     {
         img.color = color;
+    }
+
+    public float getHeight()
+    {
+        return rectTransform.rect.height;
     }
 }

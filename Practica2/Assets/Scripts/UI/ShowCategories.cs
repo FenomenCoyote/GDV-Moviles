@@ -18,8 +18,19 @@ namespace flow.UI
         [SerializeField]
         MenuButton categoryButton;
 
+        RectTransform rectTransform;
+
+        VerticalLayoutGroup vOrder;
+
+        private void Awake()
+        {
+            rectTransform = GetComponent<RectTransform>();
+            vOrder = GetComponent<VerticalLayoutGroup>();
+        }
+
         void Start()
         {
+            float auxHeight = 0.0f;
 
             nivelesText.text = "<color=red>n</color>" +
                                "<color=green>i</color>"+
@@ -29,6 +40,9 @@ namespace flow.UI
                                "<color=red>e</color>"+
                                "<color=green>s</color>";
 
+            //Esto es bucear en la escena?
+            auxHeight += nivelesText.rectTransform.rect.height + vOrder.spacing;
+
             categories = GameManager.Instance.getPackCategories();
 
             foreach(PackCategory category in categories)
@@ -36,14 +50,17 @@ namespace flow.UI
                 MenuPanel panel = Instantiate(categoryHeader, transform);
                 panel.setColor(category.categoryColor);
                 panel.setText(category.categoryName);
+                auxHeight += panel.getHeight() + vOrder.spacing;
 
                 foreach (LevelPack levelPack in category.levelPacks)
                 {
                     MenuButton packButton = Instantiate(categoryButton, transform);
-                    packButton.setPackName(levelPack.name, category.categoryColor);
-                    packButton.setColor(category.categoryColor);
+                    packButton.setPackName(levelPack.packName, category.categoryColor);
+                    auxHeight += packButton.getHeight() + vOrder.spacing;
                 }
             }
+
+            rectTransform.SetSizeWithCurrentAnchors(RectTransform.Axis.Vertical, auxHeight);
 
         }
     }

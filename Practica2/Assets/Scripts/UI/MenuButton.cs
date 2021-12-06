@@ -14,11 +14,11 @@ public class MenuButton: MonoBehaviour
     [SerializeField]
     Image finishedPackCheck;
 
-    Image img;
+    RectTransform rectTransform;
 
     private void Awake()
     {
-        img = GetComponent<Image>();
+        rectTransform = GetComponent<RectTransform>();
     }
 
     public void setPackName(string packName, Color color)
@@ -37,8 +37,8 @@ public class MenuButton: MonoBehaviour
         finishedPackCheck.enabled = enable;
     }
 
-    public void setColor(Color color)
+    public float getHeight()
     {
-        img.color = color;
+        return rectTransform.rect.height;
     }
 }
