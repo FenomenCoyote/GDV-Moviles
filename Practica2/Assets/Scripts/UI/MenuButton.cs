@@ -3,42 +3,62 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class MenuButton: MonoBehaviour
+namespace flow.UI
 {
-    [SerializeField]
-    Text levelPackName;
-
-    [SerializeField]
-    Text packProgress;
-
-    [SerializeField]
-    Image finishedPackCheck;
-
-    RectTransform rectTransform;
-
-    private void Awake()
+    public class MenuButton : MonoBehaviour
     {
-        rectTransform = GetComponent<RectTransform>();
-    }
+        [SerializeField]
+        Text levelPackName;
 
-    public void setPackName(string packName, Color color)
-    {
-        levelPackName.text = packName;
-        levelPackName.color = color;
-    }
+        [SerializeField]
+        Text packProgress;
 
-    public void setPackProgress(int levelsDone, int totalLevels)
-    {
-        //TODO
-    }
+        [SerializeField]
+        Image finishedPackCheck;
 
-    public void enableFinishedPackCheck(bool enable)
-    {
-        finishedPackCheck.enabled = enable;
-    }
+        RectTransform rectTransform;
 
-    public float getHeight()
-    {
-        return rectTransform.rect.height;
+        LevelPack pack;
+
+        Button button;
+
+        private void Awake()
+        {
+            rectTransform = GetComponent<RectTransform>();
+            button = GetComponent<Button>();
+        }
+
+        private void Start()
+        {
+            button.onClick.AddListener(delegate () { clickCallback(); });
+        }
+
+        public void setPack(LevelPack levelPack, Color color)
+        {
+            pack = levelPack;
+            levelPackName.text = pack.packName;
+            levelPackName.color = color;
+        }
+
+        public void setPackProgress(int levelsDone, int totalLevels)
+        {
+            //TODO
+        }
+
+        public void enableFinishedPackCheck(bool enable)
+        {
+            finishedPackCheck.enabled = enable;
+        }
+
+        public float getHeight()
+        {
+            return rectTransform.rect.height;
+        }
+
+        private void clickCallback()
+        {
+            if(pack != null)
+                GameManager.Instance.selectPack(pack);
+        }
     }
 }
