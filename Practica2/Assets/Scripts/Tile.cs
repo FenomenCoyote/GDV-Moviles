@@ -35,6 +35,8 @@ namespace flow
 
         private Logic.Dir origen = Logic.Dir.None, dest = Logic.Dir.None;
 
+        private bool lockHighLightColor = false;
+
 #if UNITY_EDITOR
         void Start()
         {
@@ -51,6 +53,13 @@ namespace flow
 
         //TODO: Algo para hacer el shake
 
+        public void setHightLock(bool b)
+        {
+            lockHighLightColor = b;
+
+            if(!lockHighLightColor) updateSpritesColor();
+        }
+
         public void setColor(Color c)
         {
             color = c;
@@ -60,6 +69,21 @@ namespace flow
         public Color getColor()
         {
             return color;
+        }
+
+        public bool hasNoDir()
+        {
+            return origen == Logic.Dir.None && dest == Logic.Dir.None;
+        }
+
+        public void enableDestDirectionSprite()
+        {
+            setEnabledDirectionSprite(dest, true);
+        }
+
+        public void enableSourceDirectionSprite()
+        {
+            setEnabledDirectionSprite(origen, true);
         }
 
         public void enableDestDirectionSprite(Logic.Dir dir)
@@ -133,6 +157,8 @@ namespace flow
             right.enabled = false;
             backGroundHighlight.enabled = false;
             check.enabled = false;
+            origen = Logic.Dir.None;
+            dest = Logic.Dir.None;
         }
 
         public void setCircleBig()
@@ -177,10 +203,13 @@ namespace flow
             left.color = color;
             right.color = color;
 
-            float colorAlpha = color.a;
-            color.a = backGroundHighlightAlpha;
-            backGroundHighlight.color = color;
-            color.a = colorAlpha;
+            if (!lockHighLightColor)
+            {
+                float colorAlpha = color.a;
+                color.a = backGroundHighlightAlpha;
+                backGroundHighlight.color = color;
+                color.a = colorAlpha;
+            }
         }
 
         private void setEnabledDirectionSprite(Logic.Dir dir, bool e)
