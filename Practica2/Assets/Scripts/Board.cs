@@ -62,8 +62,8 @@ namespace flow
                     dragingColor = getTile(t).getColor();
                     currentPipe = pipes[dragingColor];
 
-                    currentPipe.cutMyself(t);
                     currentPipe.startDrag(t);
+                    currentPipe.cutMyself(t);
                 }
                 else
                 {
@@ -91,7 +91,11 @@ namespace flow
                 //I moved
                 if (Vector2.Distance(t, lastCursorTilePos) >= 0.1)
                 {
-                    if(currentPipe.add(t, tileActual) && currentPipe.isClosed())
+                    if (tileActual.isActive() && tileActual.getColor() != dragingColor)
+                    {
+                        pipes[tileActual.getColor()].provisionalCut(t);
+                    }
+                    else if(currentPipe.add(t, tileActual) && currentPipe.isClosed())
                     {
                         lastCursorTilePos = Vector2.negativeInfinity;
                         draging = false;
@@ -129,7 +133,7 @@ namespace flow
                     aux.y = pos.y;
                     aux.x = pos.x;
                     tiles[i, j].transform.localPosition = aux;
-
+                    tiles[i, j].setCircleSmall();
                     pos.x++;
                 }
                 pos.y--;

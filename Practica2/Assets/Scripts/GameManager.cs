@@ -33,7 +33,7 @@ namespace flow
         {
             if (Instance != null) {
                 setInfo(levelMngr);
-                Destroy(this);
+                Destroy(gameObject);
             }
 
             Instance = this;

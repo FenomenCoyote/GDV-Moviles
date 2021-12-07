@@ -33,7 +33,7 @@ namespace flow
         private bool initialOrEnd = false;
         private Color color;
 
-        private Logic.Dir origen = Logic.Dir.Right, dest = Logic.Dir.Left;
+        private Logic.Dir origen = Logic.Dir.None, dest = Logic.Dir.None;
 
 #if UNITY_EDITOR
         void Start()
@@ -50,7 +50,6 @@ namespace flow
 
 
         //TODO: Algo para hacer el shake
-
 
         public void setColor(Color c)
         {
@@ -83,13 +82,11 @@ namespace flow
         public void disableDestDirectionSprite()
         {
             setEnabledDirectionSprite(dest, false);
-            dest = Logic.Dir.Right;
         }
 
         public void disableSourceDirectionSprite()
         {
             setEnabledDirectionSprite(origen, false);
-            origen = Logic.Dir.Right;
         }
 
         public void disableDirectionSprite(Logic.Dir dir)
@@ -165,6 +162,13 @@ namespace flow
             return initialOrEnd;
         }
 
+        public void reverse()
+        {
+            Logic.Dir aux = origen;
+            origen = dest;
+            dest = aux;
+        }
+
         private void updateSpritesColor()
         {
             circle.color = color;
@@ -194,9 +198,6 @@ namespace flow
                     break;
                 case Logic.Dir.Right:
                     right.enabled = e;
-                    break;
-                default:
-                    Debug.LogError("Direction imposible en tile");
                     break;
             }
         }
