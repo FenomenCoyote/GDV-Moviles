@@ -78,11 +78,14 @@ namespace flow
                 lastCursorTilePos = Vector2.negativeInfinity;
                 draging = false;
                 dragingColor = Color.black;
-                if(currentPipe != null) 
-                    currentPipe.notDraggingAnymore();
 
-                foreach(Logic.Pipe p in pipes.Values)
-                    p.restoreFromProvisionalCut();
+                if(currentPipe != null)
+                {
+                    currentPipe.notDraggingAnymore();
+                    foreach (Logic.Pipe p in pipes.Values)
+                        if (currentPipe != p)
+                            p.restoreFromProvisionalCut(currentPipe);
+                }
 
                 currentPipe = null;
             }
@@ -96,13 +99,27 @@ namespace flow
                 if (Vector2.Distance(t, lastCursorTilePos) >= 0.1)
                 {
                     if (!tileActual.isInitialOrEnd() || tileActual.getColor() == dragingColor)
-                    {               
+                    {
                         if (tileActual.isActive() && tileActual.getColor() != dragingColor)
                         {
-                            pipes[tileActual.getColor()].provisionalCut(t);
+                            pipes[tileActual.getColor()].provisionalCut(currentPipe, t);
                         }
-                        if(currentPipe.add(t, tileActual) && currentPipe.isClosed())
+
+                        currentPipe.add(t, tileActual);
+
+                        if (currentPipe.pollCutted())
                         {
+                            foreach (Logic.Pipe p in pipes.Values)
+                                if (currentPipe != p)
+                                    p.restoreFromProvisionalCut(currentPipe, true);
+                        }
+
+                        if (currentPipe.isClosed())
+                        {
+                            foreach (Logic.Pipe p in pipes.Values)
+                                if (currentPipe != p)
+                                    p.restoreFromProvisionalCut(currentPipe);
+
                             lastCursorTilePos = Vector2.negativeInfinity;
                             draging = false;
                             dragingColor = Color.black;
@@ -111,13 +128,6 @@ namespace flow
                         }
                         else
                             lastCursorTilePos = t;
-
-                        if (currentPipe != null && currentPipe.pollCutted())
-                        {
-                            foreach (Logic.Pipe p in pipes.Values)
-                                if(currentPipe != p && !p.isCuttingThisPipe(currentPipe))
-                                    p.restoreFromProvisionalCut();
-                        }
                     }
                     else 
                         lastCursorTilePos = t;

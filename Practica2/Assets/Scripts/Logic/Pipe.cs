@@ -6,35 +6,32 @@ namespace flow.Logic
 {
     public class Pipe 
     {
-        private enum PipeDir
-        {
-            None, Initial, Final
-        }
-        private List<Vector2> positions;
-        private List<Tile> tiles;
-
         private Vector2 startPos, finalPos;
         private Tile startTile, finalTile;
 
-        private int provisionalIndex;
-        private bool provisionalCutting, justCutted;
+        private List<Vector2> positions;
+        private List<Tile> tiles;
+
+
+        private bool justCutted;
+        private Vector2 cuttedPos;
 
         private bool closed;
 
-
+        private int provisionalIndex;
 
         private Color color;
+
 
         public Pipe()
         {
             positions = new List<Vector2>();
             tiles = new List<Tile>();
 
-            provisionalIndex = -1;
-            provisionalCutting = false;
-
+            provisionalIndex = 1000;
             closed = false;
         }
+
 
         public void setInitialAndEndTiles(Vector2 ipos, Tile itile, Vector2 epos, Tile etile)
         {
@@ -86,174 +83,140 @@ namespace flow.Logic
             return b;
         }
 
-        public bool isCuttingThisPipe(Pipe other)
+        private int isCuttingThisPipe(Pipe other)
         {
+            int i = 0;
             foreach(Vector2 pos in positions)
             {
                 if (other.positions.Contains(pos))
-                    return true;
+                    return i;
+
+                ++i;
             }
 
-            return false;
+            return -1;
         }
 
-        public bool provisionalCut(Vector2 pos)
+        public bool provisionalCut(Pipe current, Vector2 pos)
         {
-            int index = positions.IndexOf(pos);
+            int index = isCuttingThisPipe(current);
+            int aux = positions.IndexOf(pos);
+
+            if (index < 0)
+                index = aux;
+
             if (index < 0)
                 return false;
 
-            provisionalCutting = true;
+            index = Mathf.Min(index, aux);
 
-            if (closed)
-            {
-                provisionalClosedCut(index);
-                return true;
-            }
-            tiles[index - 1].disableDestDirectionSprite();
-            int it = index;
-            while (it < tiles.Count)
-            {
-                tiles[it].disableAll();
-                tiles[it].disableCircle();
-                tiles[it].enableHightLight();
-                ++it;
-                //tiles.RemoveAt(index);
-                //positions.RemoveAt(index);
-            }
-            tiles[0].setActiveTile(true);
+            if (closed && provisionalIndex == 1000)
+                provisionalIndex = provisionalClosedCut(index);
+            else 
+                provisionalIndex = index;
 
-            provisionalIndex = Mathf.Min(index, provisionalIndex);
+            tiles[provisionalIndex - 1].disableDestDirectionSprite();
+
+            for (int i = provisionalIndex; i < tiles.Count; ++i)
+            {
+                if (tiles[i].getColor() != color)
+                    continue;
+
+                tiles[i].disableAll();
+
+                tiles[i].disableCircle();
+
+                tiles[i].enableHightLight();
+                tiles[i].setHightLock(true);
+            }
+
+            for(int i = 0; i < provisionalIndex - 1; ++i)
+            {
+                join(tiles[i], tiles[i + 1], positions[i], positions[i + 1]);
+            }
 
             return true;
 
         }
 
-        private void provisionalClosedCut(int index)
-        {  
-            if (index < positions.Count / 2)
+        private int provisionalClosedCut(int index)
+        {
+            if (index < tiles.Count / 2)
             {
                 //reverse order
                 positions.Reverse();
                 tiles.Reverse();
 
-                index = positions.Count - index - 1;
+                index = tiles.Count - index - 1;
                 foreach (Tile t in tiles)
                     t.reverse();
-
-                tiles[index - 1].disableDestDirectionSprite();
-
-                int it = index;
-
-                while (it < positions.Count)
-                {
-                    tiles[it].disableAll();
-                    tiles[it].enableHightLight();
-                    tiles[it].setHightLock(true);
-                    it++;
-                }
-
-                tiles[0].setActiveTile(true);
-
-                if (provisionalIndex < 0)
-                    provisionalIndex = index;
-                else
-                    provisionalIndex = Mathf.Min(index, provisionalIndex);
             }
-            else
-            {
-                
-                tiles[index - 1].disableDestDirectionSprite();
 
-                int it = index;
-
-                while (it < positions.Count)
-                {
-                    tiles[it].disableAll();
-                    tiles[it].enableHightLight();
-                    tiles[it].setHightLock(true);
-
-                    it++;
-                }
-                tiles[0].setActiveTile(true);
-
-                if (provisionalIndex < 0)
-                    provisionalIndex = index;
-                else
-                    provisionalIndex = Mathf.Min(index, provisionalIndex);
-            }
+            return index;
         }
 
-        public void restoreFromProvisionalCut()
+        public void restoreFromProvisionalCut(Pipe current, bool fromCut = false)
         {
-            if (!provisionalCutting)
+            if (provisionalIndex == 1000)
                 return;
 
-            provisionalCutting = false;
+            int cut = isCuttingThisPipe(current);
 
-            bool restore = true;
-            int joinNext = 1000;
-            for (int i = 0; i < tiles.Count; ++i) { 
-
-                Tile t = tiles[i];
-                if(t.getColor() != color)
+            if(cut > -1)
+            {
+                if (fromCut)
                 {
-                    if (!t.hasNoDir())
-                    {
-                        restore = false;
-                        closed = false;
-                        tiles[i - 1].disableDestDirectionSprite();
-                        tiles[i - 1].enableCircle();
-                    }
-                    else
-                    {
-                        join(tiles[i - 1], tiles[i], positions[i - 1], positions[i]);
-                        joinNext = 1;
-                    }
+                    int posCuttedAtCurrent = current.positions.IndexOf(current.cuttedPos);
+                    int posProvisionalCutted = current.positions.IndexOf(positions[cut]);
+
+                    if (posCuttedAtCurrent >= posProvisionalCutted)
+                        return;
                 }
 
-                if (restore)
+                for (int i = cut ; i < tiles.Count; ++i)
                 {
-                    if (joinNext == 0)
+                    tiles[i].setHightLock(false);
+
+                    if (tiles[i].getColor() != color)
                     {
-                        join(tiles[i - 1], tiles[i], positions[i - 1], positions[i]);
-                        joinNext = 1000;
+                        continue;
                     }
-                    else
-                    {
-                        --joinNext;
-                    }
-                    t.setHightLock(false);
-                    t.setColor(color);
-                    t.setActiveTile(true);
-                    t.enableHightLight();
-                    t.enableDestDirectionSprite();
-                    t.enableSourceDirectionSprite();
+                    
+                    tiles[i].disableHighLight();
+                    tiles[i].disableCircle();
                 }
-                else 
-                {
-                    if (t.getColor() != color)
-                    {
-                        t.setHightLock(false);
-                    }
-                    else
-                    {
-                        t.disableAll();
-                        t.setActiveTile(false);
-                    }
-                    tiles.RemoveAt(i);
-                    positions.RemoveAt(i);
-                    --i;
-                }
+                tiles.RemoveRange(cut, tiles.Count - cut);
+                positions.RemoveRange(cut, positions.Count - cut);
+
+                closed = false;
             }
 
+            tiles[0].disableAll();
+            for (int i = 0; i < tiles.Count - 1; ++i)
+            {
+                tiles[i + 1].disableAll();
+                join(tiles[i], tiles[i + 1], positions[i], positions[i + 1]);
+                tiles[i].setColor(color);
+                tiles[i].setHightLock(false);
+                tiles[i].enableHightLight();
+                tiles[i].setActiveTile(true);
+            }
 
+            if (tiles.Count > 1)
+            {
+                tiles[tiles.Count - 1].setActiveTile(true);
+                tiles[tiles.Count - 1].enableCircle();
+                tiles[tiles.Count - 1].setHightLock(false);
+                tiles[tiles.Count - 1].setColor(color);
+                tiles[tiles.Count - 1].enableHightLight();
+            }
+
+            provisionalIndex = 1000;
         }
 
         public bool cutMyself(Vector2 pos)
-        {
-            justCutted = true;
-            if(pos == startPos || pos == finalPos)
+        {  
+            if (pos == startPos || pos == finalPos)
             {
                 foreach (Tile t in tiles)
                 {
@@ -272,30 +235,35 @@ namespace flow.Logic
                 finalTile.setActiveTile(true);
 
                 closed = false;
+                justCutted = true;
+                cuttedPos = pos;
                 return true;
             }
             else
             {
-                int index = positions.IndexOf(pos) + 1;
-                if (index <= 0)
+                int index = positions.IndexOf(pos);
+                if (index <= 0 || index == positions.Count - 1)
                     return false;
+
+                justCutted = true;
+                cuttedPos = pos;
 
                 if (closed)
                 {
-                    openPipe(index - 1);
+                    openPipe(index);
                     return true;
                 }
 
-                tiles[index - 1].disableDestDirectionSprite();
+                tiles[index].disableDestDirectionSprite();
+                ++index;
                 while(index < positions.Count)
                 {
                     tiles[index].disableAll();
+                    tiles[index].disableCircle();
                     tiles[index].setActiveTile(false);
                     tiles.RemoveAt(index);
                     positions.RemoveAt(index);
                 }
-
-                tiles[0].setActiveTile(true);
 
                 return true;
             }
@@ -312,6 +280,7 @@ namespace flow.Logic
             {
                 if (canGoTo(startPos, pos))
                 {
+                   
                     //join last one from initial to this new one
                     join(startTile, t, startPos, pos);
 
@@ -400,6 +369,7 @@ namespace flow.Logic
         private void close()
         {
             closed = true;
+            provisionalIndex = 1000;
         }
 
 
@@ -454,7 +424,12 @@ namespace flow.Logic
             Dir dir = Direction.GetDirectionFromVector(delta);
 
             t1.enableDestDirectionSprite(dir);
+
             t2.enableSourceDirectionSprite(Direction.Opposite(dir));         
+            t2.disableDestDirectionSprite();
+
+            t1.setColor(color);
+            t2.setColor(color);
         }
 
         private bool canGoTo(Vector2 pos1, Vector2 pos2)

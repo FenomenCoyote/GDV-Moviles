@@ -125,7 +125,8 @@ namespace flow
 
         public void disableCircle()
         {
-            circle.enabled = false;
+            if(!initialOrEnd)
+                circle.enabled = false;
         }
 
         public void enableCheck()
@@ -175,6 +176,8 @@ namespace flow
 
         public void setActiveTile(bool b)
         {
+            if (initialOrEnd && !b) 
+                return;
             activeTile = b;
         }
 
