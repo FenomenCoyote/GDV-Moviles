@@ -55,7 +55,7 @@ namespace flow.UI
                 foreach (LevelPack levelPack in category.levelPacks)
                 {
                     MenuButton packButton = Instantiate(categoryButton, transform);
-                    packButton.setPack(levelPack, category.categoryColor);
+                    packButton.setPack(levelPack, category);
                     auxHeight += packButton.getHeight() + vOrder.spacing;
                 }
             }

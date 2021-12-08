@@ -19,6 +19,7 @@ namespace flow.UI
         RectTransform rectTransform;
 
         LevelPack pack;
+        PackCategory category;
 
         Button button;
 
@@ -33,11 +34,12 @@ namespace flow.UI
             button.onClick.AddListener(delegate () { clickCallback(); });
         }
 
-        public void setPack(LevelPack levelPack, Color color)
+        public void setPack(LevelPack levelPack, PackCategory cat)
         {
             pack = levelPack;
+            category = cat;
             levelPackName.text = pack.packName;
-            levelPackName.color = color;
+            levelPackName.color = category.categoryColor;
         }
 
         public void setPackProgress(int levelsDone, int totalLevels)
@@ -58,7 +60,7 @@ namespace flow.UI
         private void clickCallback()
         {
             if(pack != null)
-                GameManager.Instance.selectPack(pack);
+                GameManager.Instance.selectPack(pack,category);
         }
     }
 }

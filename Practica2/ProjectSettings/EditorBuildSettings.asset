@@ -9,6 +9,9 @@ EditorBuildSettings:
     path: Assets/Scenes/ChoosePack.unity
     guid: db1965c8ebe4cfb41b01f9b653ea4c1a
   - enabled: 1
+    path: Assets/Scenes/ChooseLevel.unity
+    guid: 3a7384a67f6013d43b027e901d3760da
+  - enabled: 1
     path: Assets/Scenes/game.unity
     guid: 302d2e87f9c283c42a6aba0392b1c0bb
   m_configObjects: {}

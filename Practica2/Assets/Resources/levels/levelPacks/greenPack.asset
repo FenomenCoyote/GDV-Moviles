@@ -15,3 +15,15 @@ MonoBehaviour:
   levels: {fileID: 4900000, guid: 555b54a80a4001047a6e8db34f902389, type: 3}
   theme: {fileID: 11400000, guid: 9beabe3a5d2a3094bbbc1395267da400, type: 2}
   packName: Green Pack
+  levelPanelColors:
+  - {r: 0, g: 1, b: 0.13840461, a: 1}
+  - {r: 0, g: 0.16778421, b: 1, a: 1}
+  - {r: 1, g: 0.8847915, b: 0, a: 1}
+  - {r: 1, g: 0.458344, b: 0, a: 1}
+  - {r: 1, g: 0, b: 0, a: 1}
+  levelPanelName:
+  - "5x5 - f\xE1cil"
+  - 6x6
+  - 7x7 - medio
+  - 8x8
+  - "9x9 - dif\xEDcil"

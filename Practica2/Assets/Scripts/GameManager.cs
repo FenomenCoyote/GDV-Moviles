@@ -27,13 +27,16 @@ namespace flow
 
         public static GameManager Instance { get; private set; }
 
-        private LevelPack selectedPack;
+        /*[SerializeField]*/ private LevelPack selectedPack;
+        /*[SerializeField]*/ private PackCategory selectedCategory;
 
         private void Awake()
         {
-            if (Instance != null) {
-                setInfo(levelMngr);
+            if (Instance != null)
+            {
+                Instance.setInfo(levelMngr);
                 Destroy(gameObject);
+                return;
             }
 
             Instance = this;
@@ -59,10 +62,20 @@ namespace flow
 
         public PackCategory[] getPackCategories() { return categories; }
 
-        public void selectPack(LevelPack pack)
+        public void selectPack(LevelPack pack, PackCategory category)
         {
             selectedPack = pack;
+            selectedCategory = category;
             SceneManager.LoadScene((int)Scene.ChooseLevel);
         }
+
+        public void gotoSelectCategoryMenu()
+        {
+            SceneManager.LoadScene((int)Scene.ChoosePack);
+        }
+
+        public LevelPack getLevelPack() { return selectedPack; }
+        public PackCategory getPackCategory() { return selectedCategory; }
+
     }
 }
