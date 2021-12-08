@@ -13,8 +13,8 @@ namespace flow.Logic
             nPipes = 0;
 
             bridges = new List<uint>();
-            emptyTiles = new List<uint>();
-            walls = new List<Tuple<uint, uint>>();
+            emptyTiles = new List<Tuple<uint, uint>>();
+            walls = new List<Tuple<Tuple<uint, uint>, Tuple<uint, uint>>>();
             pipes = new List<List<Tuple<uint, uint>>>();
         }
 
@@ -42,6 +42,37 @@ namespace flow.Logic
 
             //TODO::Leer campos opcionales
 
+            if(header.Length >= 5) //Puentes
+            {
+                //Nada
+            }
+            if (header.Length >= 6) //Huecos
+            {
+                string[] e = header[5].Split(':');
+
+                if(e[0] != "")
+                {
+                    for (int i = 0; i < e.Length; ++i)
+                    {
+                        emptyTiles.Add(getTupleFromNumber(e[i]));
+                    }
+                }
+            }
+            if (header.Length >= 7) //Muros
+            {
+                string[] w = header[6].Split(':');
+
+                if (w[0] != "")
+                {
+                    for (int i = 0; i < w.Length; ++i)
+                    {
+                        string[] tiles = w[i].Split('|');
+
+                        walls.Add(new Tuple<Tuple<uint, uint>, Tuple<uint, uint>>(getTupleFromNumber(tiles[0]), getTupleFromNumber(tiles[1])));
+                    }
+                }
+            }
+
             //Soluciones tuberias
             pipes = new List<List<Tuple<uint, uint>>>(splitedInfo.Length - 1);
             for (int i = 1; i < splitedInfo.Length; ++i)
@@ -50,11 +81,15 @@ namespace flow.Logic
                 pipes.Add(new List<Tuple<uint, uint>>(pipe.Length));
                 for (int j = 0; j < pipe.Length; ++j)
                 {
-                    uint value = uint.Parse(pipe[j]);
-                    Tuple<uint,uint> tile = new Tuple<uint,uint>(uint.Parse(pipe[j])/levelHeight, uint.Parse(pipe[j])%levelHeight);
+                    Tuple<uint,uint> tile = getTupleFromNumber(pipe[j]);
                     pipes[i-1].Add(tile);
                 }
             }
+        }
+
+        private Tuple<uint, uint> getTupleFromNumber(string number)
+        {
+            return new Tuple<uint, uint>(uint.Parse(number) / levelHeight, uint.Parse(number) % levelHeight);
         }
 
         public uint getLevelWidth() { return levelWidth; }
@@ -67,9 +102,9 @@ namespace flow.Logic
 
         public List<uint> getBridges() { return bridges; }
 
-        public List<uint> getEmptyTiles() { return emptyTiles; }
+        public List<Tuple<uint, uint>> getEmptyTiles() { return emptyTiles; }
 
-        List<Tuple<uint, uint>> getWalls() { return walls; }
+        public List<Tuple<Tuple<uint, uint>, Tuple<uint, uint>>> getWalls() { return walls; }
 
         public List<List<Tuple<uint, uint>>> getPipes() { return pipes; }
 
@@ -79,8 +114,8 @@ namespace flow.Logic
         private uint nPipes;
 
         List<uint> bridges;
-        List<uint> emptyTiles;
-        List<Tuple<uint, uint>> walls;
+        List<Tuple<uint, uint>> emptyTiles;
+        List<Tuple<Tuple<uint, uint>, Tuple<uint, uint>>> walls;
         List<List<Tuple<uint, uint>>> pipes;
     }
 }

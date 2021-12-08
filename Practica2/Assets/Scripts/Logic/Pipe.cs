@@ -69,10 +69,14 @@ namespace flow.Logic
             {
                 t.enableHightLight();
             }
-            if (tiles.Count > 0)
+            if (tiles.Count > 1)
             {
                 if (!tiles[tiles.Count - 1].isInitialOrEnd())
                     tiles[tiles.Count - 1].enableCircle();
+            }
+            else if (tiles.Count == 1)
+            {
+                tiles[0].disableHighLight();
             }
         }
 
@@ -230,6 +234,7 @@ namespace flow.Logic
                 startTile.disableSourceDirectionSprite();
                 startTile.disableDestDirectionSprite();
                 startTile.setActiveTile(true);
+
                 finalTile.disableSourceDirectionSprite();
                 finalTile.disableDestDirectionSprite();
                 finalTile.setActiveTile(true);
@@ -237,6 +242,13 @@ namespace flow.Logic
                 closed = false;
                 justCutted = true;
                 cuttedPos = pos;
+
+                positions.Add(pos);
+                if (pos == startPos)
+                    tiles.Add(startTile);
+                else 
+                    tiles.Add(finalTile);
+
                 return true;
             }
             else
@@ -276,45 +288,7 @@ namespace flow.Logic
 
         private bool tryAdd(Vector2 pos, Tile t)
         {
-            if(positions.Count == 0)
-            {
-                if (canGoTo(startPos, pos))
-                {
-                   
-                    //join last one from initial to this new one
-                    join(startTile, t, startPos, pos);
-
-                    positions.Add(startPos);
-                    tiles.Add(startTile);
-
-                    positions.Add(pos);
-                    tiles.Add(t);
-
-                    t.setColor(color);
-                    t.setActiveTile(true);
-
-                    return true;
-                }
-                else if (canGoTo(finalPos, pos))
-                {
-                    //join last one from initial to this new one
-                    join(finalTile, t, finalPos, pos);
-
-                    positions.Add(finalPos);
-                    tiles.Add(finalTile);
-
-                    positions.Add(pos);
-                    tiles.Add(t);
-
-                    t.setColor(color);
-                    t.setActiveTile(true);
-
-                    return true;
-                }
-                else return false;
-            }
-
-            else if (canGoTo(positions[positions.Count - 1], pos))
+            if (canGoTo(positions[positions.Count - 1], pos))
             {
                 //join last one from initial to this new one
                 join(tiles[tiles.Count - 1], t,
@@ -435,7 +409,20 @@ namespace flow.Logic
         private bool canGoTo(Vector2 pos1, Vector2 pos2)
         {
             float dist = Vector2.Distance(pos1, pos2);
-            return dist > 0.1f && dist < 1.1f;
+
+            if(dist > 0.1f && dist < 1.1f)
+            {
+                Vector2 delta = pos2 - pos1;
+                delta = Vector2.Perpendicular(delta) * -1;
+                Dir dir = Direction.GetDirectionFromVector(delta);
+
+                return !tiles[tiles.Count - 1].hasWall(dir);
+            }
+            return false;
         }
     }
 }
+
+
+
+

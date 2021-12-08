@@ -95,8 +95,9 @@ namespace flow
                 Vector2 t = input.getMouseTilePos();
                 Tile tileActual = getTile(t);
 
+                float distance = Vector2.Distance(t, lastCursorTilePos);
                 //I moved
-                if (Vector2.Distance(t, lastCursorTilePos) >= 0.1)
+                if (distance >= 0.1f && distance < 1.1f)
                 {
                     if (!tileActual.isInitialOrEnd() || tileActual.getColor() == dragingColor)
                     {
@@ -129,8 +130,11 @@ namespace flow
                         else
                             lastCursorTilePos = t;
                     }
-                    else 
-                        lastCursorTilePos = t;
+                }
+                else if(distance > 1.1f && tileActual.getColor() == dragingColor)
+                {
+                    currentPipe.cutMyself(t);
+                    lastCursorTilePos = t;
                 }
             }
 
@@ -193,6 +197,19 @@ namespace flow
                 newPipe.setColor(color);
                 newPipe.setInitialAndEndTiles(new Vector2(initial.Item1, initial.Item2), initTile, new Vector2(final.Item1, final.Item2), endTile);
                 this.pipes.Add(color, newPipe);
+            }
+
+            foreach(Tuple<Tuple<uint, uint>, Tuple<uint, uint>> wall in map.getWalls())
+            {
+                Vector2 origin = new Vector2(wall.Item1.Item1, wall.Item1.Item2);
+                Vector2 dest = new Vector2(wall.Item2.Item1, wall.Item2.Item2);
+
+                Vector2 delta = dest - origin;
+                delta = Vector2.Perpendicular(delta) * -1;
+                Logic.Dir dir = Logic.Direction.GetDirectionFromVector(delta);
+
+                getTile(origin).setWall(dir);
+                getTile(dest).setWall(Logic.Direction.Opposite(dir));
             }
         }
 
