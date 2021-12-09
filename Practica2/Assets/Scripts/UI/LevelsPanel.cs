@@ -11,17 +11,17 @@ namespace flow.UI {
         [SerializeField] LevelButton[] lvlButton;
         [SerializeField] int rows = 6;
         [SerializeField] int cols = 5;
-        [SerializeField] HorizontalLayoutGroup hLayout;       
+        [SerializeField] HorizontalLayoutGroup hLayout;
 
         public void setDimensionsText(string s)
         {
             dimensionsText.text = s;
         }
        
-        public void setlvlButton(Color c, string lvl, int number)
+        public void setlvlButton(Color c, string lvl, int number, int nPanel)
         {
             lvlButton[number].setButtonLevelColor(c);
-            lvlButton[number].setLevelNumberText(lvl);
+            lvlButton[number].setLevelInfo(lvl, nPanel);
         }
 
         public float getWidth() 

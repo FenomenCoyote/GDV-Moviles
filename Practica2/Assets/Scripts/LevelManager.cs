@@ -9,12 +9,24 @@ namespace flow {
         [SerializeField]
         private Board board;
 
-        public void initLevel(LevelPack pack, int level)
-        {
-            string[] levels = pack.levels.text.Split('\n');
+        private string level;
+        private LevelPack pack;
 
+        public void setLevel(string levelInfo, LevelPack selectedPack)
+        {
+            level = levelInfo;
+            pack = selectedPack;
+        }
+
+        private void Start()
+        {
+            initLevel();
+        }
+
+        private void initLevel()
+        {
             Logic.Map map = new Logic.Map();
-            map.loadLevel(levels[level]);
+            map.loadLevel(level);
 
             board.setForGame(map, pack.theme.colors);
         }

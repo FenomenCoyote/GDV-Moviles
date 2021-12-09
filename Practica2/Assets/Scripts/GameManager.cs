@@ -30,6 +30,9 @@ namespace flow
         /*[SerializeField]*/ private LevelPack selectedPack;
         /*[SerializeField]*/ private PackCategory selectedCategory;
 
+        private string selectedLevel;
+        private int levelPanelNumber;
+
         private void Awake()
         {
             if (Instance != null)
@@ -43,19 +46,13 @@ namespace flow
             DontDestroyOnLoad(this.gameObject);
         }
 
-        private void Start()
-        {
-            //TODO: temporal
-            if (levelMngr)
-            {
-                levelMngr.initLevel(categories[0].levelPacks[0], 0);
-                selectedPack = categories[0].levelPacks[0];
-            }
-        }
-
         private void setInfo(LevelManager lm)
         {
             levelMngr = lm;
+            if (levelMngr != null)
+            {
+                levelMngr.setLevel(selectedLevel, selectedPack);
+            }
         }
 
         public uint getNHints() { return hints; }
@@ -72,6 +69,13 @@ namespace flow
         public void gotoSelectCategoryMenu()
         {
             SceneManager.LoadScene((int)Scene.ChoosePack);
+        }
+
+        public void setLevel(string levelInfo, int nPanel = 0)
+        {
+            levelPanelNumber = 0;
+            selectedLevel = levelInfo;
+            SceneManager.LoadScene((int)Scene.Level);
         }
 
         public LevelPack getLevelPack() { return selectedPack; }

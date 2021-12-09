@@ -12,22 +12,33 @@ namespace flow.UI {
 
         Image img;
         RectTransform rectTr;
+        Button button;
+
+        string levelInfo;
+        int nPanel;
 
         void Awake()
         {           
             img = GetComponent<Image>();
             rectTr = GetComponent<RectTransform>();
+            button = GetComponent<Button>();
         }
 
-        
+        private void Start()
+        {
+            button.onClick.AddListener(delegate () { clickCallback(); });
+        }
+
         public void setButtonLevelColor(Color c)
         {
             img.color = c;
         }
 
-        public void setLevelNumberText(string lvl)
+        public void setLevelInfo(string lvl, int nPanel)
         {
-            levelTextNumber.text = lvl;
+            levelTextNumber.text = lvl.Split(',')[2];
+            levelInfo = lvl;
+            this.nPanel = nPanel;
         }
 
         public void enableCheck(bool b)
@@ -46,6 +57,11 @@ namespace flow.UI {
         public float getWidth()
         {
             return rectTr.rect.width;
+        }
+
+        private void clickCallback()
+        {
+            GameManager.Instance.setLevel(levelInfo, nPanel);
         }
 
     }

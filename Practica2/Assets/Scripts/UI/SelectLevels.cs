@@ -3,9 +3,10 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-namespace flow.UI { 
+namespace flow.UI
+{
 
-    public class SelectedLevels : MonoBehaviour
+    public class SelectLevels : MonoBehaviour
     {
 
         [SerializeField] Text categoryText;
@@ -19,6 +20,8 @@ namespace flow.UI {
 
         HorizontalLayoutGroup hLayout;
         RectTransform rectTr;
+
+        private const int panelSize = 30;
 
         private void Awake()
         {
@@ -41,17 +44,19 @@ namespace flow.UI {
             string[] levels = GameManager.Instance.getLevelPack().levels.ToString().Split('\n');
 
             float auxWidth = 0;
-            for (int i=0;i<levels.Length/30;i++)
+            int nPanel = -1;
+            for (int i = 0; i < levels.Length / panelSize; i++)
             {
-                LevelsPanel lvlPanel = Instantiate(levelsPanel, transform);
+                if (levels[i * panelSize].Split(',')[2] == "1")
+                    nPanel++;
 
+                LevelsPanel lvlPanel = Instantiate(levelsPanel, transform);
                 auxWidth += lvlPanel.getWidth() + hLayout.spacing;
 
                 lvlPanel.setDimensionsText(pack.levelPanelName[i]);
-                for(int j=0;j<30;j++)
+                for (int j = 0; j < panelSize; j++)
                 {
-                    string[] aux = levels[i * 30 + j].Split(',');
-                    lvlPanel.setlvlButton(pack.levelPanelColors[i], aux[2], j);
+                    lvlPanel.setlvlButton(pack.levelPanelColors[i], levels[i * panelSize + j], j, nPanel);
                 }
             }
 
