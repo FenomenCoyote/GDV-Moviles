@@ -44,7 +44,7 @@ namespace flow
         {
             if (Instance != null)
             {
-                Instance.setInfo(levelMngr);
+                Instance.setInfo(levelMngr, categories, scene);
                 Destroy(gameObject);
                 return;
             }
@@ -73,9 +73,12 @@ namespace flow
             DontDestroyOnLoad(this.gameObject);
         }
 
-        private void setInfo(LevelManager lm)
+        private void setInfo(LevelManager lm, PackCategory[] categories, Scene scene)
         {
             levelMngr = lm;
+            this.categories = categories;
+            this.scene = scene;
+
             if (levelMngr != null)
             {
                 levelMngr.setLevel(selectedLevel, selectedPack);
@@ -103,6 +106,12 @@ namespace flow
             levelPanelNumber = 0;
             selectedLevel = levelInfo;
             SceneManager.LoadScene((int)Scene.Level);
+        }
+
+        public void exitLevel()
+        {
+            levelMngr = null;
+            SceneManager.LoadScene((int)Scene.ChooseLevel);
         }
 
         public LevelPack getLevelPack() { return selectedPack; }

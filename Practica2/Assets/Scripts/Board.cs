@@ -36,6 +36,9 @@ namespace flow
         [SerializeField]
         Text percentageText;
 
+        [SerializeField]
+        SpriteRenderer inputPointerSprite;
+
         private void Awake()
         {
             input = GetComponent<BoardInput>();
@@ -73,6 +76,11 @@ namespace flow
                 Debug.LogError("percentageText not setted in Board");
                 return;
             }
+            if (inputPointerSprite == null)
+            {
+                Debug.LogError("inputPointerSprite not setted in Board");
+                return;
+            }
         }
 #endif
 
@@ -107,6 +115,18 @@ namespace flow
                 lastCursorTilePos = t;
                 draging = true;
                 dragingColor = getTile(t).getColor();
+
+                //pointer things
+                inputPointerSprite.enabled = true;
+
+                float a = inputPointerSprite.color.a;
+
+                inputPointerSprite.color = dragingColor;
+
+                Color tempColor = inputPointerSprite.color;
+                tempColor.a = a;
+                inputPointerSprite.color = tempColor;
+
                 currentPipe = pipes[dragingColor];
 
                 currentPipe.startDrag(t);
@@ -126,6 +146,7 @@ namespace flow
                 restorePipes(false);
             }
 
+            inputPointerSprite.enabled = false;
             resetMyInfo();
         }
 

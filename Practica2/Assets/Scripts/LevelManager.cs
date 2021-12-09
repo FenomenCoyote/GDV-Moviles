@@ -30,6 +30,21 @@ namespace flow {
 
             board.setForGame(map, pack.theme.colors);
         }
+
+        public void exitLevel()
+        {
+            GameManager.Instance.exitLevel();
+        }
+
+        public void nextLevel()
+        {
+
+        }
+
+        public void previousLevel()
+        {
+
+        }
     }
 
 }
