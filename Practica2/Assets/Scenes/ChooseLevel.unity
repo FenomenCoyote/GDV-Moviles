@@ -173,7 +173,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Padding:
-    m_Left: 4
+    m_Left: 90
     m_Right: 0
     m_Top: 120
     m_Bottom: 0
@@ -202,6 +202,7 @@ MonoBehaviour:
   check: {fileID: 2033882917}
   backButton: {fileID: 771374509}
   levelsPanel: {fileID: 1753413195, guid: abcef09008c7f7440b58e75ffbdaadd3, type: 3}
+  scroll: {fileID: 847986342}
 --- !u!1 &686703097
 GameObject:
   m_ObjectHideFlags: 0
@@ -415,7 +416,6 @@ GameObject:
   m_Component:
   - component: {fileID: 847986341}
   - component: {fileID: 847986344}
-  - component: {fileID: 847986343}
   - component: {fileID: 847986342}
   m_Layer: 5
   m_Name: Scroll View
@@ -474,36 +474,6 @@ MonoBehaviour:
   m_OnValueChanged:
     m_PersistentCalls:
       m_Calls: []
---- !u!114 &847986343
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 847986340}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_Material: {fileID: 0}
-  m_Color: {r: 0, g: 0, b: 0, a: 1}
-  m_RaycastTarget: 1
-  m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
-  m_Maskable: 1
-  m_OnCullStateChanged:
-    m_PersistentCalls:
-      m_Calls: []
-  m_Sprite: {fileID: 0}
-  m_Type: 1
-  m_PreserveAspect: 0
-  m_FillCenter: 1
-  m_FillMethod: 4
-  m_FillAmount: 1
-  m_FillClockwise: 1
-  m_FillOrigin: 0
-  m_UseSpriteMesh: 0
-  m_PixelsPerUnitMultiplier: 1
 --- !u!222 &847986344
 CanvasRenderer:
   m_ObjectHideFlags: 0

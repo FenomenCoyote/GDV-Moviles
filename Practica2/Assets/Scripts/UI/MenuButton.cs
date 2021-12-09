@@ -1,11 +1,12 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
 namespace flow.UI
 {
-    public class MenuButton : MonoBehaviour
+    public class MenuButton : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
     {
         [SerializeField]
         Text levelPackName;
@@ -32,6 +33,15 @@ namespace flow.UI
         private void Start()
         {
             button.onClick.AddListener(delegate () { clickCallback(); });
+        }
+
+        public void OnPointerDown(PointerEventData eventData)
+        {
+            levelPackName.color = Color.white;
+        }
+        public void OnPointerUp(PointerEventData eventData)
+        {
+            levelPackName.color = category.categoryColor;
         }
 
         public void setPack(LevelPack levelPack, PackCategory cat)

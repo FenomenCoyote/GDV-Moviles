@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 namespace flow
 {
@@ -23,12 +24,25 @@ namespace flow
         private Color dragingColor;
         private Logic.Pipe currentPipe;
 
+        private Color lastSolution;
+        private int steps;
+
+        [SerializeField] 
+        Text stepsText;
+
+        [SerializeField] 
+        Text flowsText;
+
+        [SerializeField]
+        Text percentageText;
+
         private void Awake()
         {
             input = GetComponent<BoardInput>();
             lastCursorTilePos = Vector2.negativeInfinity;
             draging = false;
             pipes = new Dictionary<Color, Logic.Pipe>();
+            steps = 0;
         }
 
 #if UNITY_EDITOR
@@ -44,101 +58,178 @@ namespace flow
                 Debug.LogError("Input board not setted in Board");
                 return;
             }
+            if (stepsText == null)
+            {
+                Debug.LogError("stepsText not setted in Board");
+                return;
+            }
+            if (flowsText == null)
+            {
+                Debug.LogError("flowsText not setted in Board");
+                return;
+            }
+            if (percentageText == null)
+            {
+                Debug.LogError("percentageText not setted in Board");
+                return;
+            }
         }
 #endif
 
-
         void Update()
         {
+            //Needs to be called it here to make the update call order right
             input.updateInput();
 
             if (input.justDown())
-            { 
-                Vector2 t = input.getMouseTilePos();
-                if (getTile(t).isActive())
-                {
-                    lastCursorTilePos = t;
-                    draging = true;
-                    dragingColor = getTile(t).getColor();
-                    currentPipe = pipes[dragingColor];
-
-                    currentPipe.startDrag(t);
-                    currentPipe.cutMyself(t);
-                }
-                else
-                {
-                    lastCursorTilePos = Vector2.negativeInfinity;
-                    draging = false;
-                    dragingColor = Color.black;
-                    currentPipe = null;
-                }
+            {
+                inputDown();
+                updatePercentageText();
             }
             else if (input.justUp())
             {
-                lastCursorTilePos = Vector2.negativeInfinity;
-                draging = false;
-                dragingColor = Color.black;
-
-                if(currentPipe != null)
-                {
-                    currentPipe.notDraggingAnymore();
-                    foreach (Logic.Pipe p in pipes.Values)
-                        if (currentPipe != p)
-                            p.restoreFromProvisionalCut(currentPipe);
-                }
-
-                currentPipe = null;
+                inputUp();
+                updatePercentageText();
             }
-
             if (draging && input.isPressed() && input.isInside())
             {
-                Vector2 t = input.getMouseTilePos();
-                Tile tileActual = getTile(t);
-
-                float distance = Vector2.Distance(t, lastCursorTilePos);
-                //I moved
-                if (distance >= 0.1f && distance < 1.1f)
-                {
-                    if (!tileActual.isInitialOrEnd() || tileActual.getColor() == dragingColor)
-                    {
-                        if (tileActual.isActive() && tileActual.getColor() != dragingColor)
-                        {
-                            pipes[tileActual.getColor()].provisionalCut(currentPipe, t);
-                        }
-
-                        currentPipe.add(t, tileActual);
-
-                        if (currentPipe.pollCutted())
-                        {
-                            foreach (Logic.Pipe p in pipes.Values)
-                                if (currentPipe != p)
-                                    p.restoreFromProvisionalCut(currentPipe, true);
-                        }
-
-                        if (currentPipe.isClosed())
-                        {
-                            foreach (Logic.Pipe p in pipes.Values)
-                                if (currentPipe != p)
-                                    p.restoreFromProvisionalCut(currentPipe);
-
-                            lastCursorTilePos = Vector2.negativeInfinity;
-                            draging = false;
-                            dragingColor = Color.black;
-                            currentPipe.notDraggingAnymore();
-                            currentPipe = null;
-                        }
-                        else
-                            lastCursorTilePos = t;
-                    }
-                }
-                else if(distance > 1.1f && tileActual.getColor() == dragingColor)
-                {
-                    currentPipe.cutMyself(t);
-                    lastCursorTilePos = t;
-                }
+                inputDrag();
             }
 
             
+        }
+
+        private void inputDown()
+        {
+            Vector2 t = input.getMouseTilePos();
+            if (getTile(t).isActive())
+            {
+                lastCursorTilePos = t;
+                draging = true;
+                dragingColor = getTile(t).getColor();
+                currentPipe = pipes[dragingColor];
+
+                currentPipe.startDrag(t);
+                currentPipe.cutMyself(t);
+            }
+            else
+            {
+                resetMyInfo();
+            }
+        }
+
+        private void inputUp()
+        {
+            if (currentPipe != null)
+            {
+                currentPipe.notDraggingAnymore();
+                restorePipes(false);
+            }
+
+            resetMyInfo();
+        }
+
+        private void inputDrag()
+        {
+            Vector2 t = input.getMouseTilePos();
+            Tile tileActual = getTile(t);
+
+            float distance = Vector2.Distance(t, lastCursorTilePos);
+
+            //I moved
+            if (distance >= 0.1f && distance < 1.1f)
+            {
+                if (!tileActual.isInitialOrEnd() || tileActual.getColor() == dragingColor)
+                {
+                    if (tileActual.isActive() && tileActual.getColor() != dragingColor)
+                    {
+                        pipes[tileActual.getColor()].provisionalCut(currentPipe, t);
+                    }
+
+                    currentPipe.add(t, tileActual);
+
+                    if (currentPipe.pollCutted())
+                    {
+                        restorePipes(true);
+                    }
+
+                    updatePercentageText();
+
+                    if (currentPipe.isClosed())
+                    {
+                        currentPipe.notDraggingAnymore();
+                        restorePipes(false);
+
+                        if (currentPipe.changedSolution() && lastSolution != dragingColor)
+                        {
+                            lastSolution = dragingColor;
+                            ++steps;
+                            stepsText.text = "pasos: " + steps;
+                            flowsText.text = "flujos: " + getPipesCompleted() + "/" + pipes.Count;
+                        }
+
+                        resetMyInfo();
+                    }
+                    else
+                        lastCursorTilePos = t;
+                }
+            }
+            else if (distance > 1.1f && tileActual.getColor() == dragingColor)
+            {
+                currentPipe.cutMyself(t);
+                lastCursorTilePos = t;
+                updatePercentageText();
+            }
+        }
+
+
+        private void resetMyInfo()
+        {
+            lastCursorTilePos = Vector2.negativeInfinity;
+            draging = false;
+            dragingColor = Color.black;
+            currentPipe = null;
+        }
+
+
+        private void restorePipes(bool fromCut)
+        {
+            foreach (Logic.Pipe p in pipes.Values)
+                if (currentPipe != p)
+                    p.restoreFromProvisionalCut(currentPipe, fromCut);
+        }
+
+        private int getPipesCompleted()
+        {
+            int completed = 0;
+            foreach(Logic.Pipe p in pipes.Values)
+            {
+                if (p.isClosed())
+                {
+                    ++completed;
+                }
+            }
+            return completed;
+        }
+
+        private int getPercentage()
+        {
+            int active = 0;
+            foreach(Tile t in tiles)
+                if (t.isActive()) ++active;
+
+            active -= pipes.Count * 2;
+
+            active += getPipesCompleted() * 2;
+
+            float done = (float)active / (float)(width * height);
+
+            return (int)(done * 100.0f);
+        }
+
+        private void updatePercentageText()
+        {
+            percentageText.text = "tubería: " + getPercentage() + "%";
         }
 
         public void setForGame(Logic.Map map, Color[] colors)
@@ -211,6 +302,29 @@ namespace flow
                 getTile(origin).setWall(dir);
                 getTile(dest).setWall(Logic.Direction.Opposite(dir));
             }
+
+            flowsText.text = "flujos: 0/" + pipes.Count;
+        }
+
+        public void resetBoard()
+        {
+            foreach (Logic.Pipe p in pipes.Values)
+            {
+                p.reset();
+            }
+            steps = 0;
+            resetMyInfo();
+
+            foreach(Tile t in tiles)
+            {
+                t.disableAll();
+                t.disableCircle();
+                t.setActiveTile(false);
+            }
+
+            updatePercentageText();
+            stepsText.text = "pasos: 0";
+            flowsText.text = "flujos: 0/" + pipes.Count;
         }
 
         private Tile getTile(Vector2 mousePos)

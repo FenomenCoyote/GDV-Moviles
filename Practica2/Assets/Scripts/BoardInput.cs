@@ -52,7 +52,7 @@ namespace flow
 #if UNITY_ANDROID
              return Input.GetTouch(0);
 #endif
-            return Input.GetMouseButtonDown(0);
+            return pressed && Input.GetMouseButtonDown(0);
         }
 
         public bool justUp()

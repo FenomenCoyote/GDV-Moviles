@@ -12,15 +12,18 @@ namespace flow.Logic
         private List<Vector2> positions;
         private List<Tile> tiles;
 
-
         private bool justCutted;
         private Vector2 cuttedPos;
 
         private bool closed;
 
+        private bool changedMySolution;
+
         private int provisionalIndex;
 
         private Color color;
+
+        private List<Vector2> solutionPositions;
 
 
         public Pipe()
@@ -28,10 +31,23 @@ namespace flow.Logic
             positions = new List<Vector2>();
             tiles = new List<Tile>();
 
+            solutionPositions = new List<Vector2>();
+
             provisionalIndex = 1000;
             closed = false;
+            changedMySolution = true;
         }
 
+        public void reset()
+        {
+            closed = false;
+            changedMySolution = false;
+            provisionalIndex = 1000;
+
+            solutionPositions.Clear();
+            positions.Clear();
+            tiles.Clear();
+        }
 
         public void setInitialAndEndTiles(Vector2 ipos, Tile itile, Vector2 epos, Tile etile)
         {
@@ -127,6 +143,7 @@ namespace flow.Logic
                     continue;
 
                 tiles[i].disableAll();
+                tiles[i].setActiveTile(false);
 
                 tiles[i].disableCircle();
 
@@ -181,6 +198,7 @@ namespace flow.Logic
                 {
                     tiles[i].setHightLock(false);
 
+                    tiles[i].setActiveTile(true);
                     if (tiles[i].getColor() != color)
                     {
                         continue;
@@ -191,6 +209,8 @@ namespace flow.Logic
                 }
                 tiles.RemoveRange(cut, tiles.Count - cut);
                 positions.RemoveRange(cut, positions.Count - cut);
+
+                solutionPositions.Clear();
 
                 closed = false;
             }
@@ -340,10 +360,53 @@ namespace flow.Logic
             return closed;
         }
 
+        public bool changedSolution()
+        {
+            return changedMySolution;
+        }
+
         private void close()
         {
             closed = true;
             provisionalIndex = 1000;
+
+            if(solutionPositions.Count != positions.Count)
+            {
+                changedMySolution = true;
+            }
+            else //Same size
+            {
+                bool changed = false;
+
+                foreach(Vector2 p in positions)
+                {
+                    if (!solutionPositions.Contains(p))
+                    {
+                        changed = true;
+                        break;
+                    }
+                }
+
+                changedMySolution = changed;
+            }
+
+            if (changedMySolution)
+            {
+                //store my provisional solution
+                solutionPositions.Clear();
+                foreach (Vector2 p in positions)
+                {
+                    solutionPositions.Add(p);
+                }
+            }
+          
+
+            //string result = "solution Positions: ";
+            //foreach (var item in solutionPositions)
+            //{
+            //    result += item.ToString() + ", ";
+            //}
+            //Debug.Log(result);
         }
 
 

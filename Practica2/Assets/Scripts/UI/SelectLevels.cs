@@ -15,6 +15,8 @@ namespace flow.UI
 
         [SerializeField] LevelsPanel levelsPanel;
 
+        [SerializeField] ScrollRect scroll;
+
         PackCategory category;
         LevelPack pack;
 
