@@ -11,6 +11,7 @@ namespace flow
 
         private bool pressed = false, inside = false;
 
+        private Vector2 offset;
         private Vector2 mouseTilePos;
 
 #if UNITY_EDITOR
@@ -42,6 +43,8 @@ namespace flow
         {
             width = w;
             height = h;
+
+            offset = new Vector3((width) / 2.0f, (-height) / 2.0f);
         }
 
         public bool justDown()
@@ -67,14 +70,17 @@ namespace flow
 
         private bool calculateMouseTilePos()
         {
-            Vector2 offset = new Vector3((-width) / 2.0f, (height) / 2.0f);
-            Vector2 worldMousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-            Vector2 cursorPos = (offset - worldMousePos) + new Vector2(0.2f, -0.2f);
-            cursorPos = new Vector2(cursorPos.x - 0.1f, cursorPos.y + 0.1f);
+            Vector2 worldMousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition); //raw in tiles
 
-            inside = cursorPos.x < 0 && cursorPos.y > 0 && cursorPos.y < height && cursorPos.x > -width;
+            worldMousePos = (worldMousePos + (offset * transform.localScale)); //adjust offset
+            worldMousePos = Vector2.Perpendicular(worldMousePos);
+
+            worldMousePos /= transform.localScale; //Fit with scale
+            worldMousePos = Vector2Int.FloorToInt(worldMousePos); //Floor it
+
+            inside = worldMousePos.x >= 0 && worldMousePos.y >= 0 && worldMousePos.y < height && worldMousePos.x < width;
             if (inside)
-                mouseTilePos = new Vector2(Mathf.Abs((int)cursorPos.y), Mathf.Abs((int)cursorPos.x));
+                mouseTilePos = worldMousePos;
             return inside;
         }
 
