@@ -39,7 +39,7 @@ namespace flow.UI
             category = GameManager.Instance.getPackCategory();
             pack = GameManager.Instance.getLevelPack();
 
-            categoryText.text = category.categoryName;
+            categoryText.text = pack.packName;
             categoryText.color = category.categoryColor;
             check.color = category.categoryColor;
 
