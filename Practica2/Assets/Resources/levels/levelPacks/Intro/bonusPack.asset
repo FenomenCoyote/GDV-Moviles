@@ -16,11 +16,11 @@ MonoBehaviour:
   theme: {fileID: 11400000, guid: 9beabe3a5d2a3094bbbc1395267da400, type: 2}
   packName: Bonus Pack
   levelPanelColors:
-  - {r: 0, g: 1, b: 0.13840461, a: 1}
-  - {r: 0, g: 0.16778421, b: 1, a: 1}
-  - {r: 1, g: 0.8847915, b: 0, a: 1}
-  - {r: 1, g: 0.458344, b: 0, a: 1}
-  - {r: 1, g: 0, b: 0, a: 1}
+  - {r: 0, g: 0.7735849, b: 0.10617836, a: 1}
+  - {r: 0, g: 0.29225227, b: 0.8490566, a: 1}
+  - {r: 0.8301887, g: 0.7357751, b: 0, a: 1}
+  - {r: 0.735849, g: 0.33762488, b: 0, a: 1}
+  - {r: 0.7264151, g: 0, b: 0, a: 1}
   levelPanelName:
   - "5x5 - f\xE1cil"
   - 6x6

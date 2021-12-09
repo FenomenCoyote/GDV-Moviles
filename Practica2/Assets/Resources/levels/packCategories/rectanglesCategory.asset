@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   categoryName: "Rect\xE1ngulos"
   levelPacks:
-  - {fileID: 11400000, guid: 8eabdb9fd3c2b264ba906225d3196f49, type: 2}
-  - {fileID: 11400000, guid: 4702cdd95b969844a9bad44a50e867c5, type: 2}
-  - {fileID: 11400000, guid: c9f6ee809d57a294ea992fcba39e9984, type: 2}
+  - {fileID: 11400000, guid: 1f3f1aab7ea3d3a4dbfef65c4b5a97c8, type: 2}
+  - {fileID: 11400000, guid: b7e79afca225cf744b77f5abd8a0f904, type: 2}
+  - {fileID: 11400000, guid: 9ee43dedda284be498db235837450f92, type: 2}
   categoryColor: {r: 0.9843137, g: 0.5372549, b: 0, a: 1}
