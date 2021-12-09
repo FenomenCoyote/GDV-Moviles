@@ -27,11 +27,18 @@ namespace flow
 
         public static GameManager Instance { get; private set; }
 
-        /*[SerializeField]*/ private LevelPack selectedPack;
-        /*[SerializeField]*/ private PackCategory selectedCategory;
+        private LevelPack selectedPack;
+        private PackCategory selectedCategory;
 
         private string selectedLevel;
         private int levelPanelNumber;
+
+        /*DEBUG*/
+        [SerializeField] private LevelPack DEBUGPack;
+        [SerializeField] private PackCategory DEBUGCategory;
+
+        [SerializeField] private int DEBUGLevel;
+        [SerializeField] private int DEBUGPanelNumber;
 
         private void Awake()
         {
@@ -41,6 +48,26 @@ namespace flow
                 Destroy(gameObject);
                 return;
             }
+
+#if UNITY_EDITOR
+            if(scene != Scene.ChoosePack)
+            {
+                if (selectedPack == null) selectedPack = DEBUGPack;
+                if (selectedCategory == null) selectedCategory = DEBUGCategory;
+                if (selectedLevel == null)
+                {
+                    string[] aux = selectedPack.levels.ToString().Split('\n');
+                    selectedLevel = aux[DEBUGLevel + (DEBUGPanelNumber * 30)];
+                }
+                if (levelMngr != null)
+                {
+                    if (levelMngr != null)
+                    {
+                        levelMngr.setLevel(selectedLevel, selectedPack);
+                    }
+                }
+            }
+#endif
 
             Instance = this;
             DontDestroyOnLoad(this.gameObject);

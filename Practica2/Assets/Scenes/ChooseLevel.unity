@@ -730,12 +730,20 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7664281169987609939, guid: 7ee61c398f688a549bbf87679d747e4e, type: 3}
       propertyPath: scene
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 7664281169987609939, guid: 7ee61c398f688a549bbf87679d747e4e, type: 3}
+      propertyPath: DEBUGPack
+      value: 
+      objectReference: {fileID: 11400000, guid: 8eabdb9fd3c2b264ba906225d3196f49, type: 2}
     - target: {fileID: 7664281169987609939, guid: 7ee61c398f688a549bbf87679d747e4e, type: 3}
       propertyPath: selectedPack
       value: 
       objectReference: {fileID: 11400000, guid: c9f6ee809d57a294ea992fcba39e9984, type: 2}
+    - target: {fileID: 7664281169987609939, guid: 7ee61c398f688a549bbf87679d747e4e, type: 3}
+      propertyPath: DEBUGCategory
+      value: 
+      objectReference: {fileID: 11400000, guid: 86000311f0977a642bcfe7548dd3bdd7, type: 2}
     - target: {fileID: 7664281169987609939, guid: 7ee61c398f688a549bbf87679d747e4e, type: 3}
       propertyPath: selectedCategory
       value: 
