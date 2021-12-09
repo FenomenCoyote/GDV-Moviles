@@ -10,20 +10,20 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 3f790ca37622ad8438d53ae182f9d7be, type: 3}
-  m_Name: bluePack
+  m_Name: 6x6Mania
   m_EditorClassIdentifier: 
-  levels: {fileID: 4900000, guid: 6a482735ee1c47040a6a899bc1608503, type: 3}
+  levels: {fileID: 4900000, guid: f2a0f4f28dd55f94fb6414519ce7a21a, type: 3}
   theme: {fileID: 11400000, guid: 9beabe3a5d2a3094bbbc1395267da400, type: 2}
-  packName: Blue Pack
+  packName: 6x6 Mania
   levelPanelColors:
-  - {r: 0, g: 1, b: 0.13840461, a: 1}
-  - {r: 0, g: 0.16778421, b: 1, a: 1}
-  - {r: 1, g: 0.8847915, b: 0, a: 1}
-  - {r: 1, g: 0.458344, b: 0, a: 1}
-  - {r: 1, g: 0, b: 0, a: 1}
+  - {r: 0.4433962, g: 0.4433962, b: 0.4433962, a: 1}
+  - {r: 0.44705883, g: 0.44705883, b: 0.44705883, a: 1}
+  - {r: 0.44705883, g: 0.44705883, b: 0.44705883, a: 1}
+  - {r: 0.44705883, g: 0.44705883, b: 0.44705883, a: 1}
+  - {r: 0.44705883, g: 0.44705883, b: 0.44705883, a: 1}
   levelPanelName:
-  - "5x5 - f\xE1cil"
-  - 6x6
-  - 7x7 - medio
-  - 8x8
-  - "9x9 - dif\xEDcil"
+  - 1-30
+  - 31-60
+  - 61-90
+  - 91-120
+  - 121-150
