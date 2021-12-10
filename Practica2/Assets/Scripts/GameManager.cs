@@ -14,7 +14,10 @@ namespace flow
             Level = 2,
         }
 
-        private uint hints;
+        private Logic.GameState state;
+
+        [SerializeField] string saveFile;
+        private ProgressSaverLoader saver;
 
         [SerializeField]
         private Scene scene;
@@ -71,6 +74,9 @@ namespace flow
 
             Instance = this;
             DontDestroyOnLoad(this.gameObject);
+
+            saver = new ProgressSaverLoader();
+            state = new Logic.GameState();
         }
 
         private void setInfo(LevelManager lm, PackCategory[] categories, Scene scene)
@@ -85,7 +91,7 @@ namespace flow
             }
         }
 
-        public uint getNHints() { return hints; }
+        public uint getNHints() { return state.nHints; }
 
         public PackCategory[] getPackCategories() { return categories; }
 
@@ -103,7 +109,7 @@ namespace flow
 
         public void setLevel(string levelInfo, int nPanel = 0)
         {
-            levelPanelNumber = 0;
+            levelPanelNumber = nPanel;
             selectedLevel = levelInfo;
             SceneManager.LoadScene((int)Scene.Level);
         }
@@ -116,6 +122,19 @@ namespace flow
 
         public LevelPack getLevelPack() { return selectedPack; }
         public PackCategory getPackCategory() { return selectedCategory; }
+
+        public void saveGame()
+        {
+            saver.saveProgress(state, saveFile);
+        }
+
+        public void loadGame()
+        {
+            Logic.GameState auxState = saver.loadProgress(saveFile);
+            if (auxState != null) {
+                state = auxState;
+            }
+        }
 
     }
 }

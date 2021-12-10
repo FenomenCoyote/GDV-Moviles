@@ -517,6 +517,10 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 7664281169987609939, guid: 7ee61c398f688a549bbf87679d747e4e, type: 3}
+      propertyPath: saveFile
+      value: save.txt
+      objectReference: {fileID: 0}
+    - target: {fileID: 7664281169987609939, guid: 7ee61c398f688a549bbf87679d747e4e, type: 3}
       propertyPath: categories.Array.size
       value: 3
       objectReference: {fileID: 0}

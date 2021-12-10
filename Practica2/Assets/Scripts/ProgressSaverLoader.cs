@@ -7,52 +7,49 @@ using System.Security.Cryptography;
 
 namespace flow
 {
-    public class ProgressSaverLoader : MonoBehaviour
+    public class ProgressSaverLoader
     {
-        private Logic.GameState gameState;
-
         SHA256 sha256;
 
-        [SerializeField] string saveFile;
-
-        // Start is called before the first frame update
-        void Start()
+        public ProgressSaverLoader()
         {
             sha256 = SHA256.Create();
         }
 
-        // Update is called once per frame
-        void Update()
+        public void saveProgress(Logic.GameState stateToSave, string saveFile)
         {
+            Logic.Save save = new Logic.Save();
+            save.gameState = stateToSave;
 
-        }
+            string serializedState = JsonUtility.ToJson(save.gameState);
+            save.hashCode = sha256.ComputeHash(Encoding.UTF8.GetBytes(serializedState));
 
-        public void saveProgress()
-        {
-            byte[] json = Encoding.UTF8.GetBytes(JsonUtility.ToJson(gameState));
-            byte[] hash = sha256.ComputeHash(json);
-
-            gameState.hashCode = hash;
-
-            json = Encoding.UTF8.GetBytes(JsonUtility.ToJson(gameState));
+            string serializedSave = JsonUtility.ToJson(save);
+            byte[] json = Encoding.UTF8.GetBytes(serializedSave);
 
             FileStream file = File.Open(saveFile, FileMode.Create);
             file.Write(json, 0, json.Length);
             file.Close();
         }
 
-        public void loadProgress()
+        public Logic.GameState loadProgress(string saveFile)
         {
+            string readSave = File.ReadAllText(saveFile, Encoding.UTF8);
+            Logic.Save save = JsonUtility.FromJson<Logic.Save>(readSave);
 
-            FileStream file = File.Open(saveFile, FileMode.Create);
-            byte[] readState = new byte[file.Length];
-            file.Read(readState, 0, (int)file.Length);
-            file.Close();
+            //Comprobacion de hash
+            byte[] readState = Encoding.UTF8.GetBytes(JsonUtility.ToJson(save.gameState));
+            byte[] hash = sha256.ComputeHash(readState);
 
-            gameState = JsonUtility.FromJson<Logic.GameState>(Encoding.UTF8.GetString(readState));
+            string readHash = Encoding.UTF8.GetString(hash);
+            string actualHash = Encoding.UTF8.GetString(save.hashCode);
 
-            //TODO Está mal porque para encriptar habría que hacerlos sin el hash y al cargar comprobar sin usar el hash
-
+            if (string.Compare(readHash, actualHash) != 0)
+            {
+                Debug.Log("Detectado intento de hack");
+                return null;
+            }
+            else return save.gameState;
         }
 
     }
