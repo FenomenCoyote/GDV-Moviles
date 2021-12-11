@@ -43,8 +43,6 @@ namespace flow
         private bool initialOrEnd = false;
         private Color color;
 
-        private Logic.Dir origen = Logic.Dir.None, dest = Logic.Dir.None;
-
         private bool lockHighLightColor = false;
 
         private Dictionary<Logic.Dir, bool> walls;
@@ -122,46 +120,9 @@ namespace flow
             return walls[dir];
         }
 
-        public bool hasNoDir()
-        {
-            return origen == Logic.Dir.None && dest == Logic.Dir.None;
-        }
-
-        public void enableDestDirectionSprite()
-        {
-            setEnabledDirectionSprite(dest, true);
-        }
-
-        public void enableSourceDirectionSprite()
-        {
-            setEnabledDirectionSprite(origen, true);
-        }
-
-        public void enableDestDirectionSprite(Logic.Dir dir)
-        {
-            setEnabledDirectionSprite(dir, true);
-            dest = dir;
-        }
-
-        public void enableSourceDirectionSprite(Logic.Dir dir)
-        {
-            setEnabledDirectionSprite(dir, true);
-            origen = dir;
-        }
-
         public void enableDirectionSprite(Logic.Dir dir)
         {
             setEnabledDirectionSprite(dir, true);
-        }
-
-        public void disableDestDirectionSprite()
-        {
-            setEnabledDirectionSprite(dest, false);
-        }
-
-        public void disableSourceDirectionSprite()
-        {
-            setEnabledDirectionSprite(origen, false);
         }
 
         public void disableDirectionSprite(Logic.Dir dir)
@@ -209,8 +170,6 @@ namespace flow
             directionRight.enabled = false;
             backGroundHighlight.enabled = false;
             check.enabled = false;
-            origen = Logic.Dir.None;
-            dest = Logic.Dir.None;
         }
 
         public void setCircleBig()
@@ -240,13 +199,6 @@ namespace flow
         public bool isInitialOrEnd()
         {
             return initialOrEnd;
-        }
-
-        public void reverse()
-        {
-            Logic.Dir aux = origen;
-            origen = dest;
-            dest = aux;
         }
 
         private void updateSpritesColor()

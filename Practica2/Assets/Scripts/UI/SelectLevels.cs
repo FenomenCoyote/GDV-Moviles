@@ -62,7 +62,7 @@ namespace flow.UI
                 }
             }
 
-            rectTr.SetSizeWithCurrentAnchors(RectTransform.Axis.Horizontal, auxWidth);
+            rectTr.SetSizeWithCurrentAnchors(RectTransform.Axis.Horizontal, auxWidth + hLayout.spacing);
         }
 
         void backClickCallback()

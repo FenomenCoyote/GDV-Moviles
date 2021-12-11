@@ -91,6 +91,18 @@ namespace flow
             }
         }
 
+        private void Update()
+        {
+            if (Input.GetKeyDown(KeyCode.S))
+            {
+                saveGame();
+            }
+            if (Input.GetKeyDown(KeyCode.L))
+            {
+                loadGame();
+            }
+        }
+
         public uint getNHints() { return state.nHints; }
 
         public PackCategory[] getPackCategories() { return categories; }

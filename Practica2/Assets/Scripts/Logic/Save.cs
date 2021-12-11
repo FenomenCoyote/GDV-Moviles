@@ -5,7 +5,7 @@ namespace flow.Logic
     [Serializable]
     public class Save
     {
-        public byte[] hashCode;
+        public string hashCode;
         public GameState gameState;
     }
 }

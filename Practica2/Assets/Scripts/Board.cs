@@ -16,8 +16,6 @@ namespace flow
         [SerializeField] private Tile tile;
         private Tile[,] tiles;
 
-        private Vector2 lastCursorTilePos;
-
         private Dictionary<Color, Logic.Pipe> pipes;
 
         private bool draging;
@@ -42,7 +40,6 @@ namespace flow
         private void Awake()
         {
             input = GetComponent<BoardInput>();
-            lastCursorTilePos = Vector2.negativeInfinity;
             draging = false;
             pipes = new Dictionary<Color, Logic.Pipe>();
             steps = 0;
@@ -89,40 +86,48 @@ namespace flow
             //Needs to be called it here to make the update call order right
             input.updateInput();
 
+            bool updateMap = false;
+
             if (input.justDown())
             {
                 inputDown();
-                updatePercentageText();
+                updateMap = true;
             }
             else if (input.justUp())
             {
                 inputUp();
-                updatePercentageText();
+                updateMap = true;
             }
-            if (draging && input.isPressed() && input.isInside())
+            else if (draging && input.isPressed() && input.isInside())
             {
                 inputDrag();
+                updateMap = true;
             }
 
-            
+            if (updateMap)
+            {
+                render();
+
+                percentageText.text = "tubería: " + getPercentage() + "%";
+                stepsText.text = "pasos: " + steps;
+                flowsText.text = "flujos: " + getPipesCompleted() + "/" + pipes.Count;
+            }
+
         }
 
         private void inputDown()
         {
             Vector2 t = input.getMouseTilePos();
+
             if (getTile(t).isActive())
             {
-                lastCursorTilePos = t;
                 draging = true;
                 dragingColor = getTile(t).getColor();
 
                 //pointer things
                 inputPointerSprite.enabled = true;
-
                 float a = inputPointerSprite.color.a;
-
                 inputPointerSprite.color = dragingColor;
-
                 Color tempColor = inputPointerSprite.color;
                 tempColor.a = a;
                 inputPointerSprite.color = tempColor;
@@ -130,7 +135,6 @@ namespace flow
                 currentPipe = pipes[dragingColor];
 
                 currentPipe.startDrag(t);
-                currentPipe.cutMyself(t);
             }
             else
             {
@@ -140,10 +144,8 @@ namespace flow
 
         private void inputUp()
         {
-            if (currentPipe != null)
-            {
+            if (currentPipe != null)  {
                 currentPipe.notDraggingAnymore();
-                restorePipes(false);
             }
 
             inputPointerSprite.enabled = false;
@@ -152,72 +154,86 @@ namespace flow
 
         private void inputDrag()
         {
-            Vector2 t = input.getMouseTilePos();
-            Tile tileActual = getTile(t);
+            Vector2 pos = input.getMouseTilePos();
 
-            float distance = Vector2.Distance(t, lastCursorTilePos);
-
-            //I moved
-            if (distance >= 0.1f && distance < 1.1f)
-            {
-                if (!tileActual.isInitialOrEnd() || tileActual.getColor() == dragingColor)
-                {
-                    if (tileActual.isActive() && tileActual.getColor() != dragingColor)
-                    {
-                        pipes[tileActual.getColor()].provisionalCut(currentPipe, t);
-                    }
-
-                    currentPipe.add(t, tileActual);
-
-                    if (currentPipe.pollCutted())
-                    {
-                        restorePipes(true);
-                    }
-
-                    updatePercentageText();
-
-                    if (currentPipe.isClosed())
-                    {
-                        currentPipe.notDraggingAnymore();
-                        restorePipes(false);
-
-                        if (currentPipe.changedSolution() && lastSolution != dragingColor)
-                        {
-                            lastSolution = dragingColor;
-                            ++steps;
-                            stepsText.text = "pasos: " + steps;
-                            flowsText.text = "flujos: " + getPipesCompleted() + "/" + pipes.Count;
-                        }
-
-                        resetMyInfo();
-                    }
-                    else
-                        lastCursorTilePos = t;
-                }
-            }
-            else if (distance > 1.1f && tileActual.getColor() == dragingColor)
-            {
-                currentPipe.cutMyself(t);
-                lastCursorTilePos = t;
-                updatePercentageText();
-            }
+            AStar(pos);
         }
 
+
+        private void AStar(Vector2 dest)
+        {
+            Vector2 origin = currentPipe.getOrigin();
+
+            if (origin == null)
+            {
+                Debug.LogError("origin cant be null when dragging");
+                return;
+            }
+
+            // :D
+
+
+        }
+
+
+        private void render()
+        {
+            //render each pipe
+            foreach(KeyValuePair<Color, Logic.Pipe> pipe in pipes)
+            {
+                if (dragingColor != null && pipe.Key == dragingColor)
+                    continue;
+ 
+                renderPipe(pipe.Key, pipe.Value, true);
+            }
+
+            //render current pipe 
+            if(currentPipe != null)
+                renderPipe(dragingColor, currentPipe, false);
+        }
+
+        private void renderPipe(Color color, Logic.Pipe pipe, bool highLight)
+        {
+            for (int i = 0; i < pipe.positions.Count; ++i)
+            {
+                Tile t1 = getTile(pipe.positions[i]);
+                t1.setColor(color);
+
+                if (highLight && i >= pipe.provisionalIndex && pipe.positions.Count > 1)
+                {
+                    t1.setHightLock(false);
+                    t1.enableHightLight();
+                    t1.setHightLock(true);
+                    continue;
+                }
+
+                if(highLight && pipe.positions.Count > 1)
+                    t1.enableHightLight();
+
+                if (i == pipe.positions.Count - 1)
+                    break;
+
+                Tile t2 = getTile(pipe.positions[i + 1]);
+
+                Logic.Dir dir = getDir(pipe.positions[i + 1], pipe.positions[i]);
+
+                t1.enableDirectionSprite(dir);
+                t2.enableDirectionSprite(Logic.Direction.Opposite(dir));
+            }  
+        }
+
+        private Logic.Dir getDir(Vector2 dest, Vector2 origen)
+        {
+            Vector2 delta = dest - origen;
+            delta = Vector2.Perpendicular(delta) * -1;
+            return Logic.Direction.GetDirectionFromVector(delta);
+        }
 
         private void resetMyInfo()
         {
-            lastCursorTilePos = Vector2.negativeInfinity;
             draging = false;
             dragingColor = Color.black;
             currentPipe = null;
-        }
-
-
-        private void restorePipes(bool fromCut)
-        {
-            foreach (Logic.Pipe p in pipes.Values)
-                if (currentPipe != p)
-                    p.restoreFromProvisionalCut(currentPipe, fromCut);
         }
 
         private int getPipesCompleted()
@@ -225,8 +241,7 @@ namespace flow
             int completed = 0;
             foreach(Logic.Pipe p in pipes.Values)
             {
-                if (p.isClosed())
-                {
+                if (p.isClosed()) {
                     ++completed;
                 }
             }
@@ -246,11 +261,6 @@ namespace flow
             float done = (float)active / (float)(width * height);
 
             return (int)(done * 100.0f);
-        }
-
-        private void updatePercentageText()
-        {
-            percentageText.text = "tubería: " + getPercentage() + "%";
         }
 
         public void setForGame(Logic.Map map, Color[] colors)
@@ -306,8 +316,9 @@ namespace flow
 
 
                 Logic.Pipe newPipe = new Logic.Pipe();
-                newPipe.setColor(color);
-                newPipe.setInitialAndEndTiles(new Vector2(initial.Item1, initial.Item2), initTile, new Vector2(final.Item1, final.Item2), endTile);
+
+                newPipe.setInitialAndEndTiles(new Vector2(initial.Item1, initial.Item2), new Vector2(final.Item1, final.Item2));
+
                 this.pipes.Add(color, newPipe);
             }
 
@@ -325,6 +336,8 @@ namespace flow
             }
 
             flowsText.text = "flujos: 0/" + pipes.Count;
+            percentageText.text = "tubería: 0%";
+            stepsText.text = "pasos: 0";
         }
 
         public void resetBoard()
@@ -343,7 +356,7 @@ namespace flow
                 t.setActiveTile(false);
             }
 
-            updatePercentageText();
+            percentageText.text = "tubería: " + getPercentage() + "%";
             stepsText.text = "pasos: 0";
             flowsText.text = "flujos: 0/" + pipes.Count;
         }
