@@ -719,6 +719,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   board: {fileID: 369493014}
+  levelText: {fileID: 1576022209}
+  boardSizeText: {fileID: 1293459001}
 --- !u!4 &643610039
 Transform:
   m_ObjectHideFlags: 0

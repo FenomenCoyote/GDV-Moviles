@@ -66,7 +66,7 @@ namespace flow
                 {
                     if (levelMngr != null)
                     {
-                        levelMngr.setLevel(selectedLevel, selectedPack);
+                        levelMngr.setLevel(selectedLevel, selectedPack,selectedCategory);
                     }
                 }
             }
@@ -87,7 +87,7 @@ namespace flow
 
             if (levelMngr != null)
             {
-                levelMngr.setLevel(selectedLevel, selectedPack);
+                levelMngr.setLevel(selectedLevel, selectedPack,selectedCategory);
             }
         }
 
