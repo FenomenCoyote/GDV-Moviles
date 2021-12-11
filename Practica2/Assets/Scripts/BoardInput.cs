@@ -78,7 +78,7 @@ namespace flow
             worldMousePos /= transform.localScale; //Fit with scale
             worldMousePos = Vector2Int.FloorToInt(worldMousePos); //Floor it
 
-            inside = worldMousePos.x >= 0 && worldMousePos.y >= 0 && worldMousePos.y < height && worldMousePos.x < width;
+            inside = worldMousePos.x >= 0 && worldMousePos.y >= 0 && worldMousePos.y < width && worldMousePos.x < height;
             if (inside)
                 mouseTilePos = worldMousePos;
             return inside;

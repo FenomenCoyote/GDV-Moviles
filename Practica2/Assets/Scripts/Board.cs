@@ -263,12 +263,15 @@ namespace flow
             return (int)(done * 100.0f);
         }
 
+
         public void setForGame(Logic.Map map, Color[] colors)
         {
             Vector3 pos = transform.position;
 
             height = map.getLevelHeight();
             width = map.getLevelWidth();
+
+            setScale();
 
             input.init(width, height);
             
@@ -338,6 +341,11 @@ namespace flow
             flowsText.text = "flujos: 0/" + pipes.Count;
             percentageText.text = "tubería: 0%";
             stepsText.text = "pasos: 0";
+        }
+
+        private void setScale()
+        {
+
         }
 
         public void resetBoard()
