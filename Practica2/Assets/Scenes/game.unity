@@ -534,6 +534,7 @@ MonoBehaviour:
   flowsText: {fileID: 304721895}
   percentageText: {fileID: 905929889}
   inputPointerSprite: {fileID: 1494508209}
+  camera: {fileID: 0}
 --- !u!4 &369493015
 Transform:
   m_ObjectHideFlags: 0
@@ -2185,14 +2186,14 @@ PrefabInstance:
     - target: {fileID: 7664281169987609939, guid: 7ee61c398f688a549bbf87679d747e4e, type: 3}
       propertyPath: DEBUGPack
       value: 
-      objectReference: {fileID: 11400000, guid: 8eabdb9fd3c2b264ba906225d3196f49, type: 2}
+      objectReference: {fileID: 11400000, guid: 1f3f1aab7ea3d3a4dbfef65c4b5a97c8, type: 2}
     - target: {fileID: 7664281169987609939, guid: 7ee61c398f688a549bbf87679d747e4e, type: 3}
       propertyPath: levelMngr
       value: 
       objectReference: {fileID: 643610038}
     - target: {fileID: 7664281169987609939, guid: 7ee61c398f688a549bbf87679d747e4e, type: 3}
       propertyPath: DEBUGLevel
-      value: 1
+      value: 29
       objectReference: {fileID: 0}
     - target: {fileID: 7664281169987609939, guid: 7ee61c398f688a549bbf87679d747e4e, type: 3}
       propertyPath: DEBUGCategory

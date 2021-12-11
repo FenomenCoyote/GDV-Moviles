@@ -25,10 +25,10 @@ namespace flow
         private Color lastSolution;
         private int steps;
 
-        [SerializeField] 
+        [SerializeField]
         Text stepsText;
 
-        [SerializeField] 
+        [SerializeField]
         Text flowsText;
 
         [SerializeField]
@@ -36,6 +36,10 @@ namespace flow
 
         [SerializeField]
         SpriteRenderer inputPointerSprite;
+
+        //Para adaptar el board
+        [SerializeField]
+        Camera camera;
 
         private void Awake()
         {
@@ -53,7 +57,7 @@ namespace flow
                 Debug.LogError("Prefab of board not setted");
                 return;
             }
-            if(input == null)
+            if (input == null)
             {
                 Debug.LogError("Input board not setted in Board");
                 return;
@@ -112,7 +116,6 @@ namespace flow
                 stepsText.text = "pasos: " + steps;
                 flowsText.text = "flujos: " + getPipesCompleted() + "/" + pipes.Count;
             }
-
         }
 
         private void inputDown()
@@ -144,7 +147,8 @@ namespace flow
 
         private void inputUp()
         {
-            if (currentPipe != null)  {
+            if (currentPipe != null)
+            {
                 currentPipe.notDraggingAnymore();
             }
 
@@ -179,16 +183,16 @@ namespace flow
         private void render()
         {
             //render each pipe
-            foreach(KeyValuePair<Color, Logic.Pipe> pipe in pipes)
+            foreach (KeyValuePair<Color, Logic.Pipe> pipe in pipes)
             {
                 if (dragingColor != null && pipe.Key == dragingColor)
                     continue;
- 
+
                 renderPipe(pipe.Key, pipe.Value, true);
             }
 
             //render current pipe 
-            if(currentPipe != null)
+            if (currentPipe != null)
                 renderPipe(dragingColor, currentPipe, false);
         }
 
@@ -207,7 +211,7 @@ namespace flow
                     continue;
                 }
 
-                if(highLight && pipe.positions.Count > 1)
+                if (highLight && pipe.positions.Count > 1)
                     t1.enableHightLight();
 
                 if (i == pipe.positions.Count - 1)
@@ -219,7 +223,7 @@ namespace flow
 
                 t1.enableDirectionSprite(dir);
                 t2.enableDirectionSprite(Logic.Direction.Opposite(dir));
-            }  
+            }
         }
 
         private Logic.Dir getDir(Vector2 dest, Vector2 origen)
@@ -239,9 +243,10 @@ namespace flow
         private int getPipesCompleted()
         {
             int completed = 0;
-            foreach(Logic.Pipe p in pipes.Values)
+            foreach (Logic.Pipe p in pipes.Values)
             {
-                if (p.isClosed()) {
+                if (p.isClosed())
+                {
                     ++completed;
                 }
             }
@@ -251,7 +256,7 @@ namespace flow
         private int getPercentage()
         {
             int active = 0;
-            foreach(Tile t in tiles)
+            foreach (Tile t in tiles)
                 if (t.isActive()) ++active;
 
             active -= pipes.Count * 2;
@@ -271,18 +276,27 @@ namespace flow
             height = map.getLevelHeight();
             width = map.getLevelWidth();
 
+
             setScale();
 
             input.init(width, height);
-            
+
             pos.y = height / 2;
+            if (height % 2 == 0)
+            {
+                pos.y -= 0.5f;
+            }
             tiles = new Tile[height, width];
             for (int i = 0; i < height; i++)
             {
                 pos.x = -width / 2;
+                if (width % 2 == 0)
+                {
+                    pos.x += 0.5f;
+                }
                 for (int j = 0; j < width; j++)
                 {
-                    tiles[i,j] = Instantiate(tile, pos, Quaternion.identity, transform);
+                    tiles[i, j] = Instantiate(tile, pos, Quaternion.identity, transform);
 
                     Vector3 aux = tiles[i, j].transform.localPosition;
                     aux.y = pos.y;
@@ -294,7 +308,7 @@ namespace flow
                 pos.y--;
             }
 
-            List<List<Tuple<uint,uint>>> _pipes = map.getPipes();
+            List<List<Tuple<uint, uint>>> _pipes = map.getPipes();
             uint nPipes = map.getNPipes();
             for (int i = 0; i < nPipes; ++i)
             {
@@ -302,7 +316,7 @@ namespace flow
                 Color color = colors[i];
 
                 //Inicial
-                Tuple<uint,uint> initial = _pipes[i][0];
+                Tuple<uint, uint> initial = _pipes[i][0];
                 Tile initTile = tiles[initial.Item1, initial.Item2];
                 initTile.setColor(color);
                 initTile.setCircleBig();
@@ -325,7 +339,7 @@ namespace flow
                 this.pipes.Add(color, newPipe);
             }
 
-            foreach(Tuple<Tuple<uint, uint>, Tuple<uint, uint>> wall in map.getWalls())
+            foreach (Tuple<Tuple<uint, uint>, Tuple<uint, uint>> wall in map.getWalls())
             {
                 Vector2 origin = new Vector2(wall.Item1.Item1, wall.Item1.Item2);
                 Vector2 dest = new Vector2(wall.Item2.Item1, wall.Item2.Item2);
@@ -345,7 +359,14 @@ namespace flow
 
         private void setScale()
         {
+            float propX = 5.0f / width;
+            float propY = 7.0f / height;
 
+            float scale = Mathf.Min(propX, propY);
+            scale *= transform.localScale.x;
+
+            Vector3 newScale = new Vector3(scale, scale, 1);
+            transform.localScale = newScale;
         }
 
         public void resetBoard()
@@ -357,7 +378,7 @@ namespace flow
             steps = 0;
             resetMyInfo();
 
-            foreach(Tile t in tiles)
+            foreach (Tile t in tiles)
             {
                 t.disableAll();
                 t.disableCircle();
