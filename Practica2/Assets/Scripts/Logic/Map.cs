@@ -89,7 +89,12 @@ namespace flow.Logic
 
         private Tuple<uint, uint> getTupleFromNumber(string number)
         {
-            return new Tuple<uint, uint>(uint.Parse(number) / levelHeight, uint.Parse(number) % levelHeight);
+            if (levelWidth == levelHeight) return new Tuple<uint, uint>(uint.Parse(number) / levelHeight, uint.Parse(number) % levelHeight);
+            else
+            {
+                if (levelWidth < levelHeight) return new Tuple<uint, uint>(uint.Parse(number) / levelWidth, uint.Parse(number) % levelWidth);
+                else return new Tuple<uint, uint>(uint.Parse(number) / levelHeight, uint.Parse(number) % levelHeight);
+            }
         }
 
         public uint getLevelWidth() { return levelWidth; }
