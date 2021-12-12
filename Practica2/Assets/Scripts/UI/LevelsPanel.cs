@@ -18,10 +18,10 @@ namespace flow.UI {
             dimensionsText.text = s;
         }
        
-        public void setlvlButton(Color c, string lvl, int number, int nPanel)
+        public void setlvlButton(Color c, string lvl, int number, int nPanel,int lvlIndex)
         {
             lvlButton[number].setButtonLevelColor(c);
-            lvlButton[number].setLevelInfo(lvl, nPanel);
+            lvlButton[number].setLevelInfo(lvl, nPanel,lvlIndex);
         }
 
         public float getWidth() 

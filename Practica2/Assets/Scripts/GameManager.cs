@@ -34,6 +34,7 @@ namespace flow
         private PackCategory selectedCategory;
 
         private string selectedLevel;
+        private int lvlIndex;
 
         private int levelPanelNumber;
 
@@ -43,6 +44,7 @@ namespace flow
 
         [SerializeField] private int DEBUGLevel;
         [SerializeField] private int DEBUGPanelNumber;
+        [SerializeField] private int DEBUGLevelIndex;
 
         private void Awake()
         {
@@ -62,12 +64,13 @@ namespace flow
                 {
                     string[] aux = selectedPack.levels.ToString().Split('\n');
                     selectedLevel = aux[DEBUGLevel + (DEBUGPanelNumber * 30)];
+                    lvlIndex = DEBUGLevelIndex;
                 }
                 if (levelMngr != null)
                 {
                     if (levelMngr != null)
                     {
-                        levelMngr.setLevel(selectedLevel, selectedPack,selectedCategory);
+                        levelMngr.setLevel(selectedLevel, lvlIndex, selectedPack, selectedCategory);
                     }
                 }
             }
@@ -94,7 +97,7 @@ namespace flow
 
             if (levelMngr != null)
             {
-                levelMngr.setLevel(selectedLevel, selectedPack,selectedCategory);
+                levelMngr.setLevel(selectedLevel, lvlIndex, selectedPack,selectedCategory);
             }
         }
 
@@ -126,10 +129,11 @@ namespace flow
             SceneManager.LoadScene((int)Scene.ChoosePack);
         }
 
-        public void setLevel(string levelInfo, int nPanel = 0)
+        public void setLevel(string levelInfo, int index, int nPanel = 0)
         {
             levelPanelNumber = nPanel;
             selectedLevel = levelInfo;
+            lvlIndex = index;
             SceneManager.LoadScene((int)Scene.Level);
         }
 
@@ -137,6 +141,19 @@ namespace flow
         {
             levelMngr = null;
             SceneManager.LoadScene((int)Scene.ChooseLevel);
+        }
+
+        public void selectLevel(int lvl)
+        {
+            string[] aux = selectedPack.levels.ToString().Split('\n');
+            
+            if (lvl>=0 && lvl<aux.Length-1)
+            {
+                selectedLevel = aux[lvl];
+                lvlIndex = lvl;
+                levelMngr.setLevel(selectedLevel, lvlIndex, selectedPack, selectedCategory);
+                SceneManager.LoadScene((int)Scene.Level);
+            }           
         }
 
         public LevelPack getLevelPack() { return selectedPack; }

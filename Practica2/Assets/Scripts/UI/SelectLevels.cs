@@ -50,7 +50,10 @@ namespace flow.UI
             for (int i = 0; i < levels.Length / panelSize; i++)
             {
                 if (levels[i * panelSize].Split(',')[2] == "1")
+                {
                     nPanel++;
+                }
+                    
 
                 LevelsPanel lvlPanel = Instantiate(levelsPanel, transform);
                 auxWidth += lvlPanel.getWidth() + hLayout.spacing;
@@ -58,7 +61,7 @@ namespace flow.UI
                 lvlPanel.setDimensionsText(pack.levelPanelName[i]);
                 for (int j = 0; j < panelSize; j++)
                 {
-                    lvlPanel.setlvlButton(pack.levelPanelColors[i], levels[i * panelSize + j], j, nPanel);
+                    lvlPanel.setlvlButton(pack.levelPanelColors[i], levels[i * panelSize + j], j, nPanel, i*panelSize+j);
                 }
             }
 
