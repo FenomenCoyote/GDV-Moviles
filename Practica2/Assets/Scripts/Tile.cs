@@ -42,6 +42,8 @@ namespace flow
 
         [SerializeField] private SpriteRenderer check;
 
+        private bool empty = false;
+
         private bool activeTile = false;
         private bool initialOrEnd = false;
         private Color color;
@@ -94,6 +96,8 @@ namespace flow
 
         public void setBoundaryColors(Color color)
         {
+            color.a = 1;
+
             wallUp.color = color;
             wallDown.color = color;
             wallLeft.color = color;
@@ -116,6 +120,8 @@ namespace flow
         public void setWall(Logic.Dir dir, bool b = true)
         {
             walls[dir] = b;
+            if (empty)
+                return;
 
             switch (dir)
             {
@@ -137,6 +143,22 @@ namespace flow
         public bool hasWall(Logic.Dir dir)
         {
             return walls[dir];
+        }
+
+        public void setEmpty()
+        {
+            empty = true;
+            walls[Logic.Dir.Up] = true; wallUp.enabled = false;
+            walls[Logic.Dir.Down] = true; wallDown.enabled = false;
+            walls[Logic.Dir.Left] = true; wallLeft.enabled = false;
+            walls[Logic.Dir.Right] = true; wallRight.enabled = false;
+
+            disableAll();
+
+            boundaryUp.enabled = false;
+            boundaryDown.enabled = false;
+            boundaryLeft.enabled = false;
+            boundaryRight.enabled = false;
         }
 
         public void enableDirectionSprite(Logic.Dir dir)
