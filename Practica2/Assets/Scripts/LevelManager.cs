@@ -44,6 +44,13 @@ namespace flow {
             board.setForGame(map, pack.theme.colors, category.categoryColor);
         }
 
+
+        public void levelDone(int perfectGame, int steps)
+        {
+            Debug.Log("Level done");
+        }
+
+
         public void exitLevel()
         {
             GameManager.Instance.exitLevel();

@@ -39,9 +39,8 @@ namespace flow
         [SerializeField]
         SpriteRenderer inputPointerSprite;
 
-        //Para adaptar el board
         [SerializeField]
-        Camera camera;
+        LevelManager levelManager;
 
         private void Awake()
         {
@@ -85,6 +84,11 @@ namespace flow
                 Debug.LogError("inputPointerSprite not setted in Board");
                 return;
             }
+            if (levelManager == null)
+            {
+                Debug.LogError("levelManager not setted in Board");
+                return;
+            }
         }
 #endif
 
@@ -117,7 +121,14 @@ namespace flow
 
                 percentageText.text = "tubería: " + getPercentage() + "%";
                 stepsText.text = "pasos: " + steps;
-                flowsText.text = "flujos: " + getPipesCompleted() + "/" + pipes.Count;
+
+                int completed = getPipesCompleted();
+                flowsText.text = "flujos: " + completed + "/" + pipes.Count;
+
+                if(completed == pipes.Count)
+                {
+                    levelManager.levelDone(pipes.Count, steps);
+                }
             }
         }
 

@@ -534,7 +534,7 @@ MonoBehaviour:
   flowsText: {fileID: 304721895}
   percentageText: {fileID: 905929889}
   inputPointerSprite: {fileID: 1494508209}
-  camera: {fileID: 0}
+  levelManager: {fileID: 643610038}
 --- !u!4 &369493015
 Transform:
   m_ObjectHideFlags: 0

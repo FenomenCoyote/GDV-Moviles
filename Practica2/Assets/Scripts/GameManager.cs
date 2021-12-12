@@ -34,6 +34,7 @@ namespace flow
         private PackCategory selectedCategory;
 
         private string selectedLevel;
+
         private int levelPanelNumber;
 
         /*DEBUG*/
