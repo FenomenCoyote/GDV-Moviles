@@ -37,6 +37,9 @@ namespace flow
         [Range(0f, 1f)]
         [SerializeField] private float backGroundHighlightAlpha = 0.2f;
 
+        [Range(0f, 1f)]
+        [SerializeField] private float boundaryAlpha = 0.75f;
+
         [SerializeField] private SpriteRenderer check;
 
         private bool activeTile = false;
@@ -88,6 +91,22 @@ namespace flow
             color = c;
             updateSpritesColor();
         }
+
+        public void setBoundaryColors(Color color)
+        {
+            wallUp.color = color;
+            wallDown.color = color;
+            wallLeft.color = color;
+            wallRight.color = color;
+
+            color.a = boundaryAlpha;
+
+            boundaryUp.color = color;
+            boundaryDown.color = color;
+            boundaryLeft.color = color;
+            boundaryRight.color = color;
+        }
+
 
         public Color getColor()
         {

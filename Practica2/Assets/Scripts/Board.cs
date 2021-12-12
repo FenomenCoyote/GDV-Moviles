@@ -166,6 +166,12 @@ namespace flow
                 pipe.Value.finallyCut();
             }
 
+            if (lastSolution != dragingColor && currentPipe.changedSolution())
+            {
+                lastSolution = dragingColor;
+                steps++;
+            }
+
             inputPointerSprite.enabled = false;
             resetMyInfo();
         }
@@ -344,7 +350,7 @@ namespace flow
         }
 
 
-        public void setForGame(Logic.Map map, Color[] colors)
+        public void setForGame(Logic.Map map, Color[] colors, Color categoryColor)
         {
             Vector3 pos = transform.position;
 
@@ -377,6 +383,7 @@ namespace flow
                     aux.x = pos.x;
                     tiles[i, j].transform.localPosition = aux;
                     tiles[i, j].setCircleSmall();
+                    tiles[i, j].setBoundaryColors(categoryColor);
                     pos.x++;
                 }
                 pos.y--;
@@ -436,7 +443,7 @@ namespace flow
         private void setScale()
         {
             float propX = 5.0f / width;
-            float propY = 7.0f / height;
+            float propY = 8.0f / height;
 
             float scale = Mathf.Min(propX, propY);
             scale *= transform.localScale.x;

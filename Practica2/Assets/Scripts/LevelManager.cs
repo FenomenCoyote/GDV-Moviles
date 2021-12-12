@@ -20,7 +20,7 @@ namespace flow {
         private LevelPack pack;
         private PackCategory category;
 
-        public void setLevel(string levelInfo, LevelPack selectedPack,PackCategory selectedCategory)
+        public void setLevel(string levelInfo, LevelPack selectedPack, PackCategory selectedCategory)
         {
             level = levelInfo;
             pack = selectedPack;
@@ -41,7 +41,7 @@ namespace flow {
             levelText.color = category.categoryColor;
             boardSizeText.text = map.getLevelWidth().ToString() + "x" + map.getLevelHeight();
 
-            board.setForGame(map, pack.theme.colors);
+            board.setForGame(map, pack.theme.colors, category.categoryColor);
         }
 
         public void exitLevel()

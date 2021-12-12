@@ -46,7 +46,7 @@ namespace flow
 
             float auxW = w % 2 == 0 ? w + 0.5f : w;
             float auxH = h % 2 == 0 ? h + 0.5f : h;
-            offset = new Vector3((auxW) / 2.0f, (-auxH) / 2.0f);
+            offset = new Vector3(auxW / 2.0f, -auxH / 2.0f);
         }
 
         public bool justDown()
@@ -75,6 +75,8 @@ namespace flow
             Vector2 worldMousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition); //raw in tiles
 
             worldMousePos = (worldMousePos + (offset * transform.localScale)); //adjust offset
+            worldMousePos.x += transform.position.x;
+            worldMousePos.y -= transform.position.y;
             worldMousePos = Vector2.Perpendicular(worldMousePos);
 
             worldMousePos /= transform.localScale; //Fit with scale

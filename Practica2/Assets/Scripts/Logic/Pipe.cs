@@ -77,7 +77,28 @@ namespace flow.Logic
         public void notDraggingAnymore()
         {
             if (checkPipeClosed())
+            {
+                bool changed = false;
+                foreach (Vector2 p in positions)
+                {
+                    if (!solutionPositions.Contains(p))
+                    {
+                        changed = true;
+                        break;
+                    }
+                }
+
+                changedMySolution = changed;
+
+                if (changedMySolution)
+                {
+                    solutionPositions.Clear();
+                    foreach (Vector2 p in positions)
+                        solutionPositions.Add(p);
+                } 
+
                 closed = true;
+            }
         }
 
         public bool provisionalCut(Pipe current)
@@ -107,6 +128,9 @@ namespace flow.Logic
             positions.RemoveRange(provisionalIndex, positions.Count - provisionalIndex);
             provisionalIndex = 1000;
             closed = checkPipeClosed();
+
+            solutionPositions.Clear();
+            changedMySolution = true;
         }
 
 
@@ -188,18 +212,20 @@ namespace flow.Logic
             return true;
         }
 
-        public void addPathFromOrigin(List<Vector2> path)
+        public bool addPathFromOrigin(List<Vector2> path)
         {
             int index = isCuttingThisPipe(path);
 
             if(index < 0)
             {
                 positions.AddRange(path);
-                return;
+
+                return true;
             }
             else
             {
                 cutMyself(positions[index]);
+                return false;
             }
         }
 
@@ -210,7 +236,7 @@ namespace flow.Logic
 
         public bool changedSolution()
         {
-            return changedMySolution;
+            return closed && changedMySolution;
         }
 
         private void openPipe(int index)
