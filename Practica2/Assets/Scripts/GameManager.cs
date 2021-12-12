@@ -77,6 +77,12 @@ namespace flow
 
             saver = new ProgressSaverLoader();
             state = new Logic.GameState();
+            if (!System.IO.File.Exists(saveFile))
+            {
+                state.init(categories);
+            }
+            else loadGame();
+
         }
 
         private void setInfo(LevelManager lm, PackCategory[] categories, Scene scene)
@@ -147,6 +153,8 @@ namespace flow
                 state = auxState;
             }
         }
+
+        public Logic.GameState getState() { return state; }
 
     }
 }

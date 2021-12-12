@@ -54,7 +54,7 @@ namespace flow.UI
 
         public void setPackProgress(int levelsDone, int totalLevels)
         {
-            //TODO
+            packProgress.text = levelsDone.ToString() + "/" + totalLevels.ToString();
         }
 
         public void enableFinishedPackCheck(bool enable)

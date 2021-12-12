@@ -7,8 +7,6 @@ namespace flow.UI
 {
     public class ShowCategories : MonoBehaviour
     {
-        private PackCategory[] categories;
-
         [SerializeField]
         Text nivelesText;
 
@@ -33,30 +31,38 @@ namespace flow.UI
             float auxHeight = 0.0f;
 
             nivelesText.text = "<color=red>n</color>" +
-                               "<color=green>i</color>"+
-                               "<color=blue>v</color>"+
-                               "<color=yellow>e</color>"+
-                               "<color=orange>l</color>"+
-                               "<color=red>e</color>"+
+                               "<color=green>i</color>" +
+                               "<color=blue>v</color>" +
+                               "<color=yellow>e</color>" +
+                               "<color=orange>l</color>" +
+                               "<color=red>e</color>" +
                                "<color=green>s</color>";
 
             //Esto es bucear en la escena?
             auxHeight += nivelesText.rectTransform.rect.height + vOrder.spacing;
 
-            categories = GameManager.Instance.getPackCategories();
+            PackCategory[] categories = GameManager.Instance.getPackCategories();
+            Logic.GameState state = GameManager.Instance.getState();
 
-            foreach(PackCategory category in categories)
+            for (int c = 0; c < categories.Length; ++c)
             {
+                PackCategory category = categories[c];
+
                 MenuPanel panel = Instantiate(categoryHeader, transform);
                 panel.setColor(category.categoryColor);
                 panel.setText(category.categoryName);
                 auxHeight += panel.getHeight() + vOrder.spacing;
 
-                foreach (LevelPack levelPack in category.levelPacks)
+                for (int p = 0; p < category.levelPacks.Length; ++p)
                 {
+                    LevelPack pack = category.levelPacks[p];
+
                     MenuButton packButton = Instantiate(categoryButton, transform);
-                    packButton.setPack(levelPack, category);
+                    packButton.setPack(pack, category);
                     auxHeight += packButton.getHeight() + vOrder.spacing;
+
+                    int nLeves = pack.levels.ToString().Split('\n').Length;
+                    packButton.setPackProgress(state.categories[c].packs[p].completedLevels, nLeves);
                 }
             }
 
