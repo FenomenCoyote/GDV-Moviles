@@ -111,9 +111,9 @@ namespace flow.Logic
                 return false;
             }
 
-            if (closed && provisionalIndex == 1000)
-                provisionalIndex = provisionalClosedCut(index);
-            else 
+            //if (closed && provisionalIndex == 1000)
+            //    provisionalIndex = provisionalClosedCut(index);
+            //else 
                 provisionalIndex = index;
 
             return true;
