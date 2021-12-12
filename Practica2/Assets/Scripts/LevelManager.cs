@@ -19,10 +19,13 @@ namespace flow {
         private string level;
         private LevelPack pack;
         private PackCategory category;
+        private int currentLvlIndex;
 
-        public void setLevel(string levelInfo, LevelPack selectedPack, PackCategory selectedCategory)
+
+        public void setLevel(string levelInfo, int index,LevelPack selectedPack, PackCategory selectedCategory)
         {
             level = levelInfo;
+            currentLvlIndex = index;
             pack = selectedPack;
             category = selectedCategory;
         }
@@ -44,12 +47,10 @@ namespace flow {
             board.setForGame(map, pack.theme.colors, category.categoryColor);
         }
 
-
         public void levelDone(int perfectGame, int steps)
         {
             Debug.Log("Level done");
         }
-
 
         public void exitLevel()
         {
@@ -58,13 +59,12 @@ namespace flow {
 
         public void nextLevel()
         {
-
+            GameManager.Instance.selectLevel(currentLvlIndex + 1);
         }
 
         public void previousLevel()
         {
-
+            GameManager.Instance.selectLevel(currentLvlIndex - 1);
         }
     }
-
 }

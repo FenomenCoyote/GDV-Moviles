@@ -2558,9 +2558,9 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 369493014}
-        m_TargetAssemblyTypeName: flow.Board, Assembly-CSharp
-        m_MethodName: resetBoard
+      - m_Target: {fileID: 643610038}
+        m_TargetAssemblyTypeName: flow.LevelManager, Assembly-CSharp
+        m_MethodName: nextLevel
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -2690,9 +2690,9 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 369493014}
-        m_TargetAssemblyTypeName: flow.Board, Assembly-CSharp
-        m_MethodName: resetBoard
+      - m_Target: {fileID: 643610038}
+        m_TargetAssemblyTypeName: flow.LevelManager, Assembly-CSharp
+        m_MethodName: previousLevel
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -2946,6 +2946,10 @@ PrefabInstance:
     - target: {fileID: 7664281169987609939, guid: 7ee61c398f688a549bbf87679d747e4e, type: 3}
       propertyPath: categories.Array.size
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7664281169987609939, guid: 7ee61c398f688a549bbf87679d747e4e, type: 3}
+      propertyPath: DEBUGLevelIndex
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 7664281169987609939, guid: 7ee61c398f688a549bbf87679d747e4e, type: 3}
       propertyPath: categories.Array.data[0]

@@ -16,6 +16,7 @@ namespace flow.UI {
 
         string levelInfo;
         int nPanel;
+        int lvlIndex;
 
         void Awake()
         {           
@@ -34,11 +35,12 @@ namespace flow.UI {
             img.color = c;
         }
 
-        public void setLevelInfo(string lvl, int nPanel)
+        public void setLevelInfo(string lvl, int nPanel,int lvlIndex)
         {
             levelTextNumber.text = lvl.Split(',')[2];
             levelInfo = lvl;
             this.nPanel = nPanel;
+            this.lvlIndex = lvlIndex;
         }
 
         public void enableCheck(bool b)
@@ -61,7 +63,7 @@ namespace flow.UI {
 
         private void clickCallback()
         {
-            GameManager.Instance.setLevel(levelInfo, nPanel);
+            GameManager.Instance.setLevel(levelInfo, lvlIndex, nPanel);
         }
 
     }
