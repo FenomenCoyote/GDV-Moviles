@@ -106,6 +106,7 @@ namespace flow.Logic
 
             positions.RemoveRange(provisionalIndex, positions.Count - provisionalIndex);
             provisionalIndex = 1000;
+            closed = checkPipeClosed();
         }
 
 

@@ -100,7 +100,7 @@ namespace flow
                 inputDown();
                 updateMap = true;
             }
-            else if (input.justUp())
+            else if (currentPipe != null && input.justUp())
             {
                 inputUp();
                 updateMap = true;
