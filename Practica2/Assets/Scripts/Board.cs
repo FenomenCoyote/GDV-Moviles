@@ -28,6 +28,9 @@ namespace flow
         private AStar aStar;
 
         [SerializeField]
+        private int pathFindingPenalizeOtherColors = 1, pathFindingPenalizeMyEnd = 20;
+
+        [SerializeField]
         Text stepsText;
 
         [SerializeField]
@@ -431,6 +434,8 @@ namespace flow
                 this.pipes.Add(color, newPipe);
             }
 
+            bool addBounds = false;
+
             foreach (Tuple<Tuple<uint, uint>, Tuple<uint, uint>> wall in map.getWalls())
             {
                 Vector2 origin = new Vector2(wall.Item1.Item1, wall.Item1.Item2);
@@ -442,9 +447,33 @@ namespace flow
 
                 getTile(origin).setWall(dir);
                 getTile(dest).setWall(Logic.Direction.Opposite(dir));
+
+                addBounds = true;
             }
 
-            aStar.RecibeLaberinto(tiles);
+            foreach (Tuple<uint, uint> empty in map.getEmptyTiles())
+            {
+                Vector2 t = new Vector2(empty.Item1, empty.Item2);
+                Tile tile = getTile(t);
+
+                tile.setEmpty();
+
+                if (t.x > 0) 
+                    getTile(t + Vector2.left).setWall(Logic.Dir.Down);
+                if (t.y > 0) 
+                    getTile(t + Vector2.down).setWall(Logic.Dir.Right);
+                if (t.x < height - 1) 
+                    getTile(t + Vector2.right).setWall(Logic.Dir.Up);
+                if (t.y < width - 1)
+                    getTile(t + Vector2.up).setWall(Logic.Dir.Left);
+
+                addBounds = true;
+            }
+
+            if (addBounds)
+                borderAll();
+
+            aStar.RecibeLaberinto(tiles, pathFindingPenalizeOtherColors, pathFindingPenalizeMyEnd);
 
             flowsText.text = "flujos: 0/" + pipes.Count;
             percentageText.text = "tubería: 0%";
@@ -482,6 +511,20 @@ namespace flow
             percentageText.text = "tubería: " + getPercentage() + "%";
             stepsText.text = "pasos: 0";
             flowsText.text = "flujos: 0/" + pipes.Count;
+        }
+
+        private void borderAll()
+        {
+            for(int i = 0; i < height; ++i)
+            {
+                tiles[i, 0].setWall(Logic.Dir.Left);
+                tiles[i, width - 1].setWall(Logic.Dir.Right);
+            }
+            for (int i = 0; i < width; ++i)
+            {
+                tiles[0, i].setWall(Logic.Dir.Up);
+                tiles[height - 1, i].setWall(Logic.Dir.Down);
+            }
         }
 
         private Tile getTile(Vector2 mousePos)

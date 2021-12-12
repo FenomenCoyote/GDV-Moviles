@@ -13,14 +13,15 @@ namespace flow
         /// </summary>
         private Nodo[,] laberinto;
 
-
         private Color color;
+
+        private int lilPenalize=1, bigPenalize=20;
 
         /// <summary>
         /// Recibe tanto el laberinto generado como la dimension de sus casilla
         /// </summary>
         /// <param name="laberinto_"></param>
-        public void RecibeLaberinto(Tile[,] laberinto_)
+        public void RecibeLaberinto(Tile[,] laberinto_, int lilPenalize, int bigPenalize)
         {
             laberinto = new Nodo[laberinto_.GetLength(0), laberinto_.GetLength(1)];
 
@@ -31,6 +32,9 @@ namespace flow
                     laberinto[i, j] = new Nodo(laberinto_[i, j], i, j);
                 }
             }
+
+            this.lilPenalize = lilPenalize;
+            this.bigPenalize = bigPenalize;
         }
 
         /// <summary>
@@ -104,16 +108,16 @@ namespace flow
             List<Nodo> candidatos = new List<Nodo>();
 
             if (origen.x + 1 < laberinto.GetLength(0) && !nodosCerrados.Contains(laberinto[origen.x + 1, origen.y]) && 
-                laberinto[origen.x, origen.y].derecha && canGoTo(laberinto[origen.x + 1, origen.y])) candidatos.Add(laberinto[origen.x + 1, origen.y]);    //derecha
+                laberinto[origen.x, origen.y].abajo && canGoTo(laberinto[origen.x + 1, origen.y])) candidatos.Add(laberinto[origen.x + 1, origen.y]);    //derecha
             
             if (origen.x - 1 >= 0 && !nodosCerrados.Contains(laberinto[origen.x - 1, origen.y]) && 
-                laberinto[origen.x, origen.y].izquierda && canGoTo(laberinto[origen.x - 1, origen.y])) candidatos.Add(laberinto[origen.x - 1, origen.y]);   //izquierda
+                laberinto[origen.x, origen.y].arriba && canGoTo(laberinto[origen.x - 1, origen.y])) candidatos.Add(laberinto[origen.x - 1, origen.y]);   //izquierda
             
             if (origen.y + 1 < laberinto.GetLength(1) && !nodosCerrados.Contains(laberinto[origen.x, origen.y + 1]) && 
-                laberinto[origen.x, origen.y].abajo && canGoTo(laberinto[origen.x, origen.y + 1])) candidatos.Add(laberinto[origen.x, origen.y + 1]);    //abajo
+                laberinto[origen.x, origen.y].derecha && canGoTo(laberinto[origen.x, origen.y + 1])) candidatos.Add(laberinto[origen.x, origen.y + 1]);    //abajo
             
             if (origen.y - 1 >= 0 && !nodosCerrados.Contains(laberinto[origen.x, origen.y - 1]) && 
-                laberinto[origen.x, origen.y].arriba && canGoTo(laberinto[origen.x, origen.y - 1])) candidatos.Add(laberinto[origen.x, origen.y - 1]);   //arriba
+                laberinto[origen.x, origen.y].izquierda && canGoTo(laberinto[origen.x, origen.y - 1])) candidatos.Add(laberinto[origen.x, origen.y - 1]);   //arriba
 
             int nuevaDistancia = origen.distanciaComienzo + 1;
             
@@ -126,9 +130,9 @@ namespace flow
                     adyacente.distanciaDestino = Distancia(destino, adyacente);
 
                     if (adyacente.tile.getColor() != color && adyacente.tile.isActive())
-                        adyacente.distanciaDestino += 1;
+                        adyacente.distanciaDestino += lilPenalize;
                     if (adyacente.initialOrEnd)
-                        adyacente.distanciaDestino += 20;
+                        adyacente.distanciaDestino += bigPenalize;
 
                     adyacente.anterior = origen;
                     

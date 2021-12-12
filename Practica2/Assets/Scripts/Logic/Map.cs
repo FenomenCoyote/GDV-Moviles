@@ -30,6 +30,10 @@ namespace flow.Logic
             {
                 string[] size = header[0].Split(':');
                 levelWidth = uint.Parse(size[0]);
+
+                if (size[1].EndsWith("+B"))
+                    size[1] = size[1].Remove(size[1].IndexOf('+'), 2);
+
                 levelHeight = uint.Parse(size[1]);
             }
             else levelWidth = levelHeight = uint.Parse(header[0]);

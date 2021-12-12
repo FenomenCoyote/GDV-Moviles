@@ -39,7 +39,7 @@ namespace flow.UI
             category = GameManager.Instance.getPackCategory();
             pack = GameManager.Instance.getLevelPack();
 
-            //Texto nombre categoría
+            //Texto nombre categorï¿½a
             categoryText.text = pack.packName;
             categoryText.color = category.categoryColor;
             check.color = category.categoryColor;
@@ -54,7 +54,10 @@ namespace flow.UI
             for (int i = 0; i < (levels.Length - 1) / panelSize; i++)
             {
                 if (levels[i * panelSize].Split(',')[2] == "1")
+                {
                     nPanel++;
+                }
+                    
 
                 LevelsPanel lvlPanel = Instantiate(levelsPanel, transform);
                 auxWidth += lvlPanel.getWidth() + hLayout.spacing;

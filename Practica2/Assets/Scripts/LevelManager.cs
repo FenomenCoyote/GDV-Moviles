@@ -16,13 +16,22 @@ namespace flow {
         [SerializeField]
         private Text boardSizeText;
 
+        [SerializeField]
+        private Image nextLevelButtonImg;
+
+        [SerializeField]
+        private Image previousLevelButtonImg;
+
         private string level;
         private LevelPack pack;
         private PackCategory category;
+        private int currentLvlIndex;
 
-        public void setLevel(string levelInfo, LevelPack selectedPack, PackCategory selectedCategory)
+
+        public void setLevel(string levelInfo, int index,LevelPack selectedPack, PackCategory selectedCategory)
         {
             level = levelInfo;
+            currentLvlIndex = index;
             pack = selectedPack;
             category = selectedCategory;
         }
@@ -41,15 +50,17 @@ namespace flow {
             levelText.color = category.categoryColor;
             boardSizeText.text = map.getLevelWidth().ToString() + "x" + map.getLevelHeight();
 
+            if (currentLvlIndex == 0) previousLevelButtonImg.color = Color.gray;
+            //-2 porque el tamaño del level pack es 151
+            else if (currentLvlIndex >= GameManager.Instance.getLevelPackSize()-2) nextLevelButtonImg.color = Color.gray;
+
             board.setForGame(map, pack.theme.colors, category.categoryColor);
         }
-
 
         public void levelDone(int perfectGame, int steps)
         {
             Debug.Log("Level done");
         }
-
 
         public void exitLevel()
         {
@@ -58,13 +69,12 @@ namespace flow {
 
         public void nextLevel()
         {
-
+            GameManager.Instance.selectLevel(currentLvlIndex + 1);
         }
 
         public void previousLevel()
         {
-
+            GameManager.Instance.selectLevel(currentLvlIndex - 1);
         }
     }
-
 }
