@@ -16,6 +16,12 @@ namespace flow {
         [SerializeField]
         private Text boardSizeText;
 
+        [SerializeField]
+        private Image nextLevelButtonImg;
+
+        [SerializeField]
+        private Image previousLevelButtonImg;
+
         private string level;
         private LevelPack pack;
         private PackCategory category;
@@ -43,6 +49,10 @@ namespace flow {
             levelText.text = "Level " + map.getNLevel();
             levelText.color = category.categoryColor;
             boardSizeText.text = map.getLevelWidth().ToString() + "x" + map.getLevelHeight();
+
+            if (currentLvlIndex == 0) previousLevelButtonImg.color = Color.gray;
+            //-2 porque el tamaño del level pack es 151
+            else if (currentLvlIndex >= GameManager.Instance.getLevelPackSize()-2) nextLevelButtonImg.color = Color.gray;
 
             board.setForGame(map, pack.theme.colors, category.categoryColor);
         }

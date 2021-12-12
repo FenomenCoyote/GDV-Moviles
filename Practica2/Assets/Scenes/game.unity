@@ -724,6 +724,8 @@ MonoBehaviour:
   board: {fileID: 369493014}
   levelText: {fileID: 1576022209}
   boardSizeText: {fileID: 1293459001}
+  nextLevelButtonImg: {fileID: 1937918261}
+  previousLevelButtonImg: {fileID: 1967821795}
 --- !u!4 &643610039
 Transform:
   m_ObjectHideFlags: 0
@@ -1267,7 +1269,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0}
   m_AnchorMax: {x: 0.5, y: 0}
-  m_AnchoredPosition: {x: 0, y: 216}
+  m_AnchoredPosition: {x: 0, y: 187.93402}
   m_SizeDelta: {x: 100, y: 100}
   m_Pivot: {x: 0.5, y: 0}
 --- !u!114 &913929826
@@ -1331,7 +1333,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0.14}
   m_AnchorMax: {x: 0, y: 0.14}
-  m_AnchoredPosition: {x: 19.599976, y: -52.93402}
+  m_AnchoredPosition: {x: 19.599976, y: -81}
   m_SizeDelta: {x: 64, y: 65}
   m_Pivot: {x: 0, y: 0}
 --- !u!114 &914088786
@@ -1403,7 +1405,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 0.4433962, g: 0.4433962, b: 0.4433962, a: 1}
+  m_Color: {r: 0.5019608, g: 0.5019608, b: 0.5019608, a: 1}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
@@ -1819,7 +1821,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 1, y: 0.14}
   m_AnchorMax: {x: 1, y: 0.14}
-  m_AnchoredPosition: {x: 0, y: -10.340027}
+  m_AnchoredPosition: {x: 0, y: -38.406006}
   m_SizeDelta: {x: 217.3, y: 43.08}
   m_Pivot: {x: 1, y: 0.5}
 --- !u!114 &1242983870
@@ -2944,12 +2946,12 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 11400000, guid: b2543d6ecf0e9f94697dc3d93eba2933, type: 2}
     - target: {fileID: 7664281169987609939, guid: 7ee61c398f688a549bbf87679d747e4e, type: 3}
-      propertyPath: categories.Array.size
+      propertyPath: DEBUGLevelIndex
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 7664281169987609939, guid: 7ee61c398f688a549bbf87679d747e4e, type: 3}
-      propertyPath: DEBUGLevelIndex
-      value: 1
+      propertyPath: categories.Array.size
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 7664281169987609939, guid: 7ee61c398f688a549bbf87679d747e4e, type: 3}
       propertyPath: categories.Array.data[0]

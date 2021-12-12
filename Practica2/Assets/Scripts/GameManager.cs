@@ -147,7 +147,7 @@ namespace flow
         {
             string[] aux = selectedPack.levels.ToString().Split('\n');
             
-            if (lvl>=0 && lvl<aux.Length-1)
+            if (lvl>=0 && lvl<aux.Length-1) //-1 porque el tamaño del level pack es de 151
             {
                 selectedLevel = aux[lvl];
                 lvlIndex = lvl;
@@ -158,6 +158,7 @@ namespace flow
 
         public LevelPack getLevelPack() { return selectedPack; }
         public PackCategory getPackCategory() { return selectedCategory; }
+        public int getLevelPackSize() { return selectedPack.levels.ToString().Split('\n').Length; }
 
         public void saveGame()
         {
