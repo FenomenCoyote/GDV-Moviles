@@ -44,7 +44,9 @@ namespace flow
             width = w;
             height = h;
 
-            offset = new Vector3((width) / 2.0f, (-height) / 2.0f);
+            float auxW = w % 2 == 0 ? w + 0.5f : w;
+            float auxH = h % 2 == 0 ? h + 0.5f : h;
+            offset = new Vector3((auxW) / 2.0f, (-auxH) / 2.0f);
         }
 
         public bool justDown()

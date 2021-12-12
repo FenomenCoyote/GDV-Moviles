@@ -25,6 +25,8 @@ namespace flow
         private Color lastSolution;
         private int steps;
 
+        private AStar aStar;
+
         [SerializeField]
         Text stepsText;
 
@@ -47,6 +49,7 @@ namespace flow
             draging = false;
             pipes = new Dictionary<Color, Logic.Pipe>();
             steps = 0;
+            aStar = new AStar();
         }
 
 #if UNITY_EDITOR
@@ -92,7 +95,7 @@ namespace flow
 
             bool updateMap = false;
 
-            if (input.justDown())
+            if (input.justDown() && input.isInside())
             {
                 inputDown();
                 updateMap = true;
@@ -152,6 +155,17 @@ namespace flow
                 currentPipe.notDraggingAnymore();
             }
 
+            if (!input.isInside())
+                AStar(input.getMouseTilePos());
+
+            foreach (KeyValuePair<Color, Logic.Pipe> pipe in pipes)
+            {
+                if (dragingColor != null && pipe.Key == dragingColor)
+                    continue;
+
+                pipe.Value.finallyCut();
+            }
+
             inputPointerSprite.enabled = false;
             resetMyInfo();
         }
@@ -159,6 +173,10 @@ namespace flow
         private void inputDrag()
         {
             Vector2 pos = input.getMouseTilePos();
+
+            if (getTile(pos).isInitialOrEnd() && getTile(pos).getColor() != dragingColor ||
+                currentPipe.getOrigin() == pos)
+                return;
 
             AStar(pos);
         }
@@ -174,14 +192,31 @@ namespace flow
                 return;
             }
 
-            // :D
+            List<Vector2> path = aStar.Astrella(origin, dest, dragingColor);
+            path.RemoveAt(0);
+            currentPipe.addPathFromOrigin(path);
 
+            foreach (KeyValuePair<Color, Logic.Pipe> pipe in pipes)
+            {
+                if (dragingColor != null && pipe.Key == dragingColor)
+                    continue;
 
+                pipe.Value.provisionalCut(currentPipe);
+            }
         }
 
 
+        private void clear()
+        {
+            foreach(Tile t in tiles)
+            {
+                t.disableAll();
+            }
+        }
+
         private void render()
         {
+            clear();
             //render each pipe
             foreach (KeyValuePair<Color, Logic.Pipe> pipe in pipes)
             {
@@ -198,31 +233,71 @@ namespace flow
 
         private void renderPipe(Color color, Logic.Pipe pipe, bool highLight)
         {
-            for (int i = 0; i < pipe.positions.Count; ++i)
+            if(pipe.provisionalIndex == 1000)
             {
-                Tile t1 = getTile(pipe.positions[i]);
-                t1.setColor(color);
-
-                if (highLight && i >= pipe.provisionalIndex && pipe.positions.Count > 1)
+                for (int i = 0; i < pipe.positions.Count; ++i)
                 {
-                    t1.setHightLock(false);
-                    t1.enableHightLight();
-                    t1.setHightLock(true);
-                    continue;
+                    Tile t1 = getTile(pipe.positions[i]);
+                    t1.setColor(color);
+
+                    t1.setActiveTile(true);
+
+                    if (i == pipe.positions.Count - 1)
+                        t1.enableCircle();
+
+                    if (highLight && pipe.positions.Count > 1)
+                        t1.enableHightLight();
+
+                    if (i == pipe.positions.Count - 1)
+                        break;
+
+                    Tile t2 = getTile(pipe.positions[i + 1]);
+
+                    Logic.Dir dir = getDir(pipe.positions[i + 1], pipe.positions[i]);
+
+                    t1.enableDirectionSprite(dir);
+                    t2.enableDirectionSprite(Logic.Direction.Opposite(dir));
+                }
+            }
+            else
+            {
+                for (int i = 0; i < pipe.provisionalIndex - 1; ++i)
+                {
+                    Tile t1 = getTile(pipe.positions[i]);
+                    t1.setColor(color);
+
+                    t1.setActiveTile(true);
+
+                    if (highLight && pipe.positions.Count > 1)
+                        t1.enableHightLight();
+
+                    if (i == pipe.positions.Count - 1)
+                        break;
+
+                    Tile t2 = getTile(pipe.positions[i + 1]);
+                    t2.setColor(color);
+                    if (highLight && pipe.positions.Count > 1)
+                        t2.enableHightLight();
+
+                    Logic.Dir dir = getDir(pipe.positions[i + 1], pipe.positions[i]);
+
+                    t1.enableDirectionSprite(dir);
+                    t2.enableDirectionSprite(Logic.Direction.Opposite(dir));
                 }
 
-                if (highLight && pipe.positions.Count > 1)
-                    t1.enableHightLight();
+                for (int i = pipe.provisionalIndex; i < pipe.positions.Count; ++i)
+                {
+                    Tile t1 = getTile(pipe.positions[i]);
+                    t1.setColor(color);
 
-                if (i == pipe.positions.Count - 1)
-                    break;
-
-                Tile t2 = getTile(pipe.positions[i + 1]);
-
-                Logic.Dir dir = getDir(pipe.positions[i + 1], pipe.positions[i]);
-
-                t1.enableDirectionSprite(dir);
-                t2.enableDirectionSprite(Logic.Direction.Opposite(dir));
+                    if (highLight && pipe.positions.Count > 1)
+                    {
+                        t1.setHightLock(false);
+                        t1.enableHightLight();
+                        t1.setHightLock(true);
+                        continue;
+                    }
+                }
             }
         }
 
@@ -275,7 +350,6 @@ namespace flow
 
             height = map.getLevelHeight();
             width = map.getLevelWidth();
-
 
             setScale();
 
@@ -351,6 +425,8 @@ namespace flow
                 getTile(origin).setWall(dir);
                 getTile(dest).setWall(Logic.Direction.Opposite(dir));
             }
+
+            aStar.RecibeLaberinto(tiles);
 
             flowsText.text = "flujos: 0/" + pipes.Count;
             percentageText.text = "tubería: 0%";

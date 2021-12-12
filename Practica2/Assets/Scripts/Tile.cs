@@ -163,13 +163,15 @@ namespace flow
 
         public void disableAll()
         {
-            //circle.enabled = false;
+            disableCircle();
             directionUp.enabled = false;
             directionDown.enabled = false;
             directionLeft.enabled = false;
             directionRight.enabled = false;
             backGroundHighlight.enabled = false;
+            lockHighLightColor = false;
             check.enabled = false;
+            setActiveTile(false);
         }
 
         public void setCircleBig()

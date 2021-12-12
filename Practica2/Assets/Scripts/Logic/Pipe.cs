@@ -51,11 +51,26 @@ namespace flow.Logic
 
         public void startDrag(Vector2 pos)
         {
-            cutMyself(pos);
+            if (pos == startPos || pos == finalPos)
+            {
+                positions.Clear();
+
+                closed = false;
+
+                positions.Add(pos);
+            }
+            else
+            {
+                if(cutMyself(pos))
+                    closed = false;
+            }
         }
 
         public Vector2 getOrigin()
         {
+            if(checkPipeClosed())
+                positions.RemoveAt(positions.Count - 1);
+
             return positions[positions.Count - 1];
         }
 
@@ -83,12 +98,37 @@ namespace flow.Logic
             return true;
         }
 
+
+        public void finallyCut()
+        {
+            if (provisionalIndex == 1000)
+                return;
+
+            positions.RemoveRange(provisionalIndex, positions.Count - provisionalIndex);
+            provisionalIndex = 1000;
+        }
+
+
         private int isCuttingThisPipe(Pipe other)
         {
             int i = 0;
             foreach (Vector2 pos in positions)
             {
                 if (other.positions.Contains(pos))
+                    return i;
+
+                ++i;
+            }
+
+            return -1;
+        }
+
+        private int isCuttingThisPipe(List<Vector2> path)
+        {
+            int i = 0;
+            foreach (Vector2 pos in positions)
+            {
+                if (path.Contains(pos))
                     return i;
 
                 ++i;
@@ -120,36 +160,45 @@ namespace flow.Logic
 
         public bool cutMyself(Vector2 pos)
         {  
-            if (pos == startPos || pos == finalPos)
+            int index = positions.IndexOf(pos);
+
+            if(index == 0 && positions.Count > 1)
             {
                 positions.Clear();
-
-                closed = false;
-               
                 positions.Add(pos);
-
                 return true;
+            }
+
+            if (index < 0 || index == positions.Count - 1)
+                return false;
+
+            if (closed)
+            {
+                openPipe(index);
+                return true;
+            }
+               
+            ++index;
+            while(index < positions.Count)
+            {
+                positions.RemoveAt(index);
+            }
+
+            return true;
+        }
+
+        public void addPathFromOrigin(List<Vector2> path)
+        {
+            int index = isCuttingThisPipe(path);
+
+            if(index < 0)
+            {
+                positions.AddRange(path);
+                return;
             }
             else
             {
-                int index = positions.IndexOf(pos);
-
-                if (index <= 0 || index == positions.Count - 1)
-                    return false;
-
-                if (closed)
-                {
-                    openPipe(index);
-                    return true;
-                }
-               
-                ++index;
-                while(index < positions.Count)
-                {
-                    positions.RemoveAt(index);
-                }
-
-                return true;
+                cutMyself(positions[index]);
             }
         }
 
