@@ -2928,14 +2928,14 @@ PrefabInstance:
     - target: {fileID: 7664281169987609939, guid: 7ee61c398f688a549bbf87679d747e4e, type: 3}
       propertyPath: DEBUGPack
       value: 
-      objectReference: {fileID: 11400000, guid: 8eabdb9fd3c2b264ba906225d3196f49, type: 2}
+      objectReference: {fileID: 11400000, guid: e1bcf9a6fe8d8a4449c77763c959c6a4, type: 2}
     - target: {fileID: 7664281169987609939, guid: 7ee61c398f688a549bbf87679d747e4e, type: 3}
       propertyPath: levelMngr
       value: 
       objectReference: {fileID: 643610038}
     - target: {fileID: 7664281169987609939, guid: 7ee61c398f688a549bbf87679d747e4e, type: 3}
       propertyPath: DEBUGLevel
-      value: 31
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 7664281169987609939, guid: 7ee61c398f688a549bbf87679d747e4e, type: 3}
       propertyPath: DEBUGCategory

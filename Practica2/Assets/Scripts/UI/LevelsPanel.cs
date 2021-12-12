@@ -18,10 +18,23 @@ namespace flow.UI {
             dimensionsText.text = s;
         }
        
-        public void setlvlButton(Color c, string lvl, int number, int nPanel)
+        public void setlvlButton(Color c, string lvl, int number, int nPanel, Logic.Level logicLevel)
         {
-            lvlButton[number].setButtonLevelColor(c);
-            lvlButton[number].setLevelInfo(lvl, nPanel);
+            LevelButton button = lvlButton[number];
+
+            button.setButtonLevelColor(c);
+            button.setLevelInfo(lvl, nPanel);
+
+            if (logicLevel.locked)
+            {
+                button.enableLock(true);
+            }
+            else if(logicLevel.completed)
+            {
+                int nPipes = int.Parse(lvl.ToString().Split(',')[3]);
+                if (logicLevel.record == nPipes) button.enableStar(true);
+                else button.enableCheck(true);
+            }
         }
 
         public float getWidth() 

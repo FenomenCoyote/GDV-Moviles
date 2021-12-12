@@ -39,15 +39,19 @@ namespace flow.UI
             category = GameManager.Instance.getPackCategory();
             pack = GameManager.Instance.getLevelPack();
 
+            //Texto nombre categoría
             categoryText.text = pack.packName;
             categoryText.color = category.categoryColor;
             check.color = category.categoryColor;
 
+            Logic.Level[] logicLevels = GameManager.Instance.getState().getCategoryByName(category.categoryName)
+                .getPackByName(pack.packName).levels;
             string[] levels = GameManager.Instance.getLevelPack().levels.ToString().Split('\n');
 
             float auxWidth = 0;
             int nPanel = -1;
-            for (int i = 0; i < levels.Length / panelSize; i++)
+            //Recorre los paneles
+            for (int i = 0; i < (levels.Length - 1) / panelSize; i++)
             {
                 if (levels[i * panelSize].Split(',')[2] == "1")
                     nPanel++;
@@ -56,9 +60,11 @@ namespace flow.UI
                 auxWidth += lvlPanel.getWidth() + hLayout.spacing;
 
                 lvlPanel.setDimensionsText(pack.levelPanelName[i]);
+                //Recorre los niveles del panel
                 for (int j = 0; j < panelSize; j++)
                 {
-                    lvlPanel.setlvlButton(pack.levelPanelColors[i], levels[i * panelSize + j], j, nPanel);
+                    int nLevel = i * panelSize + j;
+                    lvlPanel.setlvlButton(pack.levelPanelColors[i], levels[nLevel], j, nPanel, logicLevels[nLevel]);
                 }
             }
 

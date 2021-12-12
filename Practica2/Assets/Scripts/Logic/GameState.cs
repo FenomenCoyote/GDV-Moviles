@@ -14,6 +14,7 @@ namespace flow.Logic
     [Serializable]
     public struct LvlPack
     {
+        public string name;
         public int completedLevels;
         public Level[] levels;
     }
@@ -21,7 +22,15 @@ namespace flow.Logic
     [Serializable]
     public struct Category
     {
+        public string name;
         public LvlPack[] packs;
+
+        public LvlPack getPackByName(string name)
+        {
+            int i = 0;
+            while (packs[i].name != name) i++;
+            return packs[i];
+        }
     }
 
     [Serializable]
@@ -40,30 +49,46 @@ namespace flow.Logic
                 LevelPack[] packs = gmCategories[c].levelPacks;
                 int nPacks = packs.Length;
                 categories[c].packs = new LvlPack[nPacks];
+                categories[c].name = gmCategories[c].categoryName;
 
                 for (int p = 0; p < nPacks; ++p)
                 {
-                    categories[c].packs[p].completedLevels = 0;
+                    LvlPack pack = categories[c].packs[p];
+
+                    pack.completedLevels = 0;
+                    pack.name = gmCategories[c].levelPacks[p].packName;
 
                     string[] levelsInfo = packs[p].levels.ToString().Split('\n');
-                    categories[c].packs[p].levels = new Level[levelsInfo.Length];
+                    pack.levels = new Level[levelsInfo.Length];
 
-                    Level level = categories[c].packs[p].levels[0];
+                    //El primer nivel es el único desbloqueado
+                    Level level = pack.levels[0];
                     level.record = 0;
                     level.completed = false;
                     level.locked = false;
+                    pack.levels[0] = level;
 
-                    for (int l = 1; l < levelsInfo.Length; ++l)
+                    for (int l = 1; l < levelsInfo.Length - 1; ++l)
                     {
-                        level = categories[c].packs[p].levels[l];
+                        level = pack.levels[l];
                         level = new Level();
 
                         level.record = 0;
                         level.completed = false;
                         level.locked = true;
+                        pack.levels[l] = level;
                     }
+
+                    categories[c].packs[p] = pack;
                 }
             }
+        }
+
+        public Category getCategoryByName(string name)
+        {
+            int i = 0;
+            while (categories[i].name != name) i++;
+            return categories[i];
         }
     }
 }

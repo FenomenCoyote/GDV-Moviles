@@ -61,7 +61,8 @@ namespace flow.UI
                     packButton.setPack(pack, category);
                     auxHeight += packButton.getHeight() + vOrder.spacing;
 
-                    int nLeves = pack.levels.ToString().Split('\n').Length;
+                    string[] levels = pack.levels.ToString().Split('\n');
+                    int nLeves = levels.Length - 1;
                     packButton.setPackProgress(state.categories[c].packs[p].completedLevels, nLeves);
                 }
             }

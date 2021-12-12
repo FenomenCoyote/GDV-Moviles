@@ -14,10 +14,7 @@ namespace flow
             Level = 2,
         }
 
-        private Logic.GameState state;
-
-        [SerializeField] string saveFile;
-        private ProgressSaverLoader saver;
+        ProgressSaverLoader saver;
 
         [SerializeField]
         private Scene scene;
@@ -76,14 +73,8 @@ namespace flow
             Instance = this;
             DontDestroyOnLoad(this.gameObject);
 
-            saver = new ProgressSaverLoader();
-            state = new Logic.GameState();
-            if (!System.IO.File.Exists(saveFile))
-            {
-                state.init(categories);
-            }
-            else loadGame();
-
+            saver = GetComponent<ProgressSaverLoader>();
+            saver.init();
         }
 
         private void setInfo(LevelManager lm, PackCategory[] categories, Scene scene)
@@ -98,21 +89,11 @@ namespace flow
             }
         }
 
-        private void Update()
-        {
-            if (Input.GetKeyDown(KeyCode.S))
-            {
-                saveGame();
-            }
-            if (Input.GetKeyDown(KeyCode.L))
-            {
-                loadGame();
-            }
+        public uint getNHints() { return saver.getNHints(); }
+
+        public PackCategory[] getPackCategories() { 
+            return categories; 
         }
-
-        public uint getNHints() { return state.nHints; }
-
-        public PackCategory[] getPackCategories() { return categories; }
 
         public void selectPack(LevelPack pack, PackCategory category)
         {
@@ -144,18 +125,10 @@ namespace flow
 
         public void saveGame()
         {
-            saver.saveProgress(state, saveFile);
+            saver.saveProgress();
         }
 
-        public void loadGame()
-        {
-            Logic.GameState auxState = saver.loadProgress(saveFile);
-            if (auxState != null) {
-                state = auxState;
-            }
-        }
-
-        public Logic.GameState getState() { return state; }
+        public Logic.GameState getState() { return saver.getState(); }
 
     }
 }

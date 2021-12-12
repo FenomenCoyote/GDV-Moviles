@@ -8,9 +8,12 @@ using System;
 
 namespace flow
 {
-    public class ProgressSaverLoader
+    public class ProgressSaverLoader : MonoBehaviour
     {
         SHA256 sha256;
+        private Logic.GameState state;
+
+        [SerializeField] string saveFile;
 
         private string pepper = "x49378jhx10ex456e12342e21axew";
 
@@ -19,11 +22,31 @@ namespace flow
             sha256 = SHA256.Create();
         }
 
+        private void Update()
+        {
+            if (Input.GetKeyDown(KeyCode.L))
+            {
+                loadProgress();
+            }
+            if (Input.GetKeyDown(KeyCode.S))
+            {
+                saveProgress();
+            }
+        }
 
-        public void saveProgress(Logic.GameState stateToSave, string saveFile)
+        public void init() {
+            state = new Logic.GameState();
+            if (!System.IO.File.Exists(saveFile))
+            {
+                state.init(GameManager.Instance.getPackCategories());
+            }
+            else loadProgress();
+        }
+
+        public void saveProgress()
         {
             Logic.Save save = new Logic.Save();
-            save.gameState = stateToSave;
+            save.gameState = state;
 
             string serializedState = JsonUtility.ToJson(save.gameState);
             //serializedState += pepper;
@@ -40,7 +63,7 @@ namespace flow
         }
 
 
-        public Logic.GameState loadProgress(string saveFile)
+        public void loadProgress()
         {
             string readSave = File.ReadAllText(saveFile, Encoding.UTF8);
 
@@ -53,7 +76,7 @@ namespace flow
             catch (Exception e)
             {
                 Debug.Log("Detectado intento de hack");
-                return null;
+                return;
             }
 
             //Comprobacion de hash
@@ -67,11 +90,13 @@ namespace flow
             if (string.Compare(readHash, actualHash) != 0)
             {
                 Debug.Log("Detectado intento de hack");
-                return null;
+                return;
             }
 
-            else return save.gameState;
+            state = save.gameState;
         }
 
+        public uint getNHints() { return state.nHints; }
+        public Logic.GameState getState() { return state; }
     }
 }

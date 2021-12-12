@@ -10,6 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 7664281169987609938}
   - component: {fileID: 7664281169987609939}
+  - component: {fileID: 4810391906833929627}
   m_Layer: 0
   m_Name: GameManager
   m_TagString: Untagged
@@ -47,3 +48,20 @@ MonoBehaviour:
   categories:
   - {fileID: 11400000, guid: 86000311f0977a642bcfe7548dd3bdd7, type: 2}
   levelMngr: {fileID: 0}
+  DEBUGPack: {fileID: 0}
+  DEBUGCategory: {fileID: 0}
+  DEBUGLevel: 0
+  DEBUGPanelNumber: 0
+--- !u!114 &4810391906833929627
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7664281169987609940}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e120629e995303f4692d84fbb7d6fb00, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  saveFile: save.json
