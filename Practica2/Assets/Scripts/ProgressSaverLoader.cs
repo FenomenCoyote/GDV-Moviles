@@ -34,7 +34,8 @@ namespace flow
             }
         }
 
-        public void init() {
+        public void init()
+        {
             state = new Logic.GameState();
             if (!System.IO.File.Exists(saveFile))
             {
@@ -43,7 +44,7 @@ namespace flow
             else loadProgress();
         }
 
-        public void saveProgress()
+        private void saveProgress()
         {
             Logic.Save save = new Logic.Save();
             save.gameState = state;
@@ -54,7 +55,7 @@ namespace flow
             save.hashCode = Encoding.UTF8.GetString(sha256.ComputeHash(Encoding.UTF8.GetBytes(serializedState)));
 
             string serializedSave = JsonUtility.ToJson(save);
-            
+
             byte[] json = Encoding.UTF8.GetBytes(serializedSave);
 
             FileStream file = File.Open(saveFile, FileMode.Create);
@@ -63,7 +64,7 @@ namespace flow
         }
 
 
-        public void loadProgress()
+        private void loadProgress()
         {
             string readSave = File.ReadAllText(saveFile, Encoding.UTF8);
 
@@ -71,7 +72,7 @@ namespace flow
 
             try
             {
-                 save = JsonUtility.FromJson<Logic.Save>(readSave);
+                save = JsonUtility.FromJson<Logic.Save>(readSave);
             }
             catch (Exception e)
             {
@@ -94,6 +95,28 @@ namespace flow
             }
 
             state = save.gameState;
+        }
+
+        public void levelFinished(int steps, int lvlIndex, PackCategory selectedCategory, LevelPack selectedPack)
+        {
+            Logic.LvlPack pack = state.getCategoryByName(selectedCategory.categoryName).getPackByName(selectedPack.packName);
+            Logic.Level level = pack.levels[lvlIndex];
+            if (!level.completed)
+            {
+                level.completed = true;
+                pack.completedLevels++;
+                level.record = steps;
+                //Desbloquear siguiente nivel
+                if (lvlIndex < pack.levels.Length - 1)
+                    pack.levels[lvlIndex + 1].locked = false;
+            }
+            else if (level.record > steps)
+            {
+                level.record = steps;
+            }
+            state.getCategoryByName(selectedCategory.categoryName).getPackByName(selectedPack.packName).levels[lvlIndex] = level;
+
+            saveProgress();
         }
 
         public uint getNHints() { return state.nHints; }

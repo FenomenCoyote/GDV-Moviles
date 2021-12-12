@@ -58,7 +58,6 @@ namespace flow.UI
                     nPanel++;
                 }
 
-
                 LevelsPanel lvlPanel = Instantiate(levelsPanel, transform);
                 auxWidth += lvlPanel.getWidth() + hLayout.spacing;
 

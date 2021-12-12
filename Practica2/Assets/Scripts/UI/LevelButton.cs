@@ -2,24 +2,27 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
-namespace flow.UI { 
+namespace flow.UI
+{
     public class LevelButton : MonoBehaviour
     {
-        [SerializeField]Text levelTextNumber;
-        [SerializeField]Image check;
-        [SerializeField]Image lockImg;
-        [SerializeField]Image star;
+        [SerializeField] Text levelTextNumber;
+        [SerializeField] Image check;
+        [SerializeField] Image lockImg;
+        [SerializeField] Image star;
 
         Image img;
         RectTransform rectTr;
         Button button;
+
+        bool locked;
 
         string levelInfo;
         int nPanel;
         int lvlIndex;
 
         void Awake()
-        {           
+        {
             img = GetComponent<Image>();
             rectTr = GetComponent<RectTransform>();
             button = GetComponent<Button>();
@@ -35,7 +38,7 @@ namespace flow.UI {
             img.color = c;
         }
 
-        public void setLevelInfo(string lvl, int nPanel,int lvlIndex)
+        public void setLevelInfo(string lvl, int nPanel, int lvlIndex)
         {
             levelTextNumber.text = lvl.Split(',')[2];
             levelInfo = lvl;
@@ -49,6 +52,7 @@ namespace flow.UI {
         }
         public void enableLock(bool b)
         {
+            locked = b;
             lockImg.enabled = b;
         }
         public void enableStar(bool b)
@@ -63,7 +67,8 @@ namespace flow.UI {
 
         private void clickCallback()
         {
-            GameManager.Instance.setLevel(levelInfo, lvlIndex, nPanel);
+            if (!locked)
+                GameManager.Instance.setLevel(levelInfo, lvlIndex, nPanel);
         }
 
     }

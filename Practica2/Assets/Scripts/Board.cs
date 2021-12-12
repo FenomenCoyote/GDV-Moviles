@@ -40,6 +40,9 @@ namespace flow
         Text percentageText;
 
         [SerializeField]
+        Text recordText;
+
+        [SerializeField]
         SpriteRenderer inputPointerSprite;
 
         [SerializeField]
@@ -130,7 +133,7 @@ namespace flow
 
                 if(completed == pipes.Count)
                 {
-                    levelManager.levelDone(pipes.Count, steps);
+                    levelManager.levelDone(steps);
                 }
             }
         }
@@ -364,7 +367,7 @@ namespace flow
         }
 
 
-        public void setForGame(Logic.Map map, Color[] colors, Color categoryColor)
+        public void setForGame(Logic.Map map, Color[] colors, Color categoryColor, int record)
         {
             Vector3 pos = transform.position;
 
@@ -478,6 +481,7 @@ namespace flow
             flowsText.text = "flujos: 0/" + pipes.Count;
             percentageText.text = "tubería: 0%";
             stepsText.text = "pasos: 0";
+            recordText.text = "récord: " + record.ToString();
         }
 
         private void setScale()

@@ -31,7 +31,8 @@ namespace flow.UI {
             }
             else if(logicLevel.completed)
             {
-                int nPipes = int.Parse(lvl.ToString().Split(',')[3]);
+                string[] header = lvl.ToString().Split(';')[0].Split(',');
+                int nPipes = int.Parse(header[3]);
                 if (logicLevel.record == nPipes) button.enableStar(true);
                 else button.enableCheck(true);
             }

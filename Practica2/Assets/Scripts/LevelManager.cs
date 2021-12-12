@@ -22,6 +22,9 @@ namespace flow {
         [SerializeField]
         private Image previousLevelButtonImg;
 
+        [SerializeField]
+        private UI.EndImage endImage;
+
         private string level;
         private LevelPack pack;
         private PackCategory category;
@@ -50,16 +53,27 @@ namespace flow {
             levelText.color = category.categoryColor;
             boardSizeText.text = map.getLevelWidth().ToString() + "x" + map.getLevelHeight();
 
+            Logic.GameState state = GameManager.Instance.getState();
+            Logic.Level logicLevel = state.getCategoryByName(category.categoryName).getPackByName(pack.packName).levels[currentLvlIndex];
+            if (logicLevel.completed)
+            {
+                if (logicLevel.record == map.getNPipes())
+                    endImage.enableStar(true);
+                else endImage.enableCheck(true);
+            }
+    
+
             if (currentLvlIndex == 0) previousLevelButtonImg.color = Color.gray;
             //-2 porque el tamaño del level pack es 151
             else if (currentLvlIndex >= GameManager.Instance.getLevelPackSize()-2) nextLevelButtonImg.color = Color.gray;
 
-            board.setForGame(map, pack.theme.colors, category.categoryColor);
+            board.setForGame(map, pack.theme.colors, category.categoryColor, logicLevel.record);
         }
 
-        public void levelDone(int perfectGame, int steps)
+        public void levelDone(int steps)
         {
             Debug.Log("Level done");
+            GameManager.Instance.levelFinished(steps);
         }
 
         public void exitLevel()

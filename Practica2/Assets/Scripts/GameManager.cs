@@ -136,17 +136,16 @@ namespace flow
                 SceneManager.LoadScene((int)Scene.Level);
             }           
         }
+        public void levelFinished(int steps)
+        {
+            saver.levelFinished(steps, lvlIndex, selectedCategory, selectedPack);
+        }
+
+        public Logic.GameState getState() { return saver.getState(); }
 
         public LevelPack getLevelPack() { return selectedPack; }
         public PackCategory getPackCategory() { return selectedCategory; }
         public int getLevelPackSize() { return selectedPack.levels.ToString().Split('\n').Length; }
-
-        public void saveGame()
-        {
-            saver.saveProgress();
-        }
-
-        public Logic.GameState getState() { return saver.getState(); }
 
     }
 }
