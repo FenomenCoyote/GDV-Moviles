@@ -18,12 +18,12 @@ namespace flow.UI {
             dimensionsText.text = s;
         }
        
-        public void setlvlButton(Color c, string lvl, int number, int nPanel, Logic.Level logicLevel)
+        public void setlvlButton(Color c, string lvl, int number, int nPanel, int lvlIndex, Logic.Level logicLevel)
         {
             LevelButton button = lvlButton[number];
 
             button.setButtonLevelColor(c);
-            button.setLevelInfo(lvl, nPanel);
+            button.setLevelInfo(lvl, nPanel, lvlIndex);
 
             if (logicLevel.locked)
             {
