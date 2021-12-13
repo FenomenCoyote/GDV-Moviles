@@ -2120,9 +2120,9 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 369493014}
-        m_TargetAssemblyTypeName: flow.Board, Assembly-CSharp
-        m_MethodName: resetBoard
+      - m_Target: {fileID: 643610038}
+        m_TargetAssemblyTypeName: flow.LevelManager, Assembly-CSharp
+        m_MethodName: resetLevel
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
