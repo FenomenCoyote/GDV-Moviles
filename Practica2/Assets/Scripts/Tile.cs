@@ -239,6 +239,11 @@ namespace flow
             return activeTile;
         }
 
+        public bool isEmpty()
+        {
+            return empty;
+        }
+
         public bool isInitialOrEnd()
         {
             return initialOrEnd;

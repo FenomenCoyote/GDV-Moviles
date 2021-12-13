@@ -46,6 +46,7 @@ namespace flow.UI
 
             Logic.Level[] logicLevels = GameManager.Instance.getState().getCategoryByName(category.categoryName)
                 .getPackByName(pack.packName).levels;
+
             string[] levels = GameManager.Instance.getLevelPack().levels.ToString().Split('\n');
 
             float auxWidth = 0;

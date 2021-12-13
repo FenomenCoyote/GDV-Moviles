@@ -17,6 +17,9 @@ namespace flow {
         private Text boardSizeText;
 
         [SerializeField]
+        private Text recordText;
+
+        [SerializeField]
         private Image nextLevelButtonImg;
 
         [SerializeField]
@@ -72,8 +75,26 @@ namespace flow {
 
         public void levelDone(int steps)
         {
-            Debug.Log("Level done");
             GameManager.Instance.levelFinished(steps);
+
+            //update level info
+
+            Logic.GameState state = GameManager.Instance.getState();
+            Logic.Level logicLevel = state.getCategoryByName(category.categoryName).getPackByName(pack.packName).levels[currentLvlIndex];
+
+            if (logicLevel.record == board.getNPipes())
+            {
+                recordText.text = "récord: " + logicLevel.record.ToString();
+                endImage.enableCheck(false);
+                endImage.enableStar(true);
+            }
+            else
+            {
+                endImage.enableStar(false);
+                endImage.enableCheck(true);
+            }
+
+
         }
 
         public void exitLevel()

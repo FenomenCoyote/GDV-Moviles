@@ -40,13 +40,15 @@ namespace flow
         Text percentageText;
 
         [SerializeField]
-        Text recordText;
-
-        [SerializeField]
         SpriteRenderer inputPointerSprite;
 
         [SerializeField]
         LevelManager levelManager;
+
+        public int getNPipes()
+        {
+            return pipes.Count;
+        }
 
         private void Awake()
         {
@@ -354,14 +356,18 @@ namespace flow
         private int getPercentage()
         {
             int active = 0;
+            int empties = 0;
             foreach (Tile t in tiles)
+            {
                 if (t.isActive()) ++active;
+                if (t.isEmpty()) ++empties;
+            }
 
             active -= pipes.Count * 2;
 
             active += getPipesCompleted() * 2;
 
-            float done = (float)active / (float)(width * height);
+            float done = (float)active / (float)(width * height - empties);
 
             return (int)(done * 100.0f);
         }
@@ -481,7 +487,6 @@ namespace flow
             flowsText.text = "flujos: 0/" + pipes.Count;
             percentageText.text = "tubería: 0%";
             stepsText.text = "pasos: 0";
-            recordText.text = "récord: " + record.ToString();
         }
 
         private void setScale()
@@ -503,6 +508,7 @@ namespace flow
                 p.reset();
             }
             steps = 0;
+            lastSolution = Color.black;
             resetMyInfo();
 
             foreach (Tile t in tiles)
