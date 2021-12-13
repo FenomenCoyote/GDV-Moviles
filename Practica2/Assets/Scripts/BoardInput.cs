@@ -14,6 +14,8 @@ namespace flow
         private Vector2 offset;
         private Vector2 mouseTilePos;
 
+        private bool disabled = false;
+
 #if UNITY_EDITOR
         void Start()
         {
@@ -21,21 +23,35 @@ namespace flow
         }
 #endif
 
+        public void disable()
+        {
+            disabled = true;
+            pressed = false;
+        }
+
+        public void enable()
+        {
+            disabled = false;
+        }
+
         public void updateInput()
         {
-            if (Input.GetMouseButtonDown(0))
+            if (!disabled)
             {
-                //Pressed if user clicked inside the board
-                pressed = calculateMouseTilePos();
-            }
-            else if (Input.GetMouseButtonUp(0))
-            {
-                //Only stop pressing after mouseUp
-                pressed = false;
-            }
-            else if (pressed)
-            {
-                calculateMouseTilePos();
+                if (Input.GetMouseButtonDown(0))
+                {
+                    //Pressed if user clicked inside the board
+                    pressed = calculateMouseTilePos();
+                }
+                else if (Input.GetMouseButtonUp(0))
+                {
+                    //Only stop pressing after mouseUp
+                    pressed = false;
+                }
+                else if (pressed)
+                {
+                    calculateMouseTilePos();
+                }
             }
         }
 
@@ -43,6 +59,8 @@ namespace flow
         {
             width = w;
             height = h;
+
+            disabled = false;
 
             float auxW = w % 2 == 0 ? w + 0.5f : w;
             float auxH = h % 2 == 0 ? h + 0.5f : h;

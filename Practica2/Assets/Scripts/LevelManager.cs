@@ -23,6 +23,9 @@ namespace flow {
         private Image nextLevelButtonImg;
 
         [SerializeField]
+        private Image nextLevelPanelButtonImg;
+
+        [SerializeField]
         private Image previousLevelButtonImg;
 
         [SerializeField]
@@ -70,13 +73,24 @@ namespace flow {
                     endImage.enableStar(true);
                 else endImage.enableCheck(true);
             }
-    
 
-            if (currentLvlIndex == 0) previousLevelButtonImg.color = Color.gray;
-            //-2 porque el tamaño del level pack es 151
-            else if (currentLvlIndex >= GameManager.Instance.getLevelPackSize()-2) nextLevelButtonImg.color = Color.gray;
+            if (currentLvlIndex == 0)
+            {
+                previousLevelButtonImg.color = Color.gray;
+            }
+            else if (currentLvlIndex >= GameManager.Instance.getLevelPackSize() - 2) { //-2 porque el tamaño del level pack es 151)
+                nextLevelButtonImg.color = Color.gray;
+                nextLevelPanelButtonImg.color = Color.gray;
+            }
 
             board.setForGame(map, pack.theme.colors, category.categoryColor, logicLevel.record);
+
+            levelDonePanel.SetActive(false);
+        }
+
+        public void resetLevel()
+        {
+            board.resetBoard();
 
             levelDonePanel.SetActive(false);
         }
@@ -104,6 +118,9 @@ namespace flow {
 
             levelDonePanel.SetActive(true);
             doneInStepsText.text = "You completed the level in " + steps + " moves.";
+
+            //disable board inputs
+            board.disableInput();
         }
 
         public void exitLevel()

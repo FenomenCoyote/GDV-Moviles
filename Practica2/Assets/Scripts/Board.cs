@@ -45,6 +45,12 @@ namespace flow
         [SerializeField]
         LevelManager levelManager;
 
+        public void disableInput()
+        {
+            if (input)
+                input.disable();
+        }
+
         public int getNPipes()
         {
             return pipes.Count;
@@ -515,6 +521,8 @@ namespace flow
             steps = 0;
             lastSolution = Color.black;
             resetMyInfo();
+
+            input.enable();
 
             foreach (Tile t in tiles)
             {
