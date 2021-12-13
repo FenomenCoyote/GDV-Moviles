@@ -19,11 +19,20 @@ namespace flow {
         [SerializeField]
         private Text recordText;
 
-        [SerializeField]
-        private Image nextLevelButtonImg;
 
         [SerializeField]
-        private Image nextLevelPanelButtonImg;
+        private Text completeText;
+        [SerializeField]
+        private GameObject nextLevelPanelButton;
+        [SerializeField]
+        private GameObject choosePackPanelButton;
+        [SerializeField]
+        private GameObject getMoreHintsPanelButton;
+        [SerializeField]
+        private GameObject getMoreLevelsPanelButton;
+
+        [SerializeField]
+        private Image nextLevelButtonImg;
 
         [SerializeField]
         private Image previousLevelButtonImg;
@@ -75,14 +84,14 @@ namespace flow {
 
                 recordText.text = "récord: " + logicLevel.record.ToString();
             }
-
+            int t = GameManager.Instance.getLevelPackSize();
             if (currentLvlIndex == 0)
             {
                 previousLevelButtonImg.color = Color.gray;
             }
             else if (currentLvlIndex >= GameManager.Instance.getLevelPackSize() - 2) { //-2 porque el tamaño del level pack es 151)
+                
                 nextLevelButtonImg.color = Color.gray;
-                nextLevelPanelButtonImg.color = Color.gray;
             }
 
             board.setForGame(map, pack.theme.colors, category.categoryColor, logicLevel.record);
@@ -118,8 +127,28 @@ namespace flow {
             recordText.text = "récord: " + logicLevel.record.ToString();
 
             levelDonePanel.SetActive(true);
-            doneInStepsText.text = "You completed the level in " + steps + " moves.";
+            //if we are complete the last level we hhave finished the leval pack
+            if (currentLvlIndex >= GameManager.Instance.getLevelPackSize() - 2)
+            {
+                completeText.text = "Congratulations!";
+                doneInStepsText.text = "You completed the" + pack.packName;
+                nextLevelPanelButton.SetActive(false);
+                getMoreHintsPanelButton.SetActive(false);
 
+                choosePackPanelButton.SetActive(true);
+                getMoreLevelsPanelButton.SetActive(true);
+            }
+            else 
+            {
+                completeText.text = "Level Complete!";
+                doneInStepsText.text = "You completed the level in " + steps + " moves.";
+                nextLevelPanelButton.SetActive(true);
+                getMoreHintsPanelButton.SetActive(true);
+
+                choosePackPanelButton.SetActive(false);
+                getMoreLevelsPanelButton.SetActive(false);
+            }
+            
             //disable board inputs
             board.disableInput();
         }
@@ -131,13 +160,22 @@ namespace flow {
 
         public void nextLevel()
         {
-           bool lockedNextLevel = GameManager.Instance.getState().getCategoryByName(category.categoryName).getPackByName(pack.packName).levels[currentLvlIndex+1].locked;
-           if(!lockedNextLevel) GameManager.Instance.selectLevel(currentLvlIndex + 1);
+            int nextLevel = currentLvlIndex + 1;
+            if(nextLevel<GameManager.Instance.getLevelPackSize()-1)
+            {
+                bool lockedNextLevel = GameManager.Instance.getState().getCategoryByName(category.categoryName).getPackByName(pack.packName).levels[nextLevel].locked;
+                if (!lockedNextLevel) GameManager.Instance.selectLevel(nextLevel);
+            }          
         }
 
         public void previousLevel()
         {
             GameManager.Instance.selectLevel(currentLvlIndex - 1);
+        }
+
+        public void goToSelectCategoryMenu()
+        {
+            GameManager.Instance.gotoSelectCategoryMenu();
         }
     }
 }
