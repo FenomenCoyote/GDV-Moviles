@@ -58,9 +58,6 @@ namespace flow.Logic
                 LevelPack[] packs = gmCategories[c].levelPacks;
                 int nPacks = packs.Length;
 
-                category.completedPacks = nPacks;
-                category.perfectPacks = nPacks;
-
                 category.packs = new LvlPack[nPacks];
                 category.name = gmCategories[c].categoryName;
 
@@ -76,9 +73,6 @@ namespace flow.Logic
 
                     string[] levelsInfo = packs[p].levels.ToString().Split('\n');
                     pack.levels = new Level[levelsInfo.Length - 1];
-
-                    pack.completedLevels = levelsInfo.Length - 1;
-                    pack.perfectLevels = levelsInfo.Length - 1;
 
                     //El primer nivel es el único desbloqueado
                     pack.levels[0] = new Level();
