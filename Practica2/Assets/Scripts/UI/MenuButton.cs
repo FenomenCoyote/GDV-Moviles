@@ -17,6 +17,9 @@ namespace flow.UI
         [SerializeField]
         Image finishedPackCheck;
 
+        [SerializeField]
+        Image perfectPackStar;
+
         RectTransform rectTransform;
 
         LevelPack pack;
@@ -57,9 +60,14 @@ namespace flow.UI
             packProgress.text = levelsDone.ToString() + "/" + totalLevels.ToString();
         }
 
-        public void enableFinishedPackCheck(bool enable)
+        public void enableCheck(bool enable)
         {
             finishedPackCheck.enabled = enable;
+        }
+
+        public void enableStar(bool enable)
+        {
+            perfectPackStar.enabled = enable;
         }
 
         public float getHeight()

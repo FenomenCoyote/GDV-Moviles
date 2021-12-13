@@ -72,6 +72,8 @@ namespace flow {
                 if (logicLevel.record == map.getNPipes())
                     endImage.enableStar(true);
                 else endImage.enableCheck(true);
+
+                recordText.text = "récord: " + logicLevel.record.ToString();
             }
 
             if (currentLvlIndex == 0)
@@ -97,16 +99,14 @@ namespace flow {
 
         public void levelDone(int steps)
         {
-            GameManager.Instance.levelFinished(steps);
-
-            //update level info
+            bool perfect = steps == board.getNPipes();
+            GameManager.Instance.levelFinished(steps, perfect);
 
             Logic.GameState state = GameManager.Instance.getState();
             Logic.Level logicLevel = state.getCategoryByName(category.categoryName).getPackByName(pack.packName).levels[currentLvlIndex];
 
             if (logicLevel.record == board.getNPipes())
             {
-                recordText.text = "récord: " + logicLevel.record.ToString();
                 endImage.enableCheck(false);
                 endImage.enableStar(true);
             }
@@ -115,6 +115,7 @@ namespace flow {
                 endImage.enableStar(false);
                 endImage.enableCheck(true);
             }
+            recordText.text = "récord: " + logicLevel.record.ToString();
 
             levelDonePanel.SetActive(true);
             doneInStepsText.text = "You completed the level in " + steps + " moves.";

@@ -136,9 +136,9 @@ namespace flow
                 SceneManager.LoadScene((int)Scene.Level);
             }           
         }
-        public void levelFinished(int steps)
+        public void levelFinished(int steps, bool perfect)
         {
-            saver.levelFinished(steps, lvlIndex, selectedCategory, selectedPack);
+            saver.levelFinished(steps, perfect, lvlIndex, selectedCategory, selectedPack);
         }
 
         public Logic.GameState getState() { return saver.getState(); }

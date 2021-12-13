@@ -10,8 +10,10 @@ namespace flow.UI
     {
 
         [SerializeField] Text categoryText;
-        [SerializeField] Image check;
         [SerializeField] Button backButton;
+
+        [SerializeField] Image check;
+        [SerializeField] Image star;
 
         [SerializeField] LevelsPanel levelsPanel;
 
@@ -44,8 +46,17 @@ namespace flow.UI
             categoryText.color = category.categoryColor;
             check.color = category.categoryColor;
 
-            Logic.Level[] logicLevels = GameManager.Instance.getState().getCategoryByName(category.categoryName)
-                .getPackByName(pack.packName).levels;
+            Logic.Category logicCategory = GameManager.Instance.getState().getCategoryByName(category.categoryName);
+            Logic.LvlPack logicPack = logicCategory.getPackByName(pack.packName);
+            int completedLevels = logicPack.completedLevels;
+            int perfectLevels = logicPack.perfectLevels;
+            int nLeves = logicPack.levels.Length;
+            if (completedLevels == nLeves && perfectLevels == nLeves)
+                star.enabled = true;
+            else if (completedLevels == nLeves)
+                check.enabled = true;
+
+            Logic.Level[] logicLevels = logicPack.levels;
 
             string[] levels = GameManager.Instance.getLevelPack().levels.ToString().Split('\n');
 

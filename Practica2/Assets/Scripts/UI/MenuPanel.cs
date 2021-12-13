@@ -8,6 +8,12 @@ public class MenuPanel : MonoBehaviour
     [SerializeField]
     Text panelText;
 
+    [SerializeField]
+    Image checkImg;
+
+    [SerializeField]
+    Image starImg;
+
     Image img;
     RectTransform rectTransform;
 
@@ -30,5 +36,15 @@ public class MenuPanel : MonoBehaviour
     public float getHeight()
     {
         return rectTransform.rect.height;
+    }
+
+    public void enableCheck(bool enable)
+    {
+        checkImg.enabled = enable;
+    }
+
+    public void enableStar(bool enable)
+    {
+        starImg.enabled = enable;
     }
 }

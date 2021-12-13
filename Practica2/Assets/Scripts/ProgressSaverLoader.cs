@@ -97,10 +97,12 @@ namespace flow
             state = save.gameState;
         }
 
-        public void levelFinished(int steps, int lvlIndex, PackCategory selectedCategory, LevelPack selectedPack)
+        public void levelFinished(int steps, bool perfect, int lvlIndex, PackCategory selectedCategory, LevelPack selectedPack)
         {
-            Logic.LvlPack pack = state.getCategoryByName(selectedCategory.categoryName).getPackByName(selectedPack.packName);
+            Logic.Category category = state.getCategoryByName(selectedCategory.categoryName);
+            Logic.LvlPack pack = category.getPackByName(selectedPack.packName);
             Logic.Level level = pack.levels[lvlIndex];
+
             if (!level.completed)
             {
                 level.completed = true;
@@ -109,11 +111,23 @@ namespace flow
                 //Desbloquear siguiente nivel
                 if (lvlIndex < pack.levels.Length - 1)
                     pack.levels[lvlIndex + 1].locked = false;
+                if (perfect)
+                {
+                    pack.perfectLevels++;
+                }
             }
             else if (level.record > steps)
             {
                 level.record = steps;
             }
+
+            if(pack.completedLevels == pack.levels.Length)
+            {
+                category.completedPacks++;
+                if (pack.perfectLevels == pack.levels.Length)
+                    category.perfectPacks++;
+            }
+
             state.getCategoryByName(selectedCategory.categoryName).getPackByName(selectedPack.packName).levels[lvlIndex] = level;
 
             saveProgress();

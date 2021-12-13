@@ -48,20 +48,40 @@ namespace flow.UI
                 PackCategory category = categories[c];
 
                 MenuPanel panel = Instantiate(categoryHeader, transform);
+
+                Logic.Category logicCategory = state.categories[c];
+
+                int completedPacks = logicCategory.completedPacks;
+                int perfectPacks = logicCategory.perfectPacks;
+                int nPacks = logicCategory.packs.Length;
+
+                if (completedPacks == nPacks && perfectPacks == nPacks)
+                    panel.enableStar(true);
+                else if (completedPacks == nPacks)
+                    panel.enableCheck(true);
+
                 panel.setColor(category.categoryColor);
                 panel.setText(category.categoryName);
                 auxHeight += panel.getHeight() + vOrder.spacing;
 
                 for (int p = 0; p < category.levelPacks.Length; ++p)
                 {
-                    LevelPack pack = category.levelPacks[p];
-
                     MenuButton packButton = Instantiate(categoryButton, transform);
+                    
+                    LevelPack pack = category.levelPacks[p];
+                    Logic.LvlPack logicPack = logicCategory.packs[p];
+
+                    int completedLevels = logicPack.completedLevels;
+                    int perfectLevels = logicPack.perfectLevels;
+                    int nLeves = logicCategory.packs[p].levels.Length;
+                    if (completedLevels == nLeves && perfectLevels == nLeves)
+                        packButton.enableStar(true);
+                    else if (completedLevels == nLeves)
+                        packButton.enableCheck(true);
+
                     packButton.setPack(pack, category);
                     auxHeight += packButton.getHeight() + vOrder.spacing;
 
-                    string[] levels = pack.levels.ToString().Split('\n');
-                    int nLeves = levels.Length - 1;
                     packButton.setPackProgress(state.categories[c].packs[p].completedLevels, nLeves);
                 }
             }
