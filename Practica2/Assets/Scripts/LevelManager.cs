@@ -83,7 +83,8 @@ namespace flow {
 
         public void nextLevel()
         {
-            GameManager.Instance.selectLevel(currentLvlIndex + 1);
+           bool lockedNextLevel = GameManager.Instance.getState().getCategoryByName(category.categoryName).getPackByName(pack.packName).levels[currentLvlIndex+1].locked;
+           if(!lockedNextLevel) GameManager.Instance.selectLevel(currentLvlIndex + 1);
         }
 
         public void previousLevel()
