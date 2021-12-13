@@ -50,6 +50,11 @@ namespace flow
             return pipes.Count;
         }
 
+        public int getSteps()
+        {
+            return steps;
+        }
+
         private void Awake()
         {
             input = GetComponent<BoardInput>();

@@ -26,6 +26,12 @@ namespace flow {
         private Image previousLevelButtonImg;
 
         [SerializeField]
+        private GameObject levelDonePanel;
+
+        [SerializeField]
+        private Text doneInStepsText;
+
+        [SerializeField]
         private UI.EndImage endImage;
 
         private string level;
@@ -71,6 +77,8 @@ namespace flow {
             else if (currentLvlIndex >= GameManager.Instance.getLevelPackSize()-2) nextLevelButtonImg.color = Color.gray;
 
             board.setForGame(map, pack.theme.colors, category.categoryColor, logicLevel.record);
+
+            levelDonePanel.SetActive(false);
         }
 
         public void levelDone(int steps)
@@ -94,7 +102,8 @@ namespace flow {
                 endImage.enableCheck(true);
             }
 
-
+            levelDonePanel.SetActive(true);
+            doneInStepsText.text = "You completed the level in " + steps + " moves.";
         }
 
         public void exitLevel()

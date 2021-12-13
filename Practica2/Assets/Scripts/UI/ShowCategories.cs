@@ -30,13 +30,12 @@ namespace flow.UI
         {
             float auxHeight = 0.0f;
 
-            nivelesText.text = "<color=red>n</color>" +
-                               "<color=green>i</color>" +
+            nivelesText.text = "<color=red>l</color>" +
+                               "<color=green>e</color>" +
                                "<color=blue>v</color>" +
                                "<color=yellow>e</color>" +
                                "<color=orange>l</color>" +
-                               "<color=red>e</color>" +
-                               "<color=green>s</color>";
+                               "<color=cyan>s</color>";
 
             //Esto es bucear en la escena?
             auxHeight += nivelesText.rectTransform.rect.height + vOrder.spacing;
