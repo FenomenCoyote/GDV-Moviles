@@ -40,7 +40,7 @@ namespace flow
         Text percentageText;
 
         [SerializeField]
-        SpriteRenderer inputPointerSprite;
+        InputPointerManager inputPointer;
 
         [SerializeField]
         LevelManager levelManager;
@@ -68,6 +68,8 @@ namespace flow
             pipes = new Dictionary<Color, Logic.Pipe>();
             steps = 0;
             aStar = new AStar();
+
+            inputPointer.enabled = false;
         }
 
 #if UNITY_EDITOR
@@ -98,7 +100,7 @@ namespace flow
                 Debug.LogError("percentageText not setted in Board");
                 return;
             }
-            if (inputPointerSprite == null)
+            if (inputPointer == null)
             {
                 Debug.LogError("inputPointerSprite not setted in Board");
                 return;
@@ -161,12 +163,9 @@ namespace flow
                 dragingColor = getTile(t).getColor();
 
                 //pointer things
-                inputPointerSprite.enabled = true;
-                float a = inputPointerSprite.color.a;
-                inputPointerSprite.color = dragingColor;
-                Color tempColor = inputPointerSprite.color;
-                tempColor.a = a;
-                inputPointerSprite.color = tempColor;
+                inputPointer.enabled = true;
+                inputPointer.setColor(dragingColor);
+                inputPointer.setCorrect();
 
                 currentPipe = pipes[dragingColor];
 
@@ -202,7 +201,8 @@ namespace flow
                 steps++;
             }
 
-            inputPointerSprite.enabled = false;
+            inputPointer.enabled = false;
+
             resetMyInfo();
         }
 
@@ -210,9 +210,16 @@ namespace flow
         {
             Vector2 pos = input.getMouseTilePos();
 
-            if (getTile(pos).isInitialOrEnd() && getTile(pos).getColor() != dragingColor ||
-                currentPipe.getOrigin() == pos)
+            inputPointer.setCorrect();
+
+            if (currentPipe.getOrigin() == pos)
                 return;
+
+            if (getTile(pos).isInitialOrEnd() && getTile(pos).getColor() != dragingColor)
+            {
+                inputPointer.setNotCorrect();
+                return;
+            }
 
             AStar(pos);
         }

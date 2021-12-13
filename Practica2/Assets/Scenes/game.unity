@@ -744,7 +744,7 @@ MonoBehaviour:
   stepsText: {fileID: 857414340}
   flowsText: {fileID: 304721895}
   percentageText: {fileID: 905929889}
-  inputPointerSprite: {fileID: 1494508209}
+  inputPointer: {fileID: 979598261}
   levelManager: {fileID: 643610038}
 --- !u!4 &369493015
 Transform:
@@ -2038,6 +2038,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0246ff9d908f1f44eb7bfa66ca9a7620, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  sprite: {fileID: 1494508209}
+  alphaCorrect: 0.5
+  alphaNotCorrect: 0.1
 --- !u!1 &1048971449
 GameObject:
   m_ObjectHideFlags: 0
