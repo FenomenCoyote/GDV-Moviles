@@ -89,7 +89,9 @@ namespace flow.Logic
 
                         level.record = 0;
                         level.completed = false;
-                        level.locked = true;
+                        if (gmCategories[c].allLevelsUnlocked)
+                            level.locked = false;
+                        else level.locked = true;
                     }
                 }
             }
