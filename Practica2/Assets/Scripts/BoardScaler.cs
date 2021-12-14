@@ -1,34 +1,53 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class BoardScaler : MonoBehaviour
 {
     [SerializeField]
     Camera camera;
 
+    [SerializeField]
+    RectTransform statisticText;
+
+    [SerializeField]
+    RectTransform backButton;
+
+    [SerializeField]
+    RectTransform resetLevelButton;
+
+    const float OFFSETX = 1f;
+    const float OFFSETY = 3f;
+
+    float heightInUnits;
+    float widthInUnits;
+
+    float topDownMargins;
+
+    private void Start()
+    {
+        heightInUnits = camera.orthographicSize * 2;
+        widthInUnits = heightInUnits * ((float)Screen.width / (float)Screen.height);
+
+        float unitsPerPixel = heightInUnits / Screen.height;
+        topDownMargins = 0;
+        topDownMargins += statisticText.rect.height * unitsPerPixel;
+        topDownMargins += backButton.rect.height * unitsPerPixel;
+        topDownMargins += resetLevelButton.rect.height * unitsPerPixel;
+    }
+
     public void fitInScreen(int boardWidth, int boardHeight)
     {
-        //float heightInUnits = camera.orthographicSize * 2;
-        //float widthInUnits = heightInUnits * ((float)Screen.width / (float)Screen.height);
+        float scale;
+        if (boardWidth >= boardHeight)
+            scale = (widthInUnits - OFFSETX) / boardWidth;
+        else
+        {
+            float offsetY = OFFSETY + topDownMargins;
+            scale = (heightInUnits - offsetY) / boardHeight;
+        }
 
-        //float maxWidth = widthInUnits - 1;
-        //float maxHeight = heightInUnits - 3;
-
-        //float propX = maxWidth / widthInUnits;
-        //float propY = maxHeight / heightInUnits;
-
-        //float scale = Mathf.Min(propX, propY);
-
-        //transform.localScale = new Vector3(scale, scale, 0);
-
-        float propX = 5.0f / boardWidth;
-        float propY = 8.0f / boardHeight;
-
-        float scale = Mathf.Min(propX, propY);
-        scale *= transform.localScale.x;
-
-        Vector3 newScale = new Vector3(scale, scale, 1);
-        transform.localScale = newScale;
+        transform.localScale = new Vector3(scale, scale, 0);
     }
 }

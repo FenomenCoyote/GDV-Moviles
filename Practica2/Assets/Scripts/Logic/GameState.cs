@@ -89,7 +89,7 @@ namespace flow.Logic
 
                         level.record = 0;
                         level.completed = false;
-                        level.locked = false;
+                        level.locked = true;
                     }
                 }
             }

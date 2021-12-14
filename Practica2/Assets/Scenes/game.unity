@@ -906,8 +906,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 317d913687c2f44449650649733a8561, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  canvas: {fileID: 1441652983}
   camera: {fileID: 656231773}
+  statisticText: {fileID: 1687517909}
+  backButton: {fileID: 2056720726}
+  resetLevelButton: {fileID: 1048971450}
 --- !u!1 &482520170
 GameObject:
   m_ObjectHideFlags: 0
