@@ -19,6 +19,8 @@ namespace flow {
         [SerializeField]
         private Text recordText;
 
+        [SerializeField]
+        private HintManager hintManager;
 
         [SerializeField]
         private Text completeText;
@@ -152,6 +154,18 @@ namespace flow {
             //disable board inputs
             board.disableInput();
         }
+
+        public void applyHint()
+        {
+            if (GameManager.Instance.getState().nHints <= 0)
+                return;
+
+            hintManager.hintsChanged((int)--GameManager.Instance.getState().nHints);
+
+            //aplicar la pista, llamar aqui a un metodo del board
+            board.nextHint();
+        }
+
 
         public void exitLevel()
         {

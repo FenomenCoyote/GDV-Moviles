@@ -27,6 +27,9 @@ namespace flow
 
         private AStar aStar;
 
+        private HashSet<Color> hintsDone;
+        private Dictionary<Color, List<Vector2>> hintsSolution;
+
         [SerializeField]
         private int pathFindingPenalizeOtherColors = 1, pathFindingPenalizeMyEnd = 20;
 
@@ -70,6 +73,9 @@ namespace flow
             aStar = new AStar();
 
             inputPointer.enabled = false;
+
+            hintsDone = new HashSet<Color>();
+            hintsSolution = new Dictionary<Color, List<Vector2>>();
         }
 
 #if UNITY_EDITOR
@@ -342,6 +348,12 @@ namespace flow
                     }
                 }
             }
+
+            if (pipe.isClosed() && hintsDone.Contains(color))
+            {
+                getTile(pipe.positions[0]).setHinted();
+                getTile(pipe.positions[pipe.positions.Count - 1]).setHinted();
+            }
         }
 
         private Logic.Dir getDir(Vector2 dest, Vector2 origen)
@@ -430,6 +442,9 @@ namespace flow
                 pos.y--;
             }
 
+            hintsDone.Clear();
+            hintsSolution.Clear();
+
             List<List<Tuple<uint, uint>>> _pipes = map.getPipes();
             uint nPipes = map.getNPipes();
             for (int i = 0; i < nPipes; ++i)
@@ -459,6 +474,11 @@ namespace flow
                 newPipe.setInitialAndEndTiles(new Vector2(initial.Item1, initial.Item2), new Vector2(final.Item1, final.Item2));
 
                 this.pipes.Add(color, newPipe);
+
+                hintsSolution.Add(color, new List<Vector2>());
+                foreach (Tuple<uint, uint> p in _pipes[i])
+                    hintsSolution[color].Add(new Vector2(p.Item1, p.Item2));
+             
             }
 
             bool addBounds = false;
@@ -542,6 +562,37 @@ namespace flow
             stepsText.text = "pasos: 0";
             flowsText.text = "flujos: 0/" + pipes.Count;
         }
+
+
+        public void nextHint()
+        {
+            foreach(KeyValuePair<Color, Logic.Pipe> pipe in pipes)
+            {
+                //If it's not already done
+                if(!hintsDone.Contains(pipe.Key))
+                {
+                    hintsDone.Add(pipe.Key);
+
+                    pipe.Value.setSolution(hintsSolution[pipe.Key]);
+
+                    render();
+
+                    percentageText.text = "tubería: " + getPercentage() + "%";
+                    stepsText.text = "pasos: " + steps;
+
+                    int completed = getPipesCompleted();
+                    flowsText.text = "flujos: " + completed + "/" + pipes.Count;
+
+                    if (completed == pipes.Count)
+                    {
+                        levelManager.levelDone(steps);
+                    }
+
+                    return;
+                }
+            }
+        }
+
 
         private void borderAll()
         {

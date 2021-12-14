@@ -160,6 +160,11 @@ namespace flow
             boundaryLeft.enabled = false;
             boundaryRight.enabled = false;
         }
+        
+        public void setHinted()
+        {
+            check.enabled = true;
+        }
 
         public void enableDirectionSprite(Logic.Dir dir)
         {

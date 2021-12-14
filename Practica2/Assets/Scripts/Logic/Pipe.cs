@@ -111,10 +111,7 @@ namespace flow.Logic
                 return false;
             }
 
-            //if (closed && provisionalIndex == 1000)
-            //    provisionalIndex = provisionalClosedCut(index);
-            //else 
-                provisionalIndex = index;
+            provisionalIndex = index;
 
             return true;
         }
@@ -161,21 +158,6 @@ namespace flow.Logic
 
             return -1;
         }
-
-
-        private int provisionalClosedCut(int index)
-        {
-            if (index < positions.Count / 2)
-            {
-                //reverse order
-                positions.Reverse();
-
-                index = positions.Count - index - 1;
-            }
-
-            return index;
-        }
-
 
         public void restore()
         {
@@ -237,6 +219,20 @@ namespace flow.Logic
         public bool changedSolution()
         {
             return closed && changedMySolution;
+        }
+
+        public void setSolution(in List<Vector2> solution)
+        {
+            positions.Clear();
+            solutionPositions.Clear();
+
+            foreach(Vector2 p in solution)
+            {
+                positions.Add(p);
+                solutionPositions.Add(p);
+            }
+
+            closed = true;
         }
 
         private void openPipe(int index)
