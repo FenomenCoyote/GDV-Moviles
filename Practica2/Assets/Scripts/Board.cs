@@ -583,11 +583,20 @@ namespace flow
             foreach(KeyValuePair<Color, Logic.Pipe> pipe in pipes)
             {
                 //If it's not already done
-                if(!hintsDone.Contains(pipe.Key))
+                if(!hintsDone.Contains(pipe.Key) && !pipe.Value.isClosed())
                 {
                     hintsDone.Add(pipe.Key);
 
                     pipe.Value.setSolution(hintsSolution[pipe.Key]);
+
+                    foreach (KeyValuePair<Color, Logic.Pipe> otherPipes in pipes)
+                    {
+                        if (pipe.Key == otherPipes.Key)
+                            continue;
+
+                        otherPipes.Value.provisionalCut(pipe.Value);
+                        otherPipes.Value.finallyCut();
+                    }
 
                     render();
 
