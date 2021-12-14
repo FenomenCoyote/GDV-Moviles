@@ -1550,6 +1550,7 @@ GameObject:
   - component: {fileID: 793441518}
   - component: {fileID: 793441517}
   - component: {fileID: 793441516}
+  - component: {fileID: 793441519}
   m_Layer: 5
   m_Name: HintButton
   m_TagString: Untagged
@@ -1619,7 +1620,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 793441517}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 793441519}
+        m_TargetAssemblyTypeName: flow.Logic.HintManager, Assembly-CSharp
+        m_MethodName: applyHint
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &793441517
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1658,6 +1671,19 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 793441514}
   m_CullTransparentMesh: 1
+--- !u!114 &793441519
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 793441514}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 827ffbca42788ef4f8b5139371084cf4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  hintNumberText: {fileID: 1102921488}
 --- !u!1 &840772369
 GameObject:
   m_ObjectHideFlags: 0
