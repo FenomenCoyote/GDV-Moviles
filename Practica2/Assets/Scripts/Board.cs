@@ -349,10 +349,24 @@ namespace flow
                 }
             }
 
-            if (pipe.isClosed() && hintsDone.Contains(color))
+            if (pipe.isClosed() && hintsDone.Contains(color) && hintsSolution[color].Count == pipe.positions.Count)
             {
-                getTile(pipe.positions[0]).setHinted();
-                getTile(pipe.positions[pipe.positions.Count - 1]).setHinted();
+                bool isHintSolution = true;
+
+                foreach(Vector2 p in hintsSolution[color])
+                {
+                    if (!pipe.positions.Contains(p))
+                    {
+                        isHintSolution = false;
+                        break;
+                    }
+                }
+
+                if (isHintSolution)
+                {
+                    getTile(pipe.positions[0]).setHinted();
+                    getTile(pipe.positions[pipe.positions.Count - 1]).setHinted();
+                }
             }
         }
 

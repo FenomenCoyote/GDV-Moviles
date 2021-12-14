@@ -4,8 +4,6 @@ using UnityEngine;
 
 namespace flow
 {
-
-
     public class AStar 
     {
         /// <summary>
