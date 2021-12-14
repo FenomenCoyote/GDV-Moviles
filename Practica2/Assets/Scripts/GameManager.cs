@@ -92,6 +92,11 @@ namespace flow
             }
         }
 
+        public void addHint()
+        {
+            //TODO
+        }
+
         public uint getNHints() { return saver.getNHints(); }
 
         public PackCategory[] getPackCategories() { 
