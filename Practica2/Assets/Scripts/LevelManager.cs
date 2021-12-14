@@ -157,10 +157,12 @@ namespace flow {
 
         public void applyHint()
         {
-            if (GameManager.Instance.getState().nHints <= 0)
+            if (GameManager.Instance.getNHints() <= 0)
                 return;
 
-            hintManager.hintsChanged((int)--GameManager.Instance.getState().nHints);
+            GameManager.Instance.hintWasted();
+
+            hintManager.hintsChanged((int)GameManager.Instance.getNHints());
 
             //aplicar la pista, llamar aqui a un metodo del board
             board.nextHint();

@@ -133,6 +133,12 @@ namespace flow
             saveProgress();
         }
 
+        public void hintWasted()
+        {
+            state.nHints--;
+            saveProgress();
+        }
+
         public uint getNHints() { return state.nHints; }
         public Logic.GameState getState() { return state; }
     }
