@@ -10,7 +10,6 @@ namespace flow.UI
     {
 
         [SerializeField] Text categoryText;
-        [SerializeField] Button backButton;
 
         [SerializeField] Image check;
         [SerializeField] Image star;
@@ -36,8 +35,6 @@ namespace flow.UI
 
         void Start()
         {
-            backButton.onClick.AddListener(delegate () { backClickCallback(); });
-
             category = GameManager.Instance.getPackCategory();
             pack = GameManager.Instance.getLevelPack();
 
@@ -85,7 +82,7 @@ namespace flow.UI
             rectTr.SetSizeWithCurrentAnchors(RectTransform.Axis.Horizontal, auxWidth + hLayout.spacing);
         }
 
-        void backClickCallback()
+        public void backClickCallback()
         {
             GameManager.Instance.gotoSelectCategoryMenu();
         }

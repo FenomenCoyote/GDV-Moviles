@@ -17,8 +17,8 @@ public class BoardScaler : MonoBehaviour
     [SerializeField]
     RectTransform resetLevelButton;
 
-    const float OFFSETX = 1f;
-    const float OFFSETY = 3f;
+    [SerializeField] float OFFSETX = 1f;
+    [SerializeField] float OFFSETY = 3f;
 
     float heightInUnits;
     float widthInUnits;
@@ -39,15 +39,13 @@ public class BoardScaler : MonoBehaviour
 
     public void fitInScreen(int boardWidth, int boardHeight)
     {
-        float scale;
-        if (boardWidth >= boardHeight)
-            scale = (widthInUnits - OFFSETX) / boardWidth;
-        else
-        {
-            float offsetY = OFFSETY + topDownMargins;
-            scale = (heightInUnits - offsetY) / boardHeight;
-        }
+        float scaleWidth = (widthInUnits - OFFSETX) / boardWidth;
 
+        float offsetY = OFFSETY + topDownMargins;
+        float scaleHeight = (heightInUnits - offsetY) / boardHeight;
+
+        float scale = Mathf.Min(scaleHeight, scaleWidth);
+       
         transform.localScale = new Vector3(scale, scale, 0);
     }
 }

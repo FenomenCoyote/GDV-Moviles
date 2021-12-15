@@ -588,6 +588,8 @@ namespace flow
                 {
                     hintsDone.Add(pipe.Key);
 
+                    steps++;
+
                     pipe.Value.setSolution(hintsSolution[pipe.Key]);
 
                     foreach (KeyValuePair<Color, Logic.Pipe> otherPipes in pipes)
