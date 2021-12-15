@@ -9,6 +9,8 @@ namespace flow
         
         [SerializeField] private SpriteRenderer circle;
 
+        [SerializeField] private TileAnimationCircle tileAnimation;
+
         [Tooltip("Scale used when this tile is an initial or ending pipe")]
         [Range(0f, 1f)]
         [SerializeField] private float circleBigSize = 0.8f;
@@ -52,6 +54,8 @@ namespace flow
 
         private Dictionary<Logic.Dir, bool> walls;
 
+       
+
         private void Awake()
         {
             walls = new Dictionary<Logic.Dir, bool>();
@@ -70,16 +74,21 @@ namespace flow
                 boundaryUp == null || boundaryDown == null || boundaryLeft == null || boundaryRight == null || 
                 wallUp == null || wallDown == null || wallLeft == null || wallRight == null ||
                 backGroundHighlight == null ||
-                check == null ) 
+                check == null || tileAnimation == null ) 
             { 
-                Debug.LogError("Tile no tiene circle asociado");
+                Debug.LogError("Tile esta mal configurado");
                 return;
             }
         }
 #endif
 
 
-        //TODO: Algo para hacer el shake
+        public void shake()
+        {
+            tileAnimation.setInitialScale(circle.transform.localScale);
+            tileAnimation.startAnim();
+        }
+
 
         public void setHightLock(bool b)
         {

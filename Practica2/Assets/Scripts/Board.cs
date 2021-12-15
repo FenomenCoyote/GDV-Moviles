@@ -176,6 +176,8 @@ namespace flow
                 currentPipe = pipes[dragingColor];
 
                 currentPipe.startDrag(t);
+
+                getTile(t).shake();
             }
             else
             {
