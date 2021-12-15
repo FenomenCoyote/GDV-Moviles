@@ -520,6 +520,7 @@ GameObject:
   - component: {fileID: 7664281169987609939}
   - component: {fileID: 4810391906833929627}
   - component: {fileID: 6634796030580549257}
+  - component: {fileID: 4461480324224056489}
   m_Layer: 0
   m_Name: GameManager
   m_TagString: Untagged
@@ -596,3 +597,18 @@ MonoBehaviour:
   forward: {fileID: 1359309015843093983}
   leak: {fileID: 1549690997996675471}
   flow: {fileID: 4727628340277173020}
+--- !u!114 &4461480324224056489
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7664281169987609940}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ee311b2b0780c3648a63657880408982, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _androidGameId: 4505790
+  _iOSGameId: 
+  _testMode: 1

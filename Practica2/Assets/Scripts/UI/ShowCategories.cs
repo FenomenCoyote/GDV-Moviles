@@ -16,6 +16,9 @@ namespace flow.UI
         [SerializeField]
         MenuButton categoryButton;
 
+        [SerializeField]
+        Text removeAdsText;
+
         RectTransform rectTransform;
 
         VerticalLayoutGroup vOrder;
@@ -45,8 +48,8 @@ namespace flow.UI
                                "<color=" + ColorToHex(theme.colors[5]) + ">s</color>";
 
             auxHeight += nivelesText.rectTransform.rect.height + vOrder.spacing;
-            auxHeight += nivelesText.rectTransform.rect.height + vOrder.spacing;
-            auxHeight += vOrder.padding.bottom;
+
+            auxHeight += removeAdsText.rectTransform.rect.height + vOrder.spacing;
 
             PackCategory[] categories = GameManager.Instance.getPackCategories();
             Logic.GameState state = GameManager.Instance.getState();

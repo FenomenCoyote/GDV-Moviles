@@ -203,6 +203,7 @@ MonoBehaviour:
   nivelesText: {fileID: 1527274719}
   categoryHeader: {fileID: 6621999297182245064, guid: b4e9f3b87baefee4b8729bec9942aca2, type: 3}
   categoryButton: {fileID: -8947032083130238934, guid: dac07249a91b1ee43a494514267b9fbf, type: 3}
+  removeAdsText: {fileID: 1661040117}
 --- !u!1 &281886964 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 7664281169987609940, guid: 7ee61c398f688a549bbf87679d747e4e, type: 3}
@@ -467,67 +468,6 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0, y: 0}
---- !u!1001 &1319088367
-PrefabInstance:
-  m_ObjectHideFlags: 0
-  serializedVersion: 2
-  m_Modification:
-    m_TransformParent: {fileID: 0}
-    m_Modifications:
-    - target: {fileID: 1113012038136244212, guid: 41d4c9b9ee2dd5f4f801e53ce2c1f8eb, type: 3}
-      propertyPath: m_Name
-      value: UnityAds
-      objectReference: {fileID: 0}
-    - target: {fileID: 1113012038136244218, guid: 41d4c9b9ee2dd5f4f801e53ce2c1f8eb, type: 3}
-      propertyPath: m_RootOrder
-      value: 4
-      objectReference: {fileID: 0}
-    - target: {fileID: 1113012038136244218, guid: 41d4c9b9ee2dd5f4f801e53ce2c1f8eb, type: 3}
-      propertyPath: m_LocalPosition.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 1113012038136244218, guid: 41d4c9b9ee2dd5f4f801e53ce2c1f8eb, type: 3}
-      propertyPath: m_LocalPosition.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 1113012038136244218, guid: 41d4c9b9ee2dd5f4f801e53ce2c1f8eb, type: 3}
-      propertyPath: m_LocalPosition.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 1113012038136244218, guid: 41d4c9b9ee2dd5f4f801e53ce2c1f8eb, type: 3}
-      propertyPath: m_LocalRotation.w
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 1113012038136244218, guid: 41d4c9b9ee2dd5f4f801e53ce2c1f8eb, type: 3}
-      propertyPath: m_LocalRotation.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 1113012038136244218, guid: 41d4c9b9ee2dd5f4f801e53ce2c1f8eb, type: 3}
-      propertyPath: m_LocalRotation.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 1113012038136244218, guid: 41d4c9b9ee2dd5f4f801e53ce2c1f8eb, type: 3}
-      propertyPath: m_LocalRotation.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 1113012038136244218, guid: 41d4c9b9ee2dd5f4f801e53ce2c1f8eb, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 1113012038136244218, guid: 41d4c9b9ee2dd5f4f801e53ce2c1f8eb, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 1113012038136244218, guid: 41d4c9b9ee2dd5f4f801e53ce2c1f8eb, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 1113012038136244219, guid: 41d4c9b9ee2dd5f4f801e53ce2c1f8eb, type: 3}
-      propertyPath: _testMode
-      value: 0
-      objectReference: {fileID: 0}
-    m_RemovedComponents: []
-  m_SourcePrefab: {fileID: 100100000, guid: 41d4c9b9ee2dd5f4f801e53ce2c1f8eb, type: 3}
 --- !u!1001 &1522448460
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -535,6 +475,10 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 4461480324224056489, guid: 7ee61c398f688a549bbf87679d747e4e, type: 3}
+      propertyPath: _androidGameId
+      value: 4505790
+      objectReference: {fileID: 0}
     - target: {fileID: 7664281169987609938, guid: 7ee61c398f688a549bbf87679d747e4e, type: 3}
       propertyPath: m_RootOrder
       value: 1
