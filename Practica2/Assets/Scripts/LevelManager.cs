@@ -96,7 +96,7 @@ namespace flow {
                 nextLevelButtonImg.color = Color.gray;
             }
 
-            board.setForGame(map, pack.theme.colors, category.categoryColor, logicLevel.record);
+            board.setForGame(map, GameManager.Instance.GetColorTheme().colors, category.categoryColor, logicLevel.record);
 
             levelDonePanel.SetActive(false);
         }
@@ -153,6 +153,14 @@ namespace flow {
             
             //disable board inputs
             board.disableInput();
+
+            GameManager.Instance.soundManager.playSound(SoundManager.Sound.Flow);
+        }
+
+        public void continueLevel()
+        {
+            board.enableInput();
+            levelDonePanel.SetActive(false);
         }
 
         public void applyHint()
@@ -180,12 +188,17 @@ namespace flow {
             if(nextLevel<GameManager.Instance.getLevelPackSize()-1)
             {
                 bool lockedNextLevel = GameManager.Instance.getState().getCategoryByName(category.categoryName).getPackByName(pack.packName).levels[nextLevel].locked;
-                if (!lockedNextLevel) GameManager.Instance.selectLevel(nextLevel);
+                if (!lockedNextLevel)
+                {
+                    GameManager.Instance.soundManager.playSound(SoundManager.Sound.Forward);
+                    GameManager.Instance.selectLevel(nextLevel);
+                }
             }          
         }
 
         public void previousLevel()
         {
+            GameManager.Instance.soundManager.playSound(SoundManager.Sound.Back);
             GameManager.Instance.selectLevel(currentLvlIndex - 1);
         }
 

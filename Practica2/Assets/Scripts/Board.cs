@@ -56,6 +56,12 @@ namespace flow
                 input.disable();
         }
 
+        public void enableInput()
+        {
+            if (input)
+                input.enable();
+        }
+
         public int getNPipes()
         {
             return pipes.Count;
@@ -209,14 +215,17 @@ namespace flow
                 pipe.Value.finallyCut();
             }
 
-            if (lastSolution != dragingColor && currentPipe.changedSolution())
+            if(lastSolution != dragingColor && currentPipe.changedSolution())
             {
-                lastSolution = dragingColor;
                 steps++;
+                lastSolution = dragingColor;
             }
 
-            if(currentPipe.isClosed())
+            if (currentPipe.isClosed())
+            {
+                GameManager.Instance.soundManager.playSound(SoundManager.Sound.Forward);
                 getTile(currentPipe.positions[currentPipe.positions.Count - 1]).finishedAnim();
+            }
             else
                 getTile(currentPipe.positions[currentPipe.positions.Count - 1]).shake();
 
@@ -254,6 +263,9 @@ namespace flow
                 return;
             }
 
+            if (getTile(dest).isEmpty())
+                return;
+
             List<Vector2> path = aStar.Astrella(origin, dest, dragingColor);
             path.RemoveAt(0);
             currentPipe.addPathFromOrigin(path);
@@ -263,7 +275,8 @@ namespace flow
                 if (dragingColor != null && pipe.Key == dragingColor)
                     continue;
 
-                pipe.Value.provisionalCut(currentPipe);
+                if (pipe.Value.provisionalCut(currentPipe) && pipe.Value.isClosed())
+                    GameManager.Instance.soundManager.playSound(SoundManager.Sound.Leak);
             }
         }
 
@@ -495,7 +508,6 @@ namespace flow
                 endTile.setActiveTile(true);
                 endTile.enableCircle();
 
-
                 Logic.Pipe newPipe = new Logic.Pipe();
 
                 newPipe.setInitialAndEndTiles(new Vector2(initial.Item1, initial.Item2), new Vector2(final.Item1, final.Item2));
@@ -556,6 +568,9 @@ namespace flow
 
         public void resetBoard()
         {
+            if(steps > 0 || getPercentage() > 0)
+                GameManager.Instance.soundManager.playSound(SoundManager.Sound.Leak);
+
             foreach (Logic.Pipe p in pipes.Values)
             {
                 p.reset();

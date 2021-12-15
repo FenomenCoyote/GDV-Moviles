@@ -121,9 +121,12 @@ namespace flow.Logic
                 return false;
             }
 
-            provisionalIndex = index;
+            bool a = provisionalIndex == 1000;
 
-            return true;
+            if (index != provisionalIndex)
+                provisionalIndex = index;
+
+            return a;
         }
 
 
@@ -228,7 +231,7 @@ namespace flow.Logic
 
         public bool changedSolution()
         {
-            return closed && changedMySolution;
+            return changedMySolution;
         }
 
         public void setSolution(in List<Vector2> solution)

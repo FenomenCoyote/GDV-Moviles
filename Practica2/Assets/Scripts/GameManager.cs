@@ -23,17 +23,20 @@ namespace flow
         private PackCategory[] categories;
 
         [SerializeField]
+        private ColorTheme theme;
+
+        [SerializeField]
         private LevelManager levelMngr;
 
         public static GameManager Instance { get; private set; }
+
+        public SoundManager soundManager { get; private set; }
 
         private LevelPack selectedPack;
         private PackCategory selectedCategory;
 
         private string selectedLevel;
         private int lvlIndex;
-
-        private int levelPanelNumber;
 
         /*DEBUG*/
         [SerializeField] private LevelPack DEBUGPack;
@@ -78,6 +81,7 @@ namespace flow
 
             saver = GetComponent<ProgressSaverLoader>();
             saver.init();
+            soundManager = GetComponent<SoundManager>();
         }
 
         private void setInfo(LevelManager lm, PackCategory[] categories, Scene scene)
@@ -105,29 +109,37 @@ namespace flow
             return categories; 
         }
 
+        public ColorTheme GetColorTheme()
+        {
+            return theme;
+        }
+
         public void selectPack(LevelPack pack, PackCategory category)
         {
             selectedPack = pack;
             selectedCategory = category;
+            soundManager.playSound(SoundManager.Sound.Forward);
             SceneManager.LoadScene((int)Scene.ChooseLevel);
         }
 
         public void gotoSelectCategoryMenu()
         {
+            soundManager.playSound(SoundManager.Sound.Back);
             SceneManager.LoadScene((int)Scene.ChoosePack);
         }
 
         public void setLevel(string levelInfo, int index, int nPanel = 0)
         {
-            levelPanelNumber = nPanel;
             selectedLevel = levelInfo;
             lvlIndex = index;
+            soundManager.playSound(SoundManager.Sound.Forward);
             SceneManager.LoadScene((int)Scene.Level);
         }
 
         public void exitLevel()
         {
             levelMngr = null;
+            soundManager.playSound(SoundManager.Sound.Back);
             SceneManager.LoadScene((int)Scene.ChooseLevel);
         }
 

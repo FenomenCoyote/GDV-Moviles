@@ -8,7 +8,6 @@ namespace flow
     public class LevelPack : ScriptableObject
     {
         public TextAsset levels;
-        public ColorTheme theme;
         public string packName;
         public Color[] levelPanelColors;
         public string[] levelPanelName;

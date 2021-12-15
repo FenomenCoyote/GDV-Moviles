@@ -26,19 +26,26 @@ namespace flow.UI
             vOrder = GetComponent<VerticalLayoutGroup>();
         }
 
+        private string ColorToHex(Color32 color)
+        {
+            return "#" + ColorUtility.ToHtmlStringRGB(color);
+        }
+
         void Start()
         {
             float auxHeight = 0.0f;
 
-            nivelesText.text = "<color=red>l</color>" +
-                               "<color=green>e</color>" +
-                               "<color=blue>v</color>" +
-                               "<color=yellow>e</color>" +
-                               "<color=orange>l</color>" +
-                               "<color=cyan>s</color>";
+            ColorTheme theme = GameManager.Instance.GetColorTheme();
+
+            nivelesText.text = "<color=" + ColorToHex(theme.colors[0]) + ">l</color>" +
+                               "<color=" + ColorToHex(theme.colors[1]) + ">e</color>" +
+                               "<color=" + ColorToHex(theme.colors[2]) + ">v</color>" +
+                               "<color=" + ColorToHex(theme.colors[3]) + ">e</color>" +
+                               "<color=" + ColorToHex(theme.colors[4]) + ">l</color>" +
+                               "<color=" + ColorToHex(theme.colors[5]) + ">s</color>";
 
             //Esto es bucear en la escena?
-            auxHeight += nivelesText.rectTransform.rect.height + vOrder.spacing;
+            auxHeight += nivelesText.rectTransform.rect.height + vOrder.spacing + vOrder.padding.bottom;
 
             PackCategory[] categories = GameManager.Instance.getPackCategories();
             Logic.GameState state = GameManager.Instance.getState();
