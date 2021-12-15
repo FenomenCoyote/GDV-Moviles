@@ -44,8 +44,8 @@ namespace flow.UI
                                "<color=" + ColorToHex(theme.colors[4]) + ">l</color>" +
                                "<color=" + ColorToHex(theme.colors[5]) + ">s</color>";
 
-            //Esto es bucear en la escena?
-            auxHeight += nivelesText.rectTransform.rect.height + vOrder.spacing + vOrder.padding.bottom;
+            auxHeight += nivelesText.rectTransform.rect.height + vOrder.spacing;
+            auxHeight += +vOrder.padding.bottom;
 
             PackCategory[] categories = GameManager.Instance.getPackCategories();
             Logic.GameState state = GameManager.Instance.getState();

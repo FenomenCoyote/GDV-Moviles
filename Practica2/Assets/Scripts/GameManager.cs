@@ -101,6 +101,11 @@ namespace flow
             //TODO
         }
 
+        public void removeAdds()
+        {
+            //TODO
+        }
+
         public void hintWasted() { saver.hintWasted(); }
 
         public uint getNHints() { return saver.getNHints(); }

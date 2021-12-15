@@ -15,7 +15,7 @@ namespace flow
 
         [SerializeField] string saveFile;
 
-        private string pepper = "x49378jhx10ex456e12342e21axew";
+        //private string pepper = "x49378jhx10ex456e12342e21axew";
 
         public ProgressSaverLoader()
         {

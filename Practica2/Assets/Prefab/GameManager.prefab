@@ -42,7 +42,7 @@ AudioSource:
   serializedVersion: 4
   OutputAudioMixerGroup: {fileID: 0}
   m_audioClip: {fileID: 8300000, guid: 7174426e845c77142be64ce479a76669, type: 3}
-  m_PlayOnAwake: 1
+  m_PlayOnAwake: 0
   m_Volume: 1
   m_Pitch: 1
   Loop: 0
@@ -169,7 +169,7 @@ AudioSource:
   serializedVersion: 4
   OutputAudioMixerGroup: {fileID: 0}
   m_audioClip: {fileID: 8300000, guid: 1ecd112130062fb428e24ce3cc47a090, type: 3}
-  m_PlayOnAwake: 1
+  m_PlayOnAwake: 0
   m_Volume: 1
   m_Pitch: 1
   Loop: 0
@@ -296,7 +296,7 @@ AudioSource:
   serializedVersion: 4
   OutputAudioMixerGroup: {fileID: 0}
   m_audioClip: {fileID: 8300000, guid: e284b6ac70b78ef4eaa68a21f0bf2af1, type: 3}
-  m_PlayOnAwake: 1
+  m_PlayOnAwake: 0
   m_Volume: 1
   m_Pitch: 1
   Loop: 0
@@ -423,7 +423,7 @@ AudioSource:
   serializedVersion: 4
   OutputAudioMixerGroup: {fileID: 0}
   m_audioClip: {fileID: 8300000, guid: a0513f4661e3be8439def84b891cb700, type: 3}
-  m_PlayOnAwake: 1
+  m_PlayOnAwake: 0
   m_Volume: 1
   m_Pitch: 1
   Loop: 0
@@ -519,6 +519,7 @@ GameObject:
   - component: {fileID: 7664281169987609938}
   - component: {fileID: 7664281169987609939}
   - component: {fileID: 4810391906833929627}
+  - component: {fileID: 6634796030580549257}
   m_Layer: 0
   m_Name: GameManager
   m_TagString: Untagged
@@ -579,3 +580,19 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   saveFile: save.json
+--- !u!114 &6634796030580549257
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7664281169987609940}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7aa447633fb6ad34bb7f38f5d1370d5c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  back: {fileID: 5228015617448722840}
+  forward: {fileID: 1359309015843093983}
+  leak: {fileID: 1549690997996675471}
+  flow: {fileID: 4727628340277173020}
