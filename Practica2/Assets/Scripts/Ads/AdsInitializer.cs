@@ -13,12 +13,13 @@ public class AdsInitializer : MonoBehaviour, IUnityAdsInitializationListener
 
     public void InitializeAds()
     {
-        Advertisement.Initialize(_androidGameId, _testMode);
+        Advertisement.Initialize(_androidGameId, _testMode, true, this);  
     }
 
     public void OnInitializationComplete()
     {
         Debug.Log("Unity Ads initialization complete.");
+        Advertisement.Show();
     }
 
     public void OnInitializationFailed(UnityAdsInitializationError error, string message)

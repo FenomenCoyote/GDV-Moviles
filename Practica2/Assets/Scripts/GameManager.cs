@@ -99,6 +99,7 @@ namespace flow
         public void addHint()
         {
             //TODO
+            UnityEngine.Advertisements.Advertisement.Show();
         }
 
         public void removeAdds()
