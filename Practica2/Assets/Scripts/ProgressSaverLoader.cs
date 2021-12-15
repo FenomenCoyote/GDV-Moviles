@@ -139,6 +139,12 @@ namespace flow
             saveProgress();
         }
 
+        public void addHint()
+        {
+            state.nHints++;
+            saveProgress();
+        }
+
         public uint getNHints() { return state.nHints; }
         public Logic.GameState getState() { return state; }
     }

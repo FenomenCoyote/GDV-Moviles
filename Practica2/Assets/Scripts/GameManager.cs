@@ -98,8 +98,7 @@ namespace flow
 
         public void addHint()
         {
-            //TODO
-            UnityEngine.Advertisements.Advertisement.Show();
+            saver.addHint();
         }
 
         public void removeAdds()

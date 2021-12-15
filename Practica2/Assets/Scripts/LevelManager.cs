@@ -48,11 +48,13 @@ namespace flow {
         [SerializeField]
         private UI.EndImage endImage;
 
+        [SerializeField]
+        RewardedAdsButton rewardedAdButton;
+
         private string level;
         private LevelPack pack;
         private PackCategory category;
         private int currentLvlIndex;
-
 
         public void setLevel(string levelInfo, int index,LevelPack selectedPack, PackCategory selectedCategory)
         {
@@ -99,6 +101,8 @@ namespace flow {
             board.setForGame(map, GameManager.Instance.GetColorTheme().colors, category.categoryColor, logicLevel.record);
 
             levelDonePanel.SetActive(false);
+
+            rewardedAdButton.LoadAd();
         }
 
         public void resetLevel()
@@ -174,6 +178,12 @@ namespace flow {
 
             //aplicar la pista, llamar aqui a un metodo del board
             board.nextHint();
+        }
+
+        public void addHint()
+        {
+            GameManager.Instance.addHint();
+            hintManager.hintsChanged((int)GameManager.Instance.getNHints());
         }
 
 
