@@ -70,7 +70,7 @@ namespace flow
         public bool justDown()
         {
 #if UNITY_ANDROID
-             return Input.GetTouch(0);
+            // return Input.GetTouch(0);
 #endif
             return pressed && Input.GetMouseButtonDown(0);
         }
@@ -78,7 +78,7 @@ namespace flow
         public bool justUp()
         {
 #if UNITY_ANDROID
-             return Input.GetTouch(0);
+             //return Input.GetTouch(0);
 #endif
             return Input.GetMouseButtonUp(0);
         }

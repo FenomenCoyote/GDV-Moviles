@@ -48,6 +48,8 @@ namespace flow
         [SerializeField]
         LevelManager levelManager;
 
+        BoardScaler scaler;
+
         public void disableInput()
         {
             if (input)
@@ -67,6 +69,7 @@ namespace flow
         private void Awake()
         {
             input = GetComponent<BoardInput>();
+            scaler = GetComponent<BoardScaler>();
             draging = false;
             pipes = new Dictionary<Color, Logic.Pipe>();
             steps = 0;
@@ -426,7 +429,7 @@ namespace flow
             height = map.getLevelHeight();
             width = map.getLevelWidth();
 
-            setScale();
+            scaler.fitInScreen((int)width, (int)height);
 
             input.init(width, height);
 
@@ -541,18 +544,6 @@ namespace flow
             flowsText.text = "flujos: 0/" + pipes.Count;
             percentageText.text = "tubería: 0%";
             stepsText.text = "pasos: 0";
-        }
-
-        private void setScale()
-        {
-            float propX = 5.0f / width;
-            float propY = 8.0f / height;
-
-            float scale = Mathf.Min(propX, propY);
-            scale *= transform.localScale.x;
-
-            Vector3 newScale = new Vector3(scale, scale, 1);
-            transform.localScale = newScale;
         }
 
         public void resetBoard()
