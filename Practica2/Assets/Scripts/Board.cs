@@ -19,7 +19,7 @@ namespace flow
         private Dictionary<Color, Logic.Pipe> pipes;
 
         private bool draging;
-        private Color dragingColor;
+        private Color dragingColor, lastDraggedColor;
         private Logic.Pipe currentPipe;
 
         private Color lastSolution;
@@ -180,7 +180,10 @@ namespace flow
 
                 currentPipe.startDrag(t);
 
-                getTile(t).shake();
+                getTile(currentPipe.getStartPos()).shake();
+                getTile(currentPipe.getFinalPos()).shake();
+
+                lastDraggedColor = dragingColor;
             }
             else
             {
@@ -211,6 +214,11 @@ namespace flow
                 lastSolution = dragingColor;
                 steps++;
             }
+
+            if(currentPipe.isClosed())
+                getTile(currentPipe.positions[currentPipe.positions.Count - 1]).finishedAnim();
+            else
+                getTile(currentPipe.positions[currentPipe.positions.Count - 1]).shake();
 
             inputPointer.enabled = false;
 
@@ -296,7 +304,7 @@ namespace flow
 
                     t1.setActiveTile(true);
 
-                    if (i == pipe.positions.Count - 1)
+                    if (color == lastDraggedColor && i == pipe.positions.Count - 1)
                         t1.enableCircle();
 
                     if (highLight && pipe.positions.Count > 1)

@@ -74,6 +74,16 @@ namespace flow.Logic
             return positions[positions.Count - 1];
         }
 
+        public Vector2 getStartPos()
+        {
+            return startPos;
+        }
+
+        public Vector2 getFinalPos()
+        {
+            return finalPos;
+        }
+
         public void notDraggingAnymore()
         {
             if (checkPipeClosed())

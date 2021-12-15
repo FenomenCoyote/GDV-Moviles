@@ -9,7 +9,8 @@ namespace flow
         
         [SerializeField] private SpriteRenderer circle;
 
-        [SerializeField] private TileAnimationCircle tileAnimation;
+        [SerializeField] private TileAnimation tileAnimationCircle;
+        [SerializeField] private TileAnimation tileAnimationFinished;
 
         [Tooltip("Scale used when this tile is an initial or ending pipe")]
         [Range(0f, 1f)]
@@ -44,6 +45,8 @@ namespace flow
 
         [SerializeField] private SpriteRenderer check;
 
+        [SerializeField] private SpriteRenderer radar;
+
         private bool empty = false;
 
         private bool activeTile = false;
@@ -54,8 +57,7 @@ namespace flow
 
         private Dictionary<Logic.Dir, bool> walls;
 
-       
-
+      
         private void Awake()
         {
             walls = new Dictionary<Logic.Dir, bool>();
@@ -73,8 +75,7 @@ namespace flow
                 directionUp == null || directionDown == null || directionLeft == null || directionRight == null ||
                 boundaryUp == null || boundaryDown == null || boundaryLeft == null || boundaryRight == null || 
                 wallUp == null || wallDown == null || wallLeft == null || wallRight == null ||
-                backGroundHighlight == null ||
-                check == null || tileAnimation == null ) 
+                backGroundHighlight == null || check == null || radar == null || tileAnimationCircle == null || tileAnimationFinished == null) 
             { 
                 Debug.LogError("Tile esta mal configurado");
                 return;
@@ -82,13 +83,17 @@ namespace flow
         }
 #endif
 
-
         public void shake()
         {
-            tileAnimation.setInitialScale(circle.transform.localScale);
-            tileAnimation.startAnim();
+            Vector3 scale = initialOrEnd ? Vector2.one * circleBigSize : Vector2.one * circleSmallSize;
+            tileAnimationCircle.setInitialScale(scale);
+            tileAnimationCircle.startAnim();
         }
 
+        public void finishedAnim()
+        {
+            tileAnimationFinished.startAnim();
+        }
 
         public void setHightLock(bool b)
         {
@@ -270,6 +275,7 @@ namespace flow
             directionDown.color = color;
             directionLeft.color = color;
             directionRight.color = color;
+            radar.color = color;
 
             if (!lockHighLightColor)
             {
