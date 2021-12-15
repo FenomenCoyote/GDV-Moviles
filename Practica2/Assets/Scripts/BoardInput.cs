@@ -16,10 +16,10 @@ namespace flow
 
         private bool disabled = false;
 
-#if UNITY_EDITOR
+#if PLATFORM_ANDROID
         void Start()
         {
-
+            Input.multiTouchEnabled = false;
         }
 #endif
 
@@ -36,12 +36,43 @@ namespace flow
 
         public void updateInput()
         {
+#if PLATFORM_ANDROID
+            updateAndroid();
+#else
+            updatePC();
+#endif
+        }
+
+        private void updateAndroid()
+        {
+            if (!disabled && Input.touchCount > 0)
+            {
+                Touch t = Input.GetTouch(0);
+                if (t.phase == TouchPhase.Began)
+                {
+                    //Pressed if user clicked inside the board
+                    pressed = calculateMouseTilePos(t.position);
+                }
+                else if (t.phase == TouchPhase.Ended)
+                {
+                    //Only stop pressing after mouseUp
+                    pressed = false;
+                }
+                else if (pressed && t.phase == TouchPhase.Moved)
+                {
+                    calculateMouseTilePos(t.position);
+                }
+            }
+        }
+
+        private void updatePC()
+        {
             if (!disabled)
             {
                 if (Input.GetMouseButtonDown(0))
                 {
                     //Pressed if user clicked inside the board
-                    pressed = calculateMouseTilePos();
+                    pressed = calculateMouseTilePos(Input.mousePosition);
                 }
                 else if (Input.GetMouseButtonUp(0))
                 {
@@ -50,7 +81,7 @@ namespace flow
                 }
                 else if (pressed)
                 {
-                    calculateMouseTilePos();
+                    calculateMouseTilePos(Input.mousePosition);
                 }
             }
         }
@@ -70,17 +101,19 @@ namespace flow
         public bool justDown()
         {
 #if UNITY_ANDROID
-            // return Input.GetTouch(0);
-#endif
+            return pressed && Input.GetTouch(0).phase == TouchPhase.Began;
+#else
             return pressed && Input.GetMouseButtonDown(0);
+#endif
         }
 
         public bool justUp()
         {
 #if UNITY_ANDROID
-             //return Input.GetTouch(0);
-#endif
+            return Input.GetTouch(0).phase == TouchPhase.Ended;
+#else
             return Input.GetMouseButtonUp(0);
+#endif
         }
 
         public Vector2 getMouseTilePos()
@@ -88,9 +121,9 @@ namespace flow
             return mouseTilePos;
         }
 
-        private bool calculateMouseTilePos()
+        private bool calculateMouseTilePos(Vector3 pos)
         {
-            Vector2 worldMousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition); //raw in tiles
+            Vector2 worldMousePos = Camera.main.ScreenToWorldPoint(pos); //raw in tiles
 
             worldMousePos = (worldMousePos + (offset * transform.localScale)); //adjust offset
             worldMousePos.x += transform.position.x;

@@ -204,7 +204,7 @@ namespace flow
                 currentPipe.notDraggingAnymore();
             }
 
-            if (!input.isInside())
+            if (input.isInside())
                 AStar(input.getMouseTilePos());
 
             foreach (KeyValuePair<Color, Logic.Pipe> pipe in pipes)
