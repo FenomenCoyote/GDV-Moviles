@@ -290,7 +290,10 @@ namespace flow
         {
             Vector2 pos = input.getMouseTilePos();
 
-            inputPointer.setCorrect();
+            if (input.isInside())
+                inputPointer.setCorrect();
+            else
+                inputPointer.setNotCorrect();
 
             if (currentPipe.getOrigin() == pos)
                 return false;
@@ -332,7 +335,10 @@ namespace flow
                     continue;
 
                 if (pipe.Value.provisionalCut(currentPipe) && pipe.Value.isClosed())
+                {
+                    getTile(pipe.Value.getLastPosProvisional()).finishedAnim();
                     GameManager.Instance.soundManager.playSound(SoundManager.Sound.Leak);
+                }
             }
             return true;
         }

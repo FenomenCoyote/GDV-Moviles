@@ -129,6 +129,13 @@ namespace flow.Logic
             return a;
         }
 
+        public Vector2 getLastPosProvisional()
+        {
+            if (provisionalIndex == 1000)
+                return positions[0];
+            return positions[provisionalIndex - 1];
+        }
+
 
         public void finallyCut()
         {
