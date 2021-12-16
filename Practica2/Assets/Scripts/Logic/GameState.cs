@@ -3,6 +3,9 @@ using System;
 namespace flow.Logic
 {
 
+    /// <summary>
+    /// Class which contains level info to be saved and loaded
+    /// </summary>
     [Serializable]
     public class Level
     {
@@ -11,15 +14,23 @@ namespace flow.Logic
         public int record;
     }
 
+    /// <summary>
+    /// Class which contains levelPack info to be saved and loaded
+    /// </summary>
     [Serializable]
     public class LvlPack
     {
         public string name;
+        //Number of completed levels from the pack
         public int completedLevels;
+        //Number of perfectly done levels from the pack
         public int perfectLevels;
         public Level[] levels;
     }
 
+    /// <summary>
+    /// Class which contains category info to be saved and loaded
+    /// </summary>
     [Serializable]
     public class Category
     {
@@ -36,12 +47,20 @@ namespace flow.Logic
         }
     }
 
+    /// <summary>
+    /// Class which contains all info to be saved and loaded
+    /// </summary>
     [Serializable]
     public class GameState
     {
         public uint nHints = 5;
         public Category[] categories;
 
+        /// <summary>
+        /// This method is called when no save was done before
+        /// Initializes everything to a starting state
+        /// </summary>
+        /// <param name="gmCategories">Categories from game manager (scriptable objects)</param>
         public void init(PackCategory[] gmCategories)
         {
             int nCategories = gmCategories.Length;
