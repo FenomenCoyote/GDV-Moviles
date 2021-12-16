@@ -269,7 +269,7 @@ namespace flow
 
             if (currentPipe.isClosed())
             {
-                GameManager.Instance.soundManager.playSound(SoundManager.Sound.Forward);
+                SoundManager.Instance.playSound(SoundManager.Sound.Forward);
                 getTile(currentPipe.positions[currentPipe.positions.Count - 1]).finishedAnim();
             }
             else
@@ -338,7 +338,7 @@ namespace flow
                 if (pipe.Value.provisionalCut(currentPipe) && pipe.Value.isClosed())
                 {
                     getTile(pipe.Value.getLastPosProvisional()).finishedAnim();
-                    GameManager.Instance.soundManager.playSound(SoundManager.Sound.Leak);
+                    SoundManager.Instance.playSound(SoundManager.Sound.Leak);
                 }
             }
             return true;
@@ -674,7 +674,7 @@ namespace flow
         public void resetBoard()
         {
             if(steps > 0 || getPercentage() > 0)
-                GameManager.Instance.soundManager.playSound(SoundManager.Sound.Leak);
+                SoundManager.Instance.playSound(SoundManager.Sound.Leak);
 
             foreach (Logic.Pipe p in pipes.Values)
             {

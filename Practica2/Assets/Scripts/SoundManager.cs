@@ -11,10 +11,24 @@ namespace flow
             Back, Forward, Leak, Flow
         }
 
+        public static SoundManager Instance { get; private set; }
+
         [SerializeField] private AudioSource back;
         [SerializeField] private AudioSource forward;
         [SerializeField] private AudioSource leak;
         [SerializeField] private AudioSource flow;
+
+        private void Awake()
+        {
+            if(Instance != null)
+            {
+                Destroy(gameObject);
+                return;
+            }
+
+            Instance = this;
+            DontDestroyOnLoad(gameObject);
+        }
 
 #if UNITY_EDITOR
         private void Start()

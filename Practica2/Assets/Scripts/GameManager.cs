@@ -31,8 +31,6 @@ namespace flow
 
         public static GameManager Instance { get; private set; }
 
-        public SoundManager soundManager { get; private set; }
-
         private LevelPack selectedPack;
         private PackCategory selectedCategory;
 
@@ -84,7 +82,6 @@ namespace flow
 
             saver = GetComponent<ProgressSaverLoader>();
             saver.init();
-            soundManager = GetComponent<SoundManager>();
 
             banner = GetComponent<Ads.BannerAd>();
         }
@@ -128,7 +125,7 @@ namespace flow
         {
             selectedPack = pack;
             selectedCategory = category;
-            soundManager.playSound(SoundManager.Sound.Forward);
+            SoundManager.Instance.playSound(SoundManager.Sound.Forward);
             SceneManager.LoadScene((int)Scene.ChooseLevel);
 
             banner.LoadBanner();
@@ -137,7 +134,7 @@ namespace flow
         public void gotoSelectCategoryMenu()
         {
             Advertisement.Banner.Hide();
-            soundManager.playSound(SoundManager.Sound.Back);
+            SoundManager.Instance.playSound(SoundManager.Sound.Back);
             SceneManager.LoadScene((int)Scene.ChoosePack);
         }
 
@@ -145,14 +142,14 @@ namespace flow
         {
             selectedLevel = levelInfo;
             lvlIndex = index;
-            soundManager.playSound(SoundManager.Sound.Forward);
+            SoundManager.Instance.playSound(SoundManager.Sound.Forward);
             SceneManager.LoadScene((int)Scene.Level);
         }
 
         public void exitLevel()
         {
             levelMngr = null;
-            soundManager.playSound(SoundManager.Sound.Back);
+            SoundManager.Instance.playSound(SoundManager.Sound.Back);
             SceneManager.LoadScene((int)Scene.ChooseLevel);
         }
 

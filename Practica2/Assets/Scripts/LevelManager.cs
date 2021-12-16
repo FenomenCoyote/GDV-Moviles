@@ -163,7 +163,7 @@ namespace flow {
             //disable board inputs
             board.disableInput();
 
-            GameManager.Instance.soundManager.playSound(SoundManager.Sound.Flow);
+            SoundManager.Instance.playSound(SoundManager.Sound.Flow);
         }
 
         public void continueLevel()
@@ -205,7 +205,7 @@ namespace flow {
                 bool lockedNextLevel = GameManager.Instance.getState().getCategoryByName(category.categoryName).getPackByName(pack.packName).levels[nextLevel].locked;
                 if (!lockedNextLevel)
                 {
-                    GameManager.Instance.soundManager.playSound(SoundManager.Sound.Forward);
+                    SoundManager.Instance.playSound(SoundManager.Sound.Forward);
                     GameManager.Instance.selectLevel(nextLevel);
                 }
             }          
@@ -213,7 +213,7 @@ namespace flow {
 
         public void previousLevel()
         {
-            GameManager.Instance.soundManager.playSound(SoundManager.Sound.Back);
+            SoundManager.Instance.playSound(SoundManager.Sound.Back);
             GameManager.Instance.selectLevel(currentLvlIndex - 1);
         }
 
