@@ -22,20 +22,10 @@ namespace flow
             sha256 = SHA256.Create();
         }
 
-        private void Update()
-        {
-            if (Input.GetKeyDown(KeyCode.L))
-            {
-                loadProgress();
-            }
-            if (Input.GetKeyDown(KeyCode.S))
-            {
-                saveProgress();
-            }
-        }
-
         public void init()
         {
+            saveFile = Application.persistentDataPath + "/" + saveFile;
+
             state = new Logic.GameState();
             if (!System.IO.File.Exists(saveFile))
             {
