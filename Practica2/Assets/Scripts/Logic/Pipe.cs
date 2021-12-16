@@ -220,7 +220,12 @@ namespace flow.Logic
 
             if(index < 0)
             {
-                positions.AddRange(path);
+                foreach(Vector2 p in path)
+                {
+                    positions.Add(p);
+                    if (p == startPos || p == finalPos)
+                        break;
+                }
 
                 return true;
             }

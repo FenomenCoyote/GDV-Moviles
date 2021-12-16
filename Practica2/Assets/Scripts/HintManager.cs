@@ -17,6 +17,8 @@ namespace flow
 
         public void hintsChanged(int nHints)
         {
+            if (hintNumberText.IsDestroyed())
+                return;
             if (nHints <= 0)
             {
                 hintNumberText.text = "+";

@@ -77,6 +77,7 @@ namespace flow
             catch (Exception e)
             {
                 Debug.Log("Detectado intento de hack");
+                state.init(GameManager.Instance.getPackCategories());
                 return;
             }
 
@@ -91,6 +92,7 @@ namespace flow
             if (string.Compare(readHash, actualHash) != 0)
             {
                 Debug.Log("Detectado intento de hack");
+                state.init(GameManager.Instance.getPackCategories());
                 return;
             }
 

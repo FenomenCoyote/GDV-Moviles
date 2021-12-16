@@ -475,10 +475,6 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
-    - target: {fileID: 4461480324224056489, guid: 7ee61c398f688a549bbf87679d747e4e, type: 3}
-      propertyPath: _androidGameId
-      value: 4505790
-      objectReference: {fileID: 0}
     - target: {fileID: 7664281169987609938, guid: 7ee61c398f688a549bbf87679d747e4e, type: 3}
       propertyPath: m_RootOrder
       value: 1

@@ -250,7 +250,7 @@ namespace flow
                 currentPipe.notDraggingAnymore();
             }
 
-            if (input.isInside())
+            if (input.isInside() && ! (getTile(input.getMouseTilePos()).isInitialOrEnd() && getTile(input.getMouseTilePos()).getColor() != dragingColor))
                 AStar(input.getMouseTilePos());
 
             foreach (KeyValuePair<Color, Logic.Pipe> pipe in pipes)
@@ -327,6 +327,7 @@ namespace flow
 
             List<Vector2> path = aStar.Astrella(origin, dest, dragingColor);
             path.RemoveAt(0);
+
             currentPipe.addPathFromOrigin(path);
 
             foreach (KeyValuePair<Color, Logic.Pipe> pipe in pipes)
