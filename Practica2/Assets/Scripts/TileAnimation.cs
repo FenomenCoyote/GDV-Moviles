@@ -4,12 +4,16 @@ using UnityEngine;
 
 public class TileAnimation : MonoBehaviour
 {
+    [Tooltip("Scale curve")]
     [SerializeField] private AnimationCurve animatorCurve;
 
+    [Tooltip("Duration")]
     [SerializeField][Range(0.1f, 10f)] private float time = 1.0f;
 
+    [Tooltip("How much does it scale")]
     [SerializeField][Range(0.1f, 2f)] private float animationScale = 0.25f;
 
+    [Tooltip("if it hides and fades")]
     [SerializeField] private bool hideWhenEnded;
 
     private Vector3 initialScale;

@@ -4,6 +4,9 @@ using UnityEngine;
 
 namespace flow.Logic
 {
+    /// <summary>
+    /// Manages a single pipe (or flow) positions
+    /// </summary>
     public class Pipe 
     {
         private Vector2 startPos, finalPos;
@@ -66,6 +69,10 @@ namespace flow.Logic
             }
         }
 
+        /// <summary>
+        /// Gets the tip of the pipe
+        /// </summary>
+        /// <returns></returns>
         public Vector2 getOrigin()
         {
             if(checkPipeClosed())
@@ -111,6 +118,11 @@ namespace flow.Logic
             }
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="current"></param>
+        /// <returns>False if it was not cutted anymore and restores, true if it's it could be cutted</returns>
         public bool provisionalCut(Pipe current)
         {
             int index = isCuttingThisPipe(current);
@@ -129,6 +141,10 @@ namespace flow.Logic
             return a;
         }
 
+        /// <summary>
+        /// Returns theorical last pos if it was finally cutted
+        /// </summary>
+        /// <returns></returns>
         public Vector2 getLastPosProvisional()
         {
             if (provisionalIndex == 1000)
@@ -136,7 +152,9 @@ namespace flow.Logic
             return positions[provisionalIndex - 1];
         }
 
-
+        /// <summary>
+        /// Finally cuts the provisional cut
+        /// </summary>
         public void finallyCut()
         {
             if (provisionalIndex == 1000)
@@ -150,7 +168,11 @@ namespace flow.Logic
             changedMySolution = true;
         }
 
-
+        /// <summary>
+        /// Index of the cut the other pipes makes to this one
+        /// </summary>
+        /// <param name="other"></param>
+        /// <returns></returns>
         private int isCuttingThisPipe(Pipe other)
         {
             int i = 0;
@@ -165,6 +187,11 @@ namespace flow.Logic
             return -1;
         }
 
+        /// <summary>
+        /// Index of the cut the path makes to the pipe
+        /// </summary>
+        /// <param name="path"></param>
+        /// <returns></returns>
         private int isCuttingThisPipe(List<Vector2> path)
         {
             int i = 0;
@@ -179,12 +206,17 @@ namespace flow.Logic
             return -1;
         }
 
+
         public void restore()
         {
             provisionalIndex = 1000;
         }
 
-
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="pos"></param>
+        /// <returns>True if it was cutted, False otherwise</returns>
         public bool cutMyself(Vector2 pos)
         {  
             int index = positions.IndexOf(pos);
@@ -214,6 +246,11 @@ namespace flow.Logic
             return true;
         }
 
+        /// <summary>
+        /// Continues this pipe 
+        /// </summary>
+        /// <param name="path"></param>
+        /// <returns></returns>
         public bool addPathFromOrigin(List<Vector2> path)
         {
             int index = isCuttingThisPipe(path);

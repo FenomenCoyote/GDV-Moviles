@@ -37,9 +37,11 @@ namespace flow
 
         [SerializeField] private SpriteRenderer backGroundHighlight;
 
+        [Tooltip("backGround sprite color alpha")]
         [Range(0f, 1f)]
         [SerializeField] private float backGroundHighlightAlpha = 0.2f;
 
+        [Tooltip("Boundaries sprite color alpha")]
         [Range(0f, 1f)]
         [SerializeField] private float boundaryAlpha = 0.75f;
 
@@ -47,17 +49,23 @@ namespace flow
 
         [SerializeField] private SpriteRenderer radar;
 
+        //If its an empty tile or not
         private bool empty = false;
 
+        //If its an active tile
         private bool activeTile = false;
+
+        //If its an initialTile
         private bool initialOrEnd = false;
+
         private Color color;
 
+        //Locks the highLight color to allow 2 colors in the same tile
         private bool lockHighLightColor = false;
 
+        //Walls logic
         private Dictionary<Logic.Dir, bool> walls;
 
-      
         private void Awake()
         {
             walls = new Dictionary<Logic.Dir, bool>();
@@ -209,16 +217,6 @@ namespace flow
         public void enableHightLight()
         {
             backGroundHighlight.enabled = true;
-        }
-
-        public void disableHighLight()
-        {
-            backGroundHighlight.enabled = false;
-        }
-
-        public void disableCheck()
-        {
-            check.enabled = false;
         }
 
         public void disableAll()
