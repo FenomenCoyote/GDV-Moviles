@@ -10,6 +10,8 @@ namespace flow.Ads
 		[SerializeField] string _adUnitId = "Rewarded_Android";
 		[SerializeField] LevelManager levelManager;
 
+		bool alreadyAdded = false;
+
 		void Awake()
 		{
 			_showAdButton = GetComponent<Button>();
@@ -50,7 +52,17 @@ namespace flow.Ads
 			// Disable the button: 
 			_showAdButton.interactable = false;
 			// Then show the ad:
+
+#if UNITY_EDITOR
+			if (!alreadyAdded)
+			{
+				Advertisement.Show(_adUnitId, this);
+				alreadyAdded = true;
+			}
+			else Advertisement.Show(_adUnitId);
+#else
 			Advertisement.Show(_adUnitId, this);
+#endif
 		}
 
 		// Implement the Show Listener's OnUnityAdsShowComplete callback method to determine if the user gets a reward:
