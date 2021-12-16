@@ -1134,8 +1134,8 @@ MonoBehaviour:
   choosePackPanelButton: {fileID: 1172127501}
   getMoreHintsPanelButton: {fileID: 1929128501}
   getMoreLevelsPanelButton: {fileID: 93364877}
-  nextLevelButton: {fileID: 0}
-  previousLevelButton: {fileID: 0}
+  nextLevelButton: {fileID: 1937918260}
+  previousLevelButton: {fileID: 1967821794}
   levelDonePanel: {fileID: 2010448747}
   doneInStepsText: {fileID: 1317762894}
   endImage: {fileID: 937110196}
