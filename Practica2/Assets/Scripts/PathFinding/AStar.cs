@@ -4,6 +4,9 @@ using UnityEngine;
 
 namespace flow
 {
+    /// <summary>
+    /// Pathfinding 
+    /// </summary>
     public class AStar 
     {
         /// <summary>

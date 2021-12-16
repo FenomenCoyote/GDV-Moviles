@@ -98,7 +98,7 @@ namespace flow {
                 nextLevelButtonImg.color = Color.gray;
             }
 
-            board.setForGame(map, GameManager.Instance.GetColorTheme().colors, category.categoryColor, logicLevel.record);
+            board.setForGame(map, GameManager.Instance.GetColorTheme().colors, category.categoryColor);
 
             levelDonePanel.SetActive(false);
 

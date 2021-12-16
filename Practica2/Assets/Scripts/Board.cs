@@ -8,70 +8,104 @@ namespace flow
 {
     public class Board : MonoBehaviour
     {
+        //Manages input for me
         private BoardInput input;
 
+        //Size 
         private uint width;
         private uint height;
 
+        [Tooltip("Prefab to instance")]
         [SerializeField] private Tile tile;
+
+        //Tile array
         private Tile[,] tiles;
 
+        //Pipes (or flows) 
         private Dictionary<Color, Logic.Pipe> pipes;
 
+        //To manage logic and render
         private bool draging;
         private Color dragingColor, lastDraggedColor;
         private Logic.Pipe currentPipe;
 
+        //Manages each step the player did
         private Color lastSolution;
         private int steps;
 
+        //Pathfinding algorithm
         private AStar aStar;
 
+        //Manages hints
         private HashSet<Color> hintsDone;
         private Dictionary<Color, List<Vector2>> hintsSolution;
 
+        [Tooltip("How AStar algorithim penalizes some tiles")]
         [SerializeField]
         private int pathFindingPenalizeOtherColors = 1, pathFindingPenalizeMyEnd = 20;
 
+        [Tooltip("Text to update how many steps have been done")]
         [SerializeField]
-        Text stepsText;
+        private Text stepsText;
 
+        [Tooltip("Text to update how many flows are completed")]
         [SerializeField]
-        Text flowsText;
+        private Text flowsText;
 
+        [Tooltip("Text to update how many tiles are filled with a flow")]
         [SerializeField]
-        Text percentageText;
+        private Text percentageText;
 
+        [Tooltip("Reference to an Input Pointer")]
         [SerializeField]
-        InputPointerManager inputPointer;
+        private InputPointerManager inputPointer;
 
+        [Tooltip("Reference to the Level Manager")]
         [SerializeField]
-        LevelManager levelManager;
+        private LevelManager levelManager;
 
-        BoardScaler scaler;
+        //Scales the board in relation to the screen
+        private BoardScaler scaler;
 
+        /// <summary>
+        /// Disables input on board
+        /// </summary>
         public void disableInput()
         {
             if (input)
                 input.disable();
         }
 
+        /// <summary>
+        /// Enables input on board
+        /// </summary>
         public void enableInput()
         {
             if (input)
                 input.enable();
         }
 
+        /// <summary>
+        /// Gets number of pipes
+        /// </summary>
+        /// <returns></returns>
         public int getNPipes()
         {
             return pipes.Count;
         }
 
+        /// <summary>
+        /// Gets number of steps
+        /// </summary>
+        /// <returns></returns>
         public int getSteps()
         {
             return steps;
         }
 
+        /// <summary>
+        /// Initializes some variables
+        /// </summary>
         private void Awake()
         {
             input = GetComponent<BoardInput>();
@@ -87,6 +121,9 @@ namespace flow
             hintsSolution = new Dictionary<Color, List<Vector2>>();
         }
 
+        /// <summary>
+        /// Serialized variables check in debug
+        /// </summary>
 #if UNITY_EDITOR
         void Start()
         {
@@ -135,22 +172,20 @@ namespace flow
 
             bool updateMap = false;
 
-            if (input.justDown() && input.isInside())
-            {
-                inputDown();
-                updateMap = true;
+            if (input.justDown() && input.isInside()) //start a drag
+            {          
+                updateMap = inputDown();
             }
-            else if (currentPipe != null && input.justUp())
-            {
-                inputUp();
-                updateMap = true;
+            else if (currentPipe != null && input.justUp()) //end a drag
+            {        
+                updateMap = inputUp();
             }
-            else if (draging && input.isPressed() && input.isInside())
+            else if (draging && input.isPressed() && input.isInside()) //drag
             {
-                inputDrag();
-                updateMap = true;
+                updateMap = inputDrag();
             }
 
+            //if player interacted, render current state and check if im done
             if (updateMap)
             {
                 render();
@@ -168,7 +203,11 @@ namespace flow
             }
         }
 
-        private void inputDown()
+        /// <summary>
+        /// Called when input was just down
+        /// </summary>
+        /// <returns>True if the player clicked an active tile, false otherwise</returns>
+        private bool inputDown()
         {
             Vector2 t = input.getMouseTilePos();
 
@@ -190,14 +229,21 @@ namespace flow
                 getTile(currentPipe.getFinalPos()).shake();
 
                 lastDraggedColor = dragingColor;
+
+                return true;
             }
             else
             {
                 resetMyInfo();
+                return false;
             }
         }
 
-        private void inputUp()
+        /// <summary>
+        /// Called when the player releases the input (finger or mouse)
+        /// </summary>
+        /// <returns>True</returns>
+        private bool inputUp()
         {
             if (currentPipe != null)
             {
@@ -232,39 +278,49 @@ namespace flow
             inputPointer.enabled = false;
 
             resetMyInfo();
+
+            return true;
         }
 
-        private void inputDrag()
+        /// <summary>
+        /// Called when the player is dragging
+        /// </summary>
+        /// <returns>True if player moved somewhere, false otherwise</returns>
+        private bool inputDrag()
         {
             Vector2 pos = input.getMouseTilePos();
 
             inputPointer.setCorrect();
 
             if (currentPipe.getOrigin() == pos)
-                return;
+                return false;
 
             if (getTile(pos).isInitialOrEnd() && getTile(pos).getColor() != dragingColor)
             {
                 inputPointer.setNotCorrect();
-                return;
+                return false;
             }
 
-            AStar(pos);
+            return AStar(pos);
         }
 
-
-        private void AStar(Vector2 dest)
+        /// <summary>
+        /// Pathfind towards 'dest'
+        /// </summary>
+        /// <param name="dest"></param>
+        /// <returns>True if a path tried, false if i tried to go to an empty tile</returns>
+        private bool AStar(Vector2 dest)
         {
             Vector2 origin = currentPipe.getOrigin();
 
             if (origin == null)
             {
                 Debug.LogError("origin cant be null when dragging");
-                return;
+                return false;
             }
 
             if (getTile(dest).isEmpty())
-                return;
+                return false;
 
             List<Vector2> path = aStar.Astrella(origin, dest, dragingColor);
             path.RemoveAt(0);
@@ -278,9 +334,12 @@ namespace flow
                 if (pipe.Value.provisionalCut(currentPipe) && pipe.Value.isClosed())
                     GameManager.Instance.soundManager.playSound(SoundManager.Sound.Leak);
             }
+            return true;
         }
 
-
+        /// <summary>
+        /// Disables every tile sprite renderer
+        /// </summary>
         private void clear()
         {
             foreach(Tile t in tiles)
@@ -289,25 +348,37 @@ namespace flow
             }
         }
 
+        /// <summary>
+        /// Renders current board state
+        /// </summary>
         private void render()
         {
             clear();
+
             //render each pipe
             foreach (KeyValuePair<Color, Logic.Pipe> pipe in pipes)
             {
+                //I skip current render pipe
                 if (dragingColor != null && pipe.Key == dragingColor)
                     continue;
 
                 renderPipe(pipe.Key, pipe.Value, true);
             }
 
-            //render current pipe 
+            //render current pipe last
             if (currentPipe != null)
                 renderPipe(dragingColor, currentPipe, false);
         }
 
+        /// <summary>
+        /// Renders a pipe in color and highlighted if needed
+        /// </summary>
+        /// <param name="color"></param>
+        /// <param name="pipe"></param>
+        /// <param name="highLight"></param>
         private void renderPipe(Color color, Logic.Pipe pipe, bool highLight)
         {
+            //Check if im being provisionally cutted
             if(pipe.provisionalIndex == 1000)
             {
                 for (int i = 0; i < pipe.positions.Count; ++i)
@@ -375,6 +446,7 @@ namespace flow
                 }
             }
 
+            //If pipe was hinted...
             if (pipe.isClosed() && hintsDone.Contains(color) && hintsSolution[color].Count == pipe.positions.Count)
             {
                 bool isHintSolution = true;
@@ -396,6 +468,12 @@ namespace flow
             }
         }
 
+        /// <summary>
+        /// Gets dir from origin towards dest
+        /// </summary>
+        /// <param name="dest"></param>
+        /// <param name="origen"></param>
+        /// <returns></returns>
         private Logic.Dir getDir(Vector2 dest, Vector2 origen)
         {
             Vector2 delta = dest - origen;
@@ -403,6 +481,9 @@ namespace flow
             return Logic.Direction.GetDirectionFromVector(delta);
         }
 
+        /// <summary>
+        /// Rests meta info that keeps track of the drag
+        /// </summary>
         private void resetMyInfo()
         {
             draging = false;
@@ -410,6 +491,10 @@ namespace flow
             currentPipe = null;
         }
 
+        /// <summary>
+        /// Gets the number of pipes that are closed
+        /// </summary>
+        /// <returns></returns>
         private int getPipesCompleted()
         {
             int completed = 0;
@@ -423,6 +508,10 @@ namespace flow
             return completed;
         }
 
+        /// <summary>
+        /// Gets a number in [0, 100] that represent the percentage of tiles filled
+        /// </summary>
+        /// <returns></returns>
         private int getPercentage()
         {
             int active = 0;
@@ -442,8 +531,14 @@ namespace flow
             return (int)(done * 100.0f);
         }
 
-
-        public void setForGame(Logic.Map map, Color[] colors, Color categoryColor, int record)
+        /// <summary>
+        /// Initializes board using Map info
+        /// </summary>
+        /// <param name="map"></param>
+        /// <param name="colors"></param>
+        /// <param name="categoryColor"></param>
+        /// <param name="record"></param>
+        public void setForGame(Logic.Map map, Color[] colors, Color categoryColor)
         {
             Vector3 pos = transform.position;
 
@@ -566,6 +661,9 @@ namespace flow
             stepsText.text = "pasos: 0";
         }
 
+        /// <summary>
+        /// Resets board but keeps it's initial state
+        /// </summary>
         public void resetBoard()
         {
             if(steps > 0 || getPercentage() > 0)
@@ -593,7 +691,9 @@ namespace flow
             flowsText.text = "flujos: 0/" + pipes.Count;
         }
 
-
+        /// <summary>
+        /// Gives next hint
+        /// </summary>
         public void nextHint()
         {
             foreach(KeyValuePair<Color, Logic.Pipe> pipe in pipes)
@@ -634,7 +734,9 @@ namespace flow
             }
         }
 
-
+        /// <summary>
+        /// Borders every exterior tile
+        /// </summary>
         private void borderAll()
         {
             for(int i = 0; i < height; ++i)
@@ -649,9 +751,14 @@ namespace flow
             }
         }
 
-        private Tile getTile(Vector2 mousePos)
+        /// <summary>
+        /// Gets tile from position
+        /// </summary>
+        /// <param name="pos"></param>
+        /// <returns></returns>
+        private Tile getTile(Vector2 pos)
         {
-            return tiles[(int)mousePos.x, (int)mousePos.y];
+            return tiles[(int)pos.x, (int)pos.y];
         }
     }
 }

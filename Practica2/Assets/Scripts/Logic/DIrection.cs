@@ -7,8 +7,6 @@ namespace flow.Logic
 
     struct Direction
     {
-        Dir dir;
-
         static public Dir Opposite(Dir d)
         {
             switch (d)

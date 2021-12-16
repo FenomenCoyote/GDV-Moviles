@@ -7,18 +7,25 @@ namespace flow
 {
     public class BoardInput : MonoBehaviour
     {
+        //Board size
         private uint width, height;
 
+        //Keeps track of player input status and if it was made inside of the board or not
         private bool pressed = false, inside = false;
 
+        //Offset in unity units 
         private Vector2 offset;
+
+        //Position in tiles
         private Vector2 mouseTilePos;
 
+        //If im disabled or not
         private bool disabled = false;
 
 #if PLATFORM_ANDROID
         void Start()
         {
+            //Disable multitouch
             Input.multiTouchEnabled = false;
         }
 #endif
@@ -43,6 +50,9 @@ namespace flow
 #endif
         }
 
+        /// <summary>
+        /// Updates input in android
+        /// </summary>
         private void updateAndroid()
         {
             if (!disabled && Input.touchCount > 0)
@@ -65,6 +75,9 @@ namespace flow
             }
         }
 
+        /// <summary>
+        /// Inputs input in PC
+        /// </summary>
         private void updatePC()
         {
             if (!disabled)
@@ -86,6 +99,11 @@ namespace flow
             }
         }
 
+        /// <summary>
+        /// Prepares input receival
+        /// </summary>
+        /// <param name="w"></param>
+        /// <param name="h"></param>
         public void init(uint w, uint h)
         {
             width = w;
@@ -144,6 +162,10 @@ namespace flow
             return pressed;
         }
 
+        /// <summary>
+        /// Whether or not the input is inside the board area
+        /// </summary>
+        /// <returns></returns>
         public bool isInside()
         {
             return inside;

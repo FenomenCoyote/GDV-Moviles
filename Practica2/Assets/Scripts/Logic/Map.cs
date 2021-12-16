@@ -18,6 +18,9 @@ namespace flow.Logic
             pipes = new List<List<Tuple<uint, uint>>>();
         }
 
+        /// <summary>
+        /// Retrieves level information from string
+        /// </summary>
         public void loadLevel(string levelInfo)
         {
             string[] splitedInfo = levelInfo.Split(';');
@@ -43,8 +46,6 @@ namespace flow.Logic
 
             //Numero tuberias
             nPipes = uint.Parse(header[3]);
-
-            //TODO::Leer campos opcionales
 
             if(header.Length >= 5) //Puentes
             {

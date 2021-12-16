@@ -1,5 +1,8 @@
 ﻿namespace flow
 {
+    /// <summary>
+    /// Represents a tile for pathfinding algorithm
+    /// </summary>
     public class Nodo
     {
         public int x;

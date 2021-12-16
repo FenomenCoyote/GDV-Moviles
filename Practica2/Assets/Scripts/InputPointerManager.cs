@@ -48,7 +48,13 @@ namespace flow
 
         void Update()
         {
+
+#if PLATFORM_ANDROID
+            if(Input.touchCount > 0)         
+                transform.position = (Vector2)Camera.main.ScreenToWorldPoint(Input.GetTouch(0).position);
+#else
             transform.position = (Vector2)Camera.main.ScreenToWorldPoint(Input.mousePosition);
+#endif
         }
     }
 }
