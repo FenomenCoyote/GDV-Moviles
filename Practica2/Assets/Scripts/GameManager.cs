@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Advertisements;
 using UnityEngine.SceneManagement;
 
 namespace flow
@@ -37,6 +38,8 @@ namespace flow
 
         private string selectedLevel;
         private int lvlIndex;
+
+        private Ads.BannerAd banner;
 
         /*DEBUG*/
         [SerializeField] private LevelPack DEBUGPack;
@@ -82,6 +85,8 @@ namespace flow
             saver = GetComponent<ProgressSaverLoader>();
             saver.init();
             soundManager = GetComponent<SoundManager>();
+
+            banner = GetComponent<Ads.BannerAd>();
         }
 
         private void setInfo(LevelManager lm, PackCategory[] categories, Scene scene)
@@ -125,10 +130,13 @@ namespace flow
             selectedCategory = category;
             soundManager.playSound(SoundManager.Sound.Forward);
             SceneManager.LoadScene((int)Scene.ChooseLevel);
+
+            banner.LoadBanner();
         }
 
         public void gotoSelectCategoryMenu()
         {
+            Advertisement.Banner.Hide();
             soundManager.playSound(SoundManager.Sound.Back);
             SceneManager.LoadScene((int)Scene.ChoosePack);
         }

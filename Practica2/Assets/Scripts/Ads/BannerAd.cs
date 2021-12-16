@@ -14,9 +14,6 @@ namespace flow.Ads
         {
             // Set the banner position:
             Advertisement.Banner.SetPosition(_bannerPosition);
-
-            LoadBanner();
-            ShowBannerAd();
         }
 
         // Implement a method to call when the Load Banner button is clicked:
@@ -37,6 +34,7 @@ namespace flow.Ads
         void OnBannerLoaded()
         {
             Debug.Log("Banner loaded");
+            ShowBannerAd();
         }
 
         // Implement code to execute when the load errorCallback event triggers:
@@ -58,6 +56,11 @@ namespace flow.Ads
 
             // Show the loaded Banner Ad Unit:
             Advertisement.Banner.Show(_adUnitId, options);
+        }
+
+        public void hide()
+        {
+
         }
 
         void OnBannerClicked() { }
