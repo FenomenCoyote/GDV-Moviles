@@ -72,6 +72,7 @@ namespace flow.Ads
 			{
 				Debug.Log("Unity Ads Rewarded Ad Completed");
 				levelManager.addHint();
+				Advertisement.Banner.Show("Banner_Android");
 
 				// Load another ad:
 				Advertisement.Load(_adUnitId, this);
@@ -92,7 +93,7 @@ namespace flow.Ads
 			// Use the error details to determine whether to try to load another ad.
 		}
 
-		public void OnUnityAdsShowStart(string adUnitId) { }
+		public void OnUnityAdsShowStart(string adUnitId) { Advertisement.Banner.Hide(); }
 		public void OnUnityAdsShowClick(string adUnitId) { }
 
 		void OnDestroy()
