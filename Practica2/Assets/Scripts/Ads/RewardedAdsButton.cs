@@ -2,7 +2,8 @@ using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.Advertisements;
 
-namespace flow {
+namespace flow.Ads
+{
 	public class RewardedAdsButton : MonoBehaviour, IUnityAdsLoadListener, IUnityAdsShowListener
 	{
 		Button _showAdButton;
@@ -15,6 +16,11 @@ namespace flow {
 			//Disable button until ad is ready to show
 			_showAdButton.interactable = false;
 		}
+
+		void Start()
+        {
+			LoadAd();
+        }
 
 		// Load content to the Ad Unit:
 		public void LoadAd()

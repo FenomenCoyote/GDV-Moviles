@@ -17,7 +17,7 @@ namespace flow.UI
         MenuButton categoryButton;
 
         [SerializeField]
-        Text removeAdsText;
+        Text removeAdsText; 
 
         RectTransform rectTransform;
 
@@ -48,7 +48,7 @@ namespace flow.UI
                                "<color=" + ColorToHex(theme.colors[5]) + ">s</color>";
 
             auxHeight += nivelesText.rectTransform.rect.height + vOrder.spacing;
-
+            auxHeight += vOrder.padding.bottom;
             auxHeight += removeAdsText.rectTransform.rect.height + vOrder.spacing;
 
             PackCategory[] categories = GameManager.Instance.getPackCategories();

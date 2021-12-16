@@ -467,19 +467,7 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 148815262}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 1514399047}
-        m_TargetAssemblyTypeName: flow.GameManager, Assembly-CSharp
-        m_MethodName: addHint
-        m_Mode: 1
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
+      m_Calls: []
 --- !u!114 &148815262
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1116,6 +1104,7 @@ GameObject:
   m_Component:
   - component: {fileID: 643610039}
   - component: {fileID: 643610038}
+  - component: {fileID: 643610040}
   m_Layer: 0
   m_Name: LevelManager
   m_TagString: Untagged
@@ -1145,12 +1134,11 @@ MonoBehaviour:
   choosePackPanelButton: {fileID: 1172127501}
   getMoreHintsPanelButton: {fileID: 1929128501}
   getMoreLevelsPanelButton: {fileID: 93364877}
-  nextLevelButtonImg: {fileID: 1937918261}
-  previousLevelButtonImg: {fileID: 1967821795}
+  nextLevelButton: {fileID: 0}
+  previousLevelButton: {fileID: 0}
   levelDonePanel: {fileID: 2010448747}
   doneInStepsText: {fileID: 1317762894}
   endImage: {fileID: 937110196}
-  rewardedAdButton: {fileID: 148815264}
 --- !u!4 &643610039
 Transform:
   m_ObjectHideFlags: 0
@@ -1165,6 +1153,19 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 5
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &643610040
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 643610037}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 488fe130118051043940e8c4df8b6016, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _adUnitId: Interstitial_Android
 --- !u!1 &656231771
 GameObject:
   m_ObjectHideFlags: 0
@@ -3359,17 +3360,6 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
---- !u!114 &1514399047 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 7664281169987609939, guid: 7ee61c398f688a549bbf87679d747e4e, type: 3}
-  m_PrefabInstance: {fileID: 7664281169382797319}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: a3a4ea8d9917af049aea25e42fa6a941, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1 &1526289092
 GameObject:
   m_ObjectHideFlags: 0
@@ -4279,7 +4269,7 @@ MonoBehaviour:
     m_HighlightedSprite: {fileID: 0}
     m_PressedSprite: {fileID: 21300000, guid: c9f3f8602ac6a3f448c18d72d4ef70f6, type: 3}
     m_SelectedSprite: {fileID: 0}
-    m_DisabledSprite: {fileID: 0}
+    m_DisabledSprite: {fileID: 21300000, guid: e39186c0d31b0794097065979053ffe5, type: 3}
   m_AnimationTriggers:
     m_NormalTrigger: Normal
     m_HighlightedTrigger: Highlighted
@@ -4411,7 +4401,7 @@ MonoBehaviour:
     m_HighlightedSprite: {fileID: 0}
     m_PressedSprite: {fileID: 21300000, guid: c9f3f8602ac6a3f448c18d72d4ef70f6, type: 3}
     m_SelectedSprite: {fileID: 0}
-    m_DisabledSprite: {fileID: 0}
+    m_DisabledSprite: {fileID: 21300000, guid: db4d564748538e3419907e4545d318a1, type: 3}
   m_AnimationTriggers:
     m_NormalTrigger: Normal
     m_HighlightedTrigger: Highlighted

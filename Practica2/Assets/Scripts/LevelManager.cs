@@ -34,10 +34,10 @@ namespace flow {
         private GameObject getMoreLevelsPanelButton;
 
         [SerializeField]
-        private Image nextLevelButtonImg;
+        private Button nextLevelButton;
 
         [SerializeField]
-        private Image previousLevelButtonImg;
+        private Button previousLevelButton;
 
         [SerializeField]
         private GameObject levelDonePanel;
@@ -48,13 +48,17 @@ namespace flow {
         [SerializeField]
         private UI.EndImage endImage;
 
-        [SerializeField]
-        RewardedAdsButton rewardedAdButton;
+        private Ads.InterstitialAd levelFinishedAd;
 
         private string level;
         private LevelPack pack;
         private PackCategory category;
         private int currentLvlIndex;
+
+        private void Awake()
+        {
+            levelFinishedAd = GetComponent<Ads.InterstitialAd>();
+        }
 
         public void setLevel(string levelInfo, int index,LevelPack selectedPack, PackCategory selectedCategory)
         {
@@ -89,20 +93,19 @@ namespace flow {
                 recordText.text = "récord: " + logicLevel.record.ToString();
             }
             int t = GameManager.Instance.getLevelPackSize();
+
             if (currentLvlIndex == 0)
             {
-                previousLevelButtonImg.color = Color.gray;
+                previousLevelButton.interactable = false;
             }
-            else if (currentLvlIndex >= GameManager.Instance.getLevelPackSize() - 2) { //-2 porque el tamaño del level pack es 151)
-                
-                nextLevelButtonImg.color = Color.gray;
+            else if (currentLvlIndex >= GameManager.Instance.getLevelPackSize() - 2) { //-2 porque el tamaño del level pack es 151)           
+                nextLevelButton.interactable = false;
             }
 
             board.setForGame(map, GameManager.Instance.GetColorTheme().colors, category.categoryColor);
 
             levelDonePanel.SetActive(false);
-
-            rewardedAdButton.LoadAd();
+            levelFinishedAd.LoadAd();
         }
 
         public void resetLevel()
@@ -116,6 +119,8 @@ namespace flow {
         {
             bool perfect = steps == board.getNPipes();
             GameManager.Instance.levelFinished(steps, perfect);
+
+            levelFinishedAd.ShowAd();
 
             Logic.GameState state = GameManager.Instance.getState();
             Logic.Level logicLevel = state.getCategoryByName(category.categoryName).getPackByName(pack.packName).levels[currentLvlIndex];
