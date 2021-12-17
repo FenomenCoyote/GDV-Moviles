@@ -115,11 +115,6 @@ namespace flow
             saver.addHint();
         }
 
-        public void removeAdds()
-        {
-            //TODO
-        }
-
         /// <summary>
         /// Spend one hint and save the new number of hints
         /// </summary>

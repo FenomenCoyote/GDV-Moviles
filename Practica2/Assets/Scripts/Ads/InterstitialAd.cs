@@ -56,9 +56,10 @@ namespace flow.Ads
         /// <param name="showCompletionState">Completition state</param>
         public void OnUnityAdsShowComplete(string adUnitId, UnityAdsShowCompletionState showCompletionState)
         {
-            if (adUnitId.Equals(this.adUnitId))
+            if (adUnitId.Equals(this.adUnitId) && callback != null)
             {
                 callback(showCompletionState);
+                callback = null;
             }
         }
 
