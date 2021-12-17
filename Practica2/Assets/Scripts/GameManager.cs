@@ -225,11 +225,5 @@ namespace flow
         /// </summary>
         /// <returns></returns>
         public PackCategory getPackCategory() { return selectedCategory; }
-        /// <summary>
-        /// Returns the number of levels of the selected level pack
-        /// </summary>
-        /// <returns></returns>
-        public int getLevelPackSize() { return selectedPack.levels.ToString().Split('\n').Length; }
-
     }
 }
