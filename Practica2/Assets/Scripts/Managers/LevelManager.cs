@@ -22,7 +22,7 @@ namespace flow
         private Text recordText;
 
         [SerializeField]
-        private HintManager hintManager;
+        private UI.HintShower hintShower;
 
         [SerializeField]
         private Text completeText;
@@ -215,7 +215,7 @@ namespace flow
 
             GameManager.Instance.hintWasted();
 
-            hintManager.hintsChanged((int)GameManager.Instance.getNHints());
+            hintShower.hintsChanged((int)GameManager.Instance.getNHints());
 
             //Calls board to use hint
             board.nextHint();
@@ -227,7 +227,7 @@ namespace flow
         public void addHint()
         {
             GameManager.Instance.addHint();
-            hintManager.hintsChanged((int)GameManager.Instance.getNHints());
+            hintShower.hintsChanged((int)GameManager.Instance.getNHints());
         }
 
         /// <summary>

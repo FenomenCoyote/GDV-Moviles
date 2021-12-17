@@ -1,9 +1,9 @@
 using UnityEngine;
 using UnityEngine.UI;
 
-namespace flow
+namespace flow.UI
 {
-    public class HintManager : MonoBehaviour
+    public class HintShower : MonoBehaviour
     {
         [SerializeField]
         private Text hintNumberText;    //The text that shows the number of hints
