@@ -5,7 +5,6 @@ using UnityEngine.UI;
 
 namespace flow.UI
 {
-
     public class SelectLevels : MonoBehaviour
     {
         [SerializeField] Text categoryText;         //The text that shows the name of the pack category

@@ -15,8 +15,6 @@ namespace flow
 
         [SerializeField] string saveFile;
 
-        //private string pepper = "x49378jhx10ex456e12342e21axew";
-
         public ProgressSaverLoader()
         {
             sha256 = SHA256.Create();
@@ -40,7 +38,6 @@ namespace flow
             save.gameState = state;
 
             string serializedState = JsonUtility.ToJson(save.gameState);
-            //serializedState += pepper;
 
             save.hashCode = Encoding.UTF8.GetString(sha256.ComputeHash(Encoding.UTF8.GetBytes(serializedState)));
 
