@@ -1,9 +1,8 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-namespace flow {
+namespace flow
+{
 
     /// <summary>
     /// Class which implements the funcionalities of level scene UI and initializes board
@@ -164,7 +163,7 @@ namespace flow {
             if (currentLvlIndex >= logicPack.levels.Length - 1)
             {
                 completeText.text = "Congratulations!";
-                doneInStepsText.text = "You completed the" + pack.packName;
+                doneInStepsText.text = "You reached the end of the " + pack.packName;
                 nextLevelPanelButton.SetActive(false);
                 getMoreHintsPanelButton.SetActive(false);
 

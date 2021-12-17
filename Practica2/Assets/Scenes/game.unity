@@ -1128,7 +1128,7 @@ MonoBehaviour:
   boardSizeText: {fileID: 1293459001}
   recordText: {fileID: 1687517911}
   hintManager: {fileID: 793441519}
-  completeText: {fileID: 1317762894}
+  completeText: {fileID: 897060311}
   nextLevelPanelButton: {fileID: 344505154}
   choosePackPanelButton: {fileID: 1172127501}
   getMoreHintsPanelButton: {fileID: 1929128501}

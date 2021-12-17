@@ -42,7 +42,7 @@ namespace flow.Logic
         /// <summary>
         /// Returns the level pack with the given name
         /// </summary>
-        /// <param name="name"></param>
+        /// <param name="name">Level pack name</param>
         /// <returns>Logical LvlPack with given name</returns>
         public LvlPack getPackByName(string name)
         {
@@ -135,7 +135,7 @@ namespace flow.Logic
         /// <summary>
         /// Returns the Category with the given name
         /// </summary>
-        /// <param name="name"></param>
+        /// <param name="name">Category name</param>
         /// <returns></returns>
         public Category getCategoryByName(string name)
         {

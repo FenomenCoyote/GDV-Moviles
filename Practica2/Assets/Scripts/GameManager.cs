@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Advertisements;
 using UnityEngine.SceneManagement;
@@ -8,6 +6,7 @@ namespace flow
 {
     public class GameManager : MonoBehaviour
     {
+        //Game scenes
         public enum Scene
         {
             ChoosePack = 0,
@@ -15,7 +14,8 @@ namespace flow
             Level = 2,
         }
 
-        ProgressSaverLoader saver;
+        //Save and load system
+        private ProgressSaverLoader saver;
 
         [SerializeField]
         private Scene scene;
@@ -29,11 +29,14 @@ namespace flow
         [SerializeField]
         private LevelManager levelMngr;
 
+        //Instance of the GameManager
         public static GameManager Instance { get; private set; }
 
+        //Selected level pack and pack category
         private LevelPack selectedPack;
         private PackCategory selectedCategory;
 
+        //Level info
         private string selectedLevel;
         private int lvlIndex;
 
@@ -47,6 +50,8 @@ namespace flow
 
         private void Awake()
         {
+            //We make sure that we have only one instance of the GameManager between scenes
+            //and we pass the GameManager information
             if (Instance != null)
             {
                 Instance.setInfo(levelMngr, categories, scene);
@@ -54,8 +59,9 @@ namespace flow
                 return;
             }
 
+            //DEBUG. Just for loading the level we want
 #if UNITY_EDITOR
-            if(scene != Scene.ChoosePack)
+            if (scene != Scene.ChoosePack)
             {
                 if (selectedPack == null) selectedPack = DEBUGPack;
                 if (selectedCategory == null) selectedCategory = DEBUGCategory;
@@ -78,6 +84,7 @@ namespace flow
             Instance = this;
             DontDestroyOnLoad(this.gameObject);
 
+            //We initialize the save and load system
             saver = GetComponent<ProgressSaverLoader>();
             saver.init();
         }

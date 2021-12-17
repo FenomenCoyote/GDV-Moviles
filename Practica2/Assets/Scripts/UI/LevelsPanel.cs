@@ -1,9 +1,8 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-namespace flow.UI {
+namespace flow.UI
+{
     public class LevelsPanel : MonoBehaviour
     {
 

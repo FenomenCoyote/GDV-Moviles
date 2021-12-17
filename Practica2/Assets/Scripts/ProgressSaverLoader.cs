@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using System.IO;
 using System.Text;
@@ -10,21 +8,32 @@ namespace flow
 {
     public class ProgressSaverLoader : MonoBehaviour
     {
-        SHA256 sha256;
+        private SHA256 sha256;
         private Logic.GameState state;
 
-        [SerializeField] string saveFile;
+        [SerializeField] string saveFile; //json file
 
+        /// <summary>
+        /// Constructor. It creates a sha256 object
+        /// </summary>
         public ProgressSaverLoader()
         {
             sha256 = SHA256.Create();
         }
 
+        /// <summary>
+        /// Initializes the save and load system
+        /// </summary>
         public void init()
         {
+            //We create the route of the save file
             saveFile = Application.persistentDataPath + "/" + saveFile;
 
+            //We initialize the game state
             state = new Logic.GameState();
+
+            //If the save file doesn't exist we initalize the game state,
+            //in other case we load the current progress
             if (!System.IO.File.Exists(saveFile))
             {
                 state.init(GameManager.Instance.getPackCategories());
@@ -32,11 +41,15 @@ namespace flow
             else loadProgress();
         }
 
+        /// <summary>
+        /// Saves the current progress of the game
+        /// </summary>
         private void saveProgress()
         {
             Logic.Save save = new Logic.Save();
             save.gameState = state;
 
+            //We create a hash 
             string serializedState = JsonUtility.ToJson(save.gameState);
 
             save.hashCode = Encoding.UTF8.GetString(sha256.ComputeHash(Encoding.UTF8.GetBytes(serializedState)));
@@ -45,14 +58,18 @@ namespace flow
 
             byte[] json = Encoding.UTF8.GetBytes(serializedSave);
 
+            //We write on the save file
             FileStream file = File.Open(saveFile, FileMode.Create);
             file.Write(json, 0, json.Length);
             file.Close();
         }
 
-
+        /// <summary>
+        /// Load the progress from the save file
+        /// </summary>
         private void loadProgress()
         {
+            //We read the save file
             string readSave = File.ReadAllText(saveFile, Encoding.UTF8);
 
             Logic.Save save;
@@ -63,12 +80,12 @@ namespace flow
             }
             catch (Exception e)
             {
-                Debug.Log("Detectado intento de hack");
+                Debug.Log("Hack attempt detected");
                 state.init(GameManager.Instance.getPackCategories());
                 return;
             }
 
-            //Comprobacion de hash
+            //Hash check. We compare the read hash and the actual hash
             byte[] readState = Encoding.UTF8.GetBytes(JsonUtility.ToJson(save.gameState));
             byte[] hash = sha256.ComputeHash(readState);
 
@@ -78,7 +95,7 @@ namespace flow
 
             if (string.Compare(readHash, actualHash) != 0)
             {
-                Debug.Log("Detectado intento de hack");
+                Debug.Log("Hack attempt detected");
                 state.init(GameManager.Instance.getPackCategories());
                 return;
             }
@@ -122,19 +139,34 @@ namespace flow
             saveProgress();
         }
 
+        /// <summary>
+        /// Spend one hint and save it
+        /// </summary>
         public void hintWasted()
         {
             state.nHints--;
             saveProgress();
         }
 
+        /// <summary>
+        /// Add one hint and save it
+        /// </summary>
         public void addHint()
         {
             state.nHints++;
             saveProgress();
         }
 
+        /// <summary>
+        /// Returns the number of hints
+        /// </summary>
+        /// <returns></returns>
         public uint getNHints() { return state.nHints; }
+
+        /// <summary>
+        /// Returns the game state
+        /// </summary>
+        /// <returns></returns>
         public Logic.GameState getState() { return state; }
     }
 }
