@@ -37,6 +37,8 @@ namespace flow
             Color c = sprite.color;
             c.a = alphaCorrect;
             sprite.color = c;
+
+            updatePos();
         }
 
         public void setNotCorrect()
@@ -48,7 +50,12 @@ namespace flow
 
         void Update()
         {
+            if(sprite.enabled)
+                updatePos();
+        }
 
+        void updatePos()
+        {
 #if PLATFORM_ANDROID
             if(Input.touchCount > 0)         
                 transform.position = (Vector2)Camera.main.ScreenToWorldPoint(Input.GetTouch(0).position);
