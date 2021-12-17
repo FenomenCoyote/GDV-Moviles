@@ -91,7 +91,8 @@ namespace flow {
             {
                 previousLevelButton.interactable = false;
             }
-            else if (currentLvlIndex >= GameManager.Instance.getLevelPackSize() - 2) { //-2 porque el tamaño del level pack es 151)           
+            if (currentLvlIndex >= GameManager.Instance.getLevelPackSize() - 2 || 
+                state.getCategoryByName(category.categoryName).getPackByName(pack.packName).levels[currentLvlIndex + 1].locked) { //-2 porque el tamaño del level pack es 151)           
                 nextLevelButton.interactable = false;
             }
 
