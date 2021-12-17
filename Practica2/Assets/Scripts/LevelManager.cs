@@ -48,17 +48,10 @@ namespace flow {
         [SerializeField]
         private UI.EndImage endImage;
 
-        private Ads.InterstitialAd levelFinishedAd;
-
         private string level;
         private LevelPack pack;
         private PackCategory category;
         private int currentLvlIndex;
-
-        private void Awake()
-        {
-            levelFinishedAd = GetComponent<Ads.InterstitialAd>();
-        }
 
         public void setLevel(string levelInfo, int index,LevelPack selectedPack, PackCategory selectedCategory)
         {
@@ -105,7 +98,6 @@ namespace flow {
             board.setForGame(map, GameManager.Instance.GetColorTheme().colors, category.categoryColor);
 
             levelDonePanel.SetActive(false);
-            levelFinishedAd.LoadAd();
         }
 
         public void resetLevel()
@@ -119,8 +111,6 @@ namespace flow {
         {
             bool perfect = steps == board.getNPipes();
             GameManager.Instance.levelFinished(steps, perfect);
-
-            levelFinishedAd.ShowAd();
 
             Logic.GameState state = GameManager.Instance.getState();
             Logic.Level logicLevel = state.getCategoryByName(category.categoryName).getPackByName(pack.packName).levels[currentLvlIndex];
@@ -137,7 +127,6 @@ namespace flow {
             }
             recordText.text = "récord: " + logicLevel.record.ToString();
 
-            levelDonePanel.SetActive(true);
             //if we are complete the last level we hhave finished the leval pack
             if (currentLvlIndex >= GameManager.Instance.getLevelPackSize() - 2)
             {
@@ -149,7 +138,7 @@ namespace flow {
                 choosePackPanelButton.SetActive(true);
                 getMoreLevelsPanelButton.SetActive(true);
             }
-            else 
+            else
             {
                 completeText.text = "Level Complete!";
                 doneInStepsText.text = "You completed the level in " + steps + " moves.";
@@ -159,10 +148,16 @@ namespace flow {
                 choosePackPanelButton.SetActive(false);
                 getMoreLevelsPanelButton.SetActive(false);
             }
-            
+
             //disable board inputs
             board.disableInput();
 
+            AdsManager.Instance.playInterstitialAd(adFinished);
+        }
+
+        private void adFinished()
+        {
+            levelDonePanel.SetActive(true);
             SoundManager.Instance.playSound(SoundManager.Sound.Flow);
         }
 

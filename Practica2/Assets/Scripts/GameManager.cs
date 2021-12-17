@@ -37,8 +37,6 @@ namespace flow
         private string selectedLevel;
         private int lvlIndex;
 
-        private Ads.BannerAd banner;
-
         /*DEBUG*/
         [SerializeField] private LevelPack DEBUGPack;
         [SerializeField] private PackCategory DEBUGCategory;
@@ -82,8 +80,6 @@ namespace flow
 
             saver = GetComponent<ProgressSaverLoader>();
             saver.init();
-
-            banner = GetComponent<Ads.BannerAd>();
         }
 
         private void setInfo(LevelManager lm, PackCategory[] categories, Scene scene)
@@ -127,8 +123,6 @@ namespace flow
             selectedCategory = category;
             SoundManager.Instance.playSound(SoundManager.Sound.Forward);
             SceneManager.LoadScene((int)Scene.ChooseLevel);
-
-            banner.LoadBanner();
         }
 
         public void gotoSelectCategoryMenu()

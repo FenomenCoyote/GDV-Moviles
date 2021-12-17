@@ -10,21 +10,22 @@ namespace flow.Ads
         [SerializeField] bool _testMode = true;
         private string _gameId;
 
-        void Awake()
-        {
-            InitializeAds();
-        }
+        private InitializedCallback initializedCallback;
 
-        public void InitializeAds()
+        public delegate void InitializedCallback();
+
+        public void InitializeAds(InitializedCallback initializedCallback)
         {
+            this.initializedCallback = initializedCallback;
             _gameId = (Application.platform == RuntimePlatform.IPhonePlayer)
                 ? _iOSGameId
                 : _androidGameId;
             Advertisement.Initialize(_gameId, _testMode, this);
         }
+
         public void OnInitializationComplete()
         {
-            Debug.Log("Unity Ads initialization complete.");
+            initializedCallback();
         }
 
         public void OnInitializationFailed(UnityAdsInitializationError error, string message)

@@ -21,22 +21,24 @@ namespace flow.Ads
 
 		void Start()
         {
-			LoadAd();
+			if (AdsManager.Instance.isInitialized)
+				LoadAd();
+			else
+				AdsManager.Instance.waitForInitialization(LoadAd);
         }
 
 		// Load content to the Ad Unit:
 		public void LoadAd()
 		{
-			// IMPORTANT! Only load content AFTER initialization (in this example, initialization is handled in a different script).
-			Debug.Log("Loading Ad: " + _adUnitId);
+			if (!AdsManager.Instance.isInitialized)
+				return;
+
 			Advertisement.Load(_adUnitId, this);
 		}
 
 		// If the ad successfully loads, add a listener to the button and enable it:
 		public void OnUnityAdsAdLoaded(string adUnitId)
 		{
-			Debug.Log("Ad Loaded: " + adUnitId);
-
 			if (adUnitId.Equals(_adUnitId))
 			{
 				// Configure the button to call the ShowAd() method when clicked:
@@ -49,6 +51,9 @@ namespace flow.Ads
 		// Implement a method to execute when the user clicks the button.
 		public void ShowAd()
 		{
+			if (!AdsManager.Instance.isInitialized)
+				return;
+
 			// Disable the button: 
 			_showAdButton.interactable = false;
 			// Then show the ad:
@@ -95,6 +100,7 @@ namespace flow.Ads
 
 		public void OnUnityAdsShowStart(string adUnitId) { Advertisement.Banner.Hide(); }
 		public void OnUnityAdsShowClick(string adUnitId) { }
+
 
 		void OnDestroy()
 		{
