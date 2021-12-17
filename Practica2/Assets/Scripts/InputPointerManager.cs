@@ -71,6 +71,9 @@ namespace flow
                 updatePos();
         }
 
+        /// <summary>
+        /// Update position of pointer
+        /// </summary>
         void updatePos()
         {
 #if PLATFORM_ANDROID
