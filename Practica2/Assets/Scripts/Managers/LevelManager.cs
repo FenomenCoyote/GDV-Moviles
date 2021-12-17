@@ -210,7 +210,7 @@ namespace flow
         /// </summary>
         public void applyHint()
         {
-            if (GameManager.Instance.getNHints() <= 0)
+            if (GameManager.Instance.getNHints() <= 0 || board.isCompleted())
                 return;
 
             GameManager.Instance.hintWasted();

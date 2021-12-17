@@ -94,6 +94,15 @@ namespace flow
         }
 
         /// <summary>
+        /// Returns if board was finished
+        /// </summary>
+        /// <returns>True if board is finished, false either</returns>
+        public bool isCompleted()
+        {
+            return getPipesCompleted() == pipes.Count;
+        }
+
+        /// <summary>
         /// Gets number of steps
         /// </summary>
         /// <returns></returns>
