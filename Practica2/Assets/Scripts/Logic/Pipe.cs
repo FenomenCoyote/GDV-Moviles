@@ -11,8 +11,11 @@ namespace flow.Logic
     {
         private Vector2 startPos, finalPos;
 
+        //List of positions 
         public List<Vector2> positions { get; private set; }
 
+        //is 1000 when is not being provisionally cutted
+        //otherwise, it points the provisionall cut position
         public int provisionalIndex { get; private set; }
 
         private bool closed;
@@ -20,7 +23,6 @@ namespace flow.Logic
         private bool changedMySolution;
 
         private List<Vector2> solutionPositions;
-
 
         /// <summary>
         /// Constructor
@@ -49,6 +51,11 @@ namespace flow.Logic
             positions.Clear();
         }
 
+        /// <summary>
+        /// Sets start and final pos
+        /// </summary>
+        /// <param name="ipos"></param>
+        /// <param name="epos"></param>
         public void setInitialAndEndTiles(Vector2 ipos, Vector2 epos)
         {
             positions.Clear();
@@ -57,7 +64,10 @@ namespace flow.Logic
             finalPos = epos;
         }
 
-
+        /// <summary>
+        /// Starts a drag and cuts if it's needed
+        /// </summary>
+        /// <param name="pos"></param>
         public void startDrag(Vector2 pos)
         {
             if (pos == startPos || pos == finalPos)
@@ -97,6 +107,9 @@ namespace flow.Logic
             return finalPos;
         }
 
+        /// <summary>
+        /// If this pipe reached both ends, it means is now closed
+        /// </summary>
         public void notDraggingAnymore()
         {
             if (checkPipeClosed())
@@ -212,13 +225,16 @@ namespace flow.Logic
             return -1;
         }
 
+        /// <summary>
+        /// No more provisional cut
+        /// </summary>
         public void restore()
         {
             provisionalIndex = 1000;
         }
 
         /// <summary>
-        /// 
+        /// Cuts myself 
         /// </summary>
         /// <param name="pos"></param>
         /// <returns>True if it was cutted, False otherwise</returns>
@@ -288,6 +304,10 @@ namespace flow.Logic
             return changedMySolution;
         }
 
+        /// <summary>
+        /// Sets the positions to match a solution
+        /// </summary>
+        /// <param name="solution"></param>
         public void setSolution(in List<Vector2> solution)
         {
             positions.Clear();
@@ -302,6 +322,11 @@ namespace flow.Logic
             closed = true;
         }
 
+        /// <summary>
+        /// Opens pipe at index. 
+        /// Cuts itself and keeps the longest path
+        /// </summary>
+        /// <param name="index"></param>
         private void openPipe(int index)
         {
             if(index < positions.Count / 2)
