@@ -44,8 +44,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ee311b2b0780c3648a63657880408982, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _androidGameId: 4505790
-  _testMode: 1
+  androidGameId: 4505790
+  testMode: 1
 --- !u!114 &1113012038136244217
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -58,4 +58,5 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 344d003532dbc0f42aec7150204b3943, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _bannerPosition: 4
+  bannerPosition: 4
+  adUnitId: Banner_Android

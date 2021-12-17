@@ -6,17 +6,17 @@ namespace flow.Ads
 {
 	public class RewardedAdsButton : MonoBehaviour, IUnityAdsLoadListener, IUnityAdsShowListener
 	{
-		Button _showAdButton;
-		[SerializeField] string _adUnitId = "Rewarded_Android";
+		Button showAdButton;
+		[SerializeField] string adUnitId = "Rewarded_Android";
 		[SerializeField] LevelManager levelManager;
 
 		bool alreadyAdded = false;
 
 		void Awake()
 		{
-			_showAdButton = GetComponent<Button>();
+			showAdButton = GetComponent<Button>();
 			//Disable button until ad is ready to show
-			_showAdButton.interactable = false;
+			showAdButton.interactable = false;
 		}
 
 		void Start()
@@ -33,18 +33,18 @@ namespace flow.Ads
 			if (!AdsManager.Instance.isInitialized)
 				return;
 
-			Advertisement.Load(_adUnitId, this);
+			Advertisement.Load(adUnitId, this);
 		}
 
 		// If the ad successfully loads, add a listener to the button and enable it:
 		public void OnUnityAdsAdLoaded(string adUnitId)
 		{
-			if (adUnitId.Equals(_adUnitId))
+			if (adUnitId.Equals(this.adUnitId))
 			{
-				// Configure the button to call the ShowAd() method when clicked:
-				_showAdButton.onClick.AddListener(ShowAd);
-				// Enable the button for users to click:
-				_showAdButton.interactable = true;
+                // Configure the button to call the ShowAd() method when clicked
+                showAdButton.onClick.AddListener(this.ShowAd);
+                // Enable the button for users to click:
+                showAdButton.interactable = true;
 			}
 		}
 
@@ -54,58 +54,81 @@ namespace flow.Ads
 			if (!AdsManager.Instance.isInitialized)
 				return;
 
-			// Disable the button: 
-			_showAdButton.interactable = false;
-			// Then show the ad:
+			//We disable the button 
+			showAdButton.interactable = false;
 
+			//Important!. In the unity editor we pass the IUnityAdsShowListener once,in other case we pass it always.
+			//This is for avoiding problems with the number of callback calls
 #if UNITY_EDITOR
 			if (!alreadyAdded)
 			{
-				Advertisement.Show(_adUnitId, this);
+				Advertisement.Show(adUnitId, this);
 				alreadyAdded = true;
 			}
-			else Advertisement.Show(_adUnitId);
+			else Advertisement.Show(adUnitId);
 #else
 			Advertisement.Show(_adUnitId, this);
 #endif
 		}
 
-		// Implement the Show Listener's OnUnityAdsShowComplete callback method to determine if the user gets a reward:
+		/// <summary>
+		/// This method is called when the ad show is completed. Here we add a hint when the user cpmpletes the ad
+		/// </summary>
+		/// <param name="adUnitId">Ad id</param>
+		/// <param name="showCompletionState">Completition state</param>
 		public void OnUnityAdsShowComplete(string adUnitId, UnityAdsShowCompletionState showCompletionState)
 		{
-			if (adUnitId.Equals(_adUnitId) && showCompletionState.Equals(UnityAdsShowCompletionState.COMPLETED))
+			if (adUnitId.Equals(this.adUnitId) && showCompletionState.Equals(UnityAdsShowCompletionState.COMPLETED))
 			{
-				Debug.Log("Unity Ads Rewarded Ad Completed");
-				levelManager.addHint();
-				Advertisement.Banner.Show("Banner_Android");
+                Debug.Log("Unity Ads Rewarded Ad Completed");
+                levelManager.addHint();
 
-				// Load another ad:
-				Advertisement.Load(_adUnitId, this);
+				//We show the banner ad
+				Advertisement.Banner.Show("Banner_Android"); 
 
+                //We load another ad
+                Advertisement.Load(this.adUnitId, this);
 			}
 		}
 
-		// Implement Load and Show Listener error callbacks:
+		/// <summary>
+		/// This method is called when ad failed to load
+		/// </summary>
+		/// <param name="adUnitId">Ad id</param>
+		/// <param name="error">Type of error</param>
+		/// <param name="message">Error mesage</param>
 		public void OnUnityAdsFailedToLoad(string adUnitId, UnityAdsLoadError error, string message)
 		{
 			Debug.Log($"Error loading Ad Unit {adUnitId}: {error.ToString()} - {message}");
-			// Use the error details to determine whether to try to load another ad.
 		}
 
+		/// <summary>
+		/// This method is called when ad failed to show
+		/// </summary>
+		/// <param name="adUnitId">Ad id</param>
+		/// <param name="error">Type of error</param>
+		/// <param name="message">Error mesage</param>
 		public void OnUnityAdsShowFailure(string adUnitId, UnityAdsShowError error, string message)
 		{
 			Debug.Log($"Error showing Ad Unit {adUnitId}: {error.ToString()} - {message}");
-			// Use the error details to determine whether to try to load another ad.
 		}
 
+		/// <summary>
+		/// This method is called when the ad show starts. Here we hide banned ad
+		/// </summary>
+		/// <param name="adUnitId">Ad id</param>
 		public void OnUnityAdsShowStart(string adUnitId) { Advertisement.Banner.Hide(); }
+		/// <summary>
+		/// This method is called when we click on the ad
+		/// </summary>
+		/// <param name="adUnitId">Ad id</param>
 		public void OnUnityAdsShowClick(string adUnitId) { }
 
 
 		void OnDestroy()
 		{
-			// Clean up the button listeners:
-			_showAdButton.onClick.RemoveAllListeners();
+			// We clean up the button listeners
+			showAdButton.onClick.RemoveAllListeners();
 		}
 	}
 }

@@ -7,46 +7,55 @@ namespace flow.Ads
     public class BannerAd : MonoBehaviour
     {
 
-        [SerializeField] BannerPosition _bannerPosition = BannerPosition.BOTTOM_CENTER;
-        [SerializeField] string _adUnitId = "Banner_Android";
+        [SerializeField] BannerPosition bannerPosition = BannerPosition.BOTTOM_CENTER;
+        [SerializeField] string adUnitId = "Banner_Android";
 
         void Start()
         {
-            // Set the banner position:
-            Advertisement.Banner.SetPosition(_bannerPosition);
+            //We set the banner position
+            Advertisement.Banner.SetPosition(bannerPosition);
         }
 
-        // Implement a method to call when the Load Banner button is clicked:
+        /// <summary>
+        /// Loads the banner
+        /// </summary>
         public void LoadBanner()
         {
-            // Set up options to notify the SDK of load events:
+            // We set up options to notify the SDK of load events
             BannerLoadOptions options = new BannerLoadOptions
             {
                 loadCallback = OnBannerLoaded,
                 errorCallback = OnBannerError
             };
 
-            // Load the Ad Unit with banner content:
-            Advertisement.Banner.Load(_adUnitId, options);
+            //We load the Ad Unit with banner content
+            Advertisement.Banner.Load(adUnitId, options);
         }
 
-        // Implement code to execute when the loadCallback event triggers:
+        /// <summary>
+        /// This method is called when the loadCallback event triggers,
+        /// it shows the banner when is loaded
+        /// </summary>
         void OnBannerLoaded()
         {
             Debug.Log("Banner loaded");
             ShowBannerAd();
         }
 
-        // Implement code to execute when the load errorCallback event triggers:
+        /// <summary>
+        /// This method is called when the errorCallback event triggers
+        /// </summary>
         void OnBannerError(string message)
         {
             Debug.Log($"Banner Error: {message}");
         }
 
-        // Implement a method to call when the Show Banner button is clicked:
+        /// <summary>
+        /// Shows the banner
+        /// </summary>
         void ShowBannerAd()
         {
-            // Set up options to notify the SDK of show events:
+            //We set up options to notify the SDK of show events
             BannerOptions options = new BannerOptions
             {
                 clickCallback = OnBannerClicked,
@@ -54,24 +63,37 @@ namespace flow.Ads
                 showCallback = OnBannerShown
             };
 
-            // Show the loaded Banner Ad Unit:
-            Advertisement.Banner.Show(_adUnitId, options);
+            //We show the loaded banner ad
+            Advertisement.Banner.Show(adUnitId, options);
         }
 
+        /// <summary>
+        /// Hides the banner
+        /// </summary>
         public void hide()
         {
             Advertisement.Banner.Hide();
         }
 
+        /// <summary>
+        /// Shows the banner
+        /// </summary>
         public void show()
         {
-            Advertisement.Banner.Show(_adUnitId);
+            Advertisement.Banner.Show(adUnitId);
         }
 
+        /// <summary>
+        /// This method is called when the clickCallback event triggers
+        /// </summary>
         void OnBannerClicked() { }
+        /// <summary>
+        /// This method is called when the showCallback event triggers
+        /// </summary>
         void OnBannerShown() { }
+        /// <summary>
+        /// This method is called when the hideCallback event triggers
+        /// </summary>
         void OnBannerHidden() { }
-
     }
-
 }

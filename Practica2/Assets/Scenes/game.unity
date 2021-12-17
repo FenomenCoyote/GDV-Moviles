@@ -518,7 +518,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4cbc530c98e644442be6c2e0b475cfdf, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _adUnitId: Rewarded_Android
+  adUnitId: Rewarded_Android
   levelManager: {fileID: 643610038}
 --- !u!1 &250387466
 GameObject:
@@ -2734,6 +2734,10 @@ PrefabInstance:
     - target: {fileID: 4492934668455456201, guid: e18432c6b07a3704bb8bca94aab17339, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8697990881963852719, guid: e18432c6b07a3704bb8bca94aab17339, type: 3}
+      propertyPath: androidGameId
+      value: 4505790
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: e18432c6b07a3704bb8bca94aab17339, type: 3}

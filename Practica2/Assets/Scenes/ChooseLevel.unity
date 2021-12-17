@@ -888,6 +888,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 8697990881963852719, guid: e18432c6b07a3704bb8bca94aab17339, type: 3}
+      propertyPath: androidGameId
+      value: 4505790
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: e18432c6b07a3704bb8bca94aab17339, type: 3}
 --- !u!1001 &1522448460

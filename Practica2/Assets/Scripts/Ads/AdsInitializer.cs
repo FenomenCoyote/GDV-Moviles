@@ -5,29 +5,36 @@ namespace flow.Ads
 {
     public class AdsInitializer : MonoBehaviour, IUnityAdsInitializationListener
     {
-        [SerializeField] string _androidGameId;
-        [SerializeField] string _iOSGameId;
-        [SerializeField] bool _testMode = true;
-        private string _gameId;
+        [SerializeField] string androidGameId;
+        [SerializeField] bool testMode = true;
 
         private InitializedCallback initializedCallback;
 
         public delegate void InitializedCallback();
 
+        /// <summary>
+        /// Initializes the advertisement system using the game id (android or ios)
+        /// </summary>
+        /// <param name="initializedCallback">Initialization callback</param>
         public void InitializeAds(InitializedCallback initializedCallback)
         {
             this.initializedCallback = initializedCallback;
-            _gameId = (Application.platform == RuntimePlatform.IPhonePlayer)
-                ? _iOSGameId
-                : _androidGameId;
-            Advertisement.Initialize(_gameId, _testMode, this);
+            Advertisement.Initialize(androidGameId, testMode, this);
         }
 
+        /// <summary>
+        /// This method is called when the initialization is completed
+        /// </summary>
         public void OnInitializationComplete()
         {
             initializedCallback();
         }
 
+        /// <summary>
+        /// This method is called when the initialization filed
+        /// </summary>
+        /// <param name="error">Error type</param>
+        /// <param name="message">Error message</param>
         public void OnInitializationFailed(UnityAdsInitializationError error, string message)
         {
             Debug.Log($"Unity Ads Initialization Failed: {error.ToString()} - {message}");
