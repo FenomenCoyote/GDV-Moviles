@@ -1,12 +1,23 @@
 namespace flow.Logic
 {
+    /// <summary>
+    /// Enum which represents four directions and none
+    /// </summary>
     public enum Dir
     {
         None, Up, Down, Left, Right
     }
 
+    /// <summary>
+    /// Struct which contains methods for directions
+    /// </summary>
     struct Direction
     {
+        /// <summary>
+        /// Get the opposite direction from the given direction
+        /// </summary>
+        /// <param name="d">Direction to get the opposite</param>
+        /// <returns>Opposite direction from given one</returns>
         static public Dir Opposite(Dir d)
         {
             switch (d)
@@ -24,6 +35,12 @@ namespace flow.Logic
             }
         }
 
+        /// <summary>
+        /// By a given vector, returns it's direction enum
+        /// Vector has to be normalized
+        /// </summary>
+        /// <param name="dir">Vector to translate to enum</param>
+        /// <returns>Dir enum of given vector</returns>
         static public Dir GetDirectionFromVector(UnityEngine.Vector2 dir)
         {
             if(dir == UnityEngine.Vector2.up)

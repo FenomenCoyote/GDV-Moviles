@@ -39,6 +39,11 @@ namespace flow.Logic
         public int perfectPacks;
         public LvlPack[] packs;
 
+        /// <summary>
+        /// Returns the level pack with the given name
+        /// </summary>
+        /// <param name="name"></param>
+        /// <returns>Logical LvlPack with given name</returns>
         public LvlPack getPackByName(string name)
         {
             int i = 0;
@@ -66,11 +71,13 @@ namespace flow.Logic
             int nCategories = gmCategories.Length;
             categories = new Category[nCategories];
 
+            //For every category
             for (int c = 0; c < nCategories; ++c)
             {
                 categories[c] = new Category();
                 Category category = categories[c];
 
+                //None pack is completed
                 category.completedPacks = 0;
                 category.perfectPacks = 0;
 
@@ -78,22 +85,27 @@ namespace flow.Logic
                 int nPacks = packs.Length;
 
                 category.packs = new LvlPack[nPacks];
+                
+                //Name is copied
                 category.name = gmCategories[c].categoryName;
 
+                //For every pack in the category
                 for (int p = 0; p < nPacks; ++p)
                 {
                     categories[c].packs[p] = new LvlPack();
                     LvlPack pack = categories[c].packs[p];
 
+                    //None level is completed
                     pack.completedLevels = 0;
                     pack.perfectLevels = 0;
 
+                    //Name is copied
                     pack.name = gmCategories[c].levelPacks[p].packName;
 
                     string[] levelsInfo = packs[p].levels.ToString().Split('\n');
                     pack.levels = new Level[levelsInfo.Length - 1];
 
-                    //El primer nivel es el único desbloqueado
+                    //First level is always unlocked
                     pack.levels[0] = new Level();
                     Level level = pack.levels[0];
                     level.record = 0;
@@ -101,13 +113,17 @@ namespace flow.Logic
                     level.locked = false;
                     pack.levels[0] = level;
 
+                    //For every level in the pack
                     for (int l = 1; l < levelsInfo.Length - 1; ++l)
                     {
                         pack.levels[l] = new Level();
                         level = pack.levels[l];
 
+                        //Level is not completed and has no record
                         level.record = 0;
                         level.completed = false;
+
+                        //Depending on category configuration other levels are locked or unlocked
                         if (gmCategories[c].allLevelsUnlocked)
                             level.locked = false;
                         else level.locked = true;
@@ -116,6 +132,11 @@ namespace flow.Logic
             }
         }
 
+        /// <summary>
+        /// Returns the Category with the given name
+        /// </summary>
+        /// <param name="name"></param>
+        /// <returns></returns>
         public Category getCategoryByName(string name)
         {
             int i = 0;

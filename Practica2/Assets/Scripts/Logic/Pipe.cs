@@ -22,6 +22,9 @@ namespace flow.Logic
         private List<Vector2> solutionPositions;
 
 
+        /// <summary>
+        /// Constructor
+        /// </summary>
         public Pipe()
         {
             positions = new List<Vector2>();
@@ -33,6 +36,9 @@ namespace flow.Logic
             changedMySolution = true;
         }
 
+        /// <summary>
+        /// Reset pipe's info
+        /// </summary>
         public void reset()
         {
             closed = false;
@@ -72,7 +78,7 @@ namespace flow.Logic
         /// <summary>
         /// Gets the tip of the pipe
         /// </summary>
-        /// <returns></returns>
+        /// <returns>Position of tip of the pipe</returns>
         public Vector2 getOrigin()
         {
             if(checkPipeClosed())
@@ -205,7 +211,6 @@ namespace flow.Logic
 
             return -1;
         }
-
 
         public void restore()
         {
