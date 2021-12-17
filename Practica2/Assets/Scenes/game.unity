@@ -4674,8 +4674,8 @@ MonoBehaviour:
   m_SpriteState:
     m_HighlightedSprite: {fileID: 0}
     m_PressedSprite: {fileID: 21300000, guid: c9f3f8602ac6a3f448c18d72d4ef70f6, type: 3}
-    m_SelectedSprite: {fileID: 0}
-    m_DisabledSprite: {fileID: 0}
+    m_SelectedSprite: {fileID: 21300000, guid: c9f3f8602ac6a3f448c18d72d4ef70f6, type: 3}
+    m_DisabledSprite: {fileID: 21300000, guid: db4d564748538e3419907e4545d318a1, type: 3}
   m_AnimationTriggers:
     m_NormalTrigger: Normal
     m_HighlightedTrigger: Highlighted
