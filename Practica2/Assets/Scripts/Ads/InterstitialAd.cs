@@ -45,7 +45,7 @@ namespace flow.Ads
             }
             else Advertisement.Show(adUnitId);
 #else
-			Advertisement.Show(_adUnitId, this);
+			Advertisement.Show(adUnitId, this);
 #endif
         }
 
