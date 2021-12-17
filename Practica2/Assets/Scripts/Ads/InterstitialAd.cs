@@ -7,35 +7,53 @@ namespace flow.Ads
     {
         [SerializeField] string _adUnitId = "Interstitial_Android";
 
+        private Callback callback;
+
+        bool alreadyAdded = false;
+
+        public delegate void Callback(UnityAdsShowCompletionState completionState);
+
         // Load content to the Ad Unit:
         public void LoadAd()
         {
-            // IMPORTANT! Only load content AFTER initialization (in this example, initialization is handled in a different script).
-            Debug.Log("Loading Ad: " + _adUnitId);
+            if (!AdsManager.Instance.isInitialized)
+                return;
+
             Advertisement.Load(_adUnitId, this);
         }
 
         // Show the loaded content in the Ad Unit: 
-        public void ShowAd()
+        public void ShowAd(Callback callback)
         {
-            // Note that if the ad content wasn't previously loaded, this method will fail
-            Debug.Log("Showing Ad: " + _adUnitId);
-            Advertisement.Show(_adUnitId, this);
-            Advertisement.Banner.Hide();
+            if (!AdsManager.Instance.isInitialized)
+                return;
+
+            this.callback = callback;
+
+#if UNITY_EDITOR
+            if (!alreadyAdded)
+            {
+                Advertisement.Show(_adUnitId, this);
+                alreadyAdded = true;
+            }
+            else Advertisement.Show(_adUnitId);
+#else
+			Advertisement.Show(_adUnitId, this);
+#endif
         }
 
         public void OnUnityAdsShowComplete(string adUnitId, UnityAdsShowCompletionState showCompletionState)
         {
-            if (adUnitId.Equals(_adUnitId) && showCompletionState.Equals(UnityAdsShowCompletionState.COMPLETED))
+            if (adUnitId.Equals(_adUnitId))
             {
-                Advertisement.Banner.Show("Banner_Android");
+                callback(showCompletionState);
             }
         }
 
         // Implement Load Listener and Show Listener interface methods:  
         public void OnUnityAdsAdLoaded(string adUnitId)
         {
-            // Optionally execute code if the Ad Unit successfully loads content.
+
         }
 
         public void OnUnityAdsFailedToLoad(string adUnitId, UnityAdsLoadError error, string message)
@@ -48,6 +66,7 @@ namespace flow.Ads
         {
             Debug.Log($"Error showing Ad Unit {adUnitId}: {error.ToString()} - {message}");
             // Optionally execute code if the Ad Unit fails to show, such as loading another ad.
+            callback(UnityAdsShowCompletionState.UNKNOWN);
         }
 
         public void OnUnityAdsShowStart(string adUnitId) { }

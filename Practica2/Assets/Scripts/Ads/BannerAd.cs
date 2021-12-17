@@ -60,7 +60,12 @@ namespace flow.Ads
 
         public void hide()
         {
+            Advertisement.Banner.Hide();
+        }
 
+        public void show()
+        {
+            Advertisement.Banner.Show(_adUnitId);
         }
 
         void OnBannerClicked() { }
