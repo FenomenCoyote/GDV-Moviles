@@ -18,7 +18,6 @@ namespace flow.UI
         bool locked;             //If the level is locked or not
 
         string levelInfo;   //Level configuration
-        int nPanel;         //Panel number
         int lvlIndex;       //Index of the level array
 
         void Awake()
@@ -47,13 +46,11 @@ namespace flow.UI
         /// Sets the level information of this levelButton
         /// </summary>
         /// <param name="lvl">The level string with its configuration</param>
-        /// <param name="nPanel">The panel where is the level</param>
         /// <param name="lvlIndex">The index of the levels array</param>
-        public void setLevelInfo(string lvl, int nPanel, int lvlIndex)
+        public void setLevelInfo(string lvl, int lvlIndex)
         {
             levelTextNumber.text = lvl.Split(',')[2]; //we set the level number
             levelInfo = lvl;
-            this.nPanel = nPanel;
             this.lvlIndex = lvlIndex;
         }
 
@@ -99,7 +96,7 @@ namespace flow.UI
         private void clickCallback()
         {
             if (!locked)
-                GameManager.Instance.setLevel(levelInfo, lvlIndex, nPanel);
+                GameManager.Instance.setLevel(levelInfo, lvlIndex);
         }
 
     }

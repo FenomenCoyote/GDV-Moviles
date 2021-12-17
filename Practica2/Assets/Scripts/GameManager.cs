@@ -132,7 +132,7 @@ namespace flow
             SceneManager.LoadScene((int)Scene.ChoosePack);
         }
 
-        public void setLevel(string levelInfo, int index, int nPanel = 0)
+        public void setLevel(string levelInfo, int index)
         {
             selectedLevel = levelInfo;
             lvlIndex = index;

@@ -8,7 +8,6 @@ namespace flow.UI
 
     public class SelectLevels : MonoBehaviour
     {
-
         [SerializeField] Text categoryText;         //The text that shows the name of the pack category
 
         [SerializeField] Image check;               //The check image
@@ -31,7 +30,6 @@ namespace flow.UI
             hLayout = GetComponent<HorizontalLayoutGroup>();
             rectTr = GetComponent<RectTransform>();
         }
-
 
         void Start()
         {
@@ -64,16 +62,10 @@ namespace flow.UI
             string[] levels = GameManager.Instance.getLevelPack().levels.ToString().Split('\n');
 
             float totalWidth = 0; //Total width of the RectTransform
-            int nPanel = -1;
+
             //We iterate through the panels
             for (int i = 0; i < (levels.Length - 1) / panelSize; i++)
             {
-                //We set the panel number
-                if (levels[i * panelSize].Split(',')[2] == "1")//¿Con los niveles de Manias y Rectangulos no se calcula bien el numero del panel?
-                {
-                    nPanel++;
-                }
-
                 //We instantiate the level panel
                 LevelsPanel lvlPanel = Instantiate(levelsPanel, transform);
                 //We add the width of each level panel to the total width
@@ -86,7 +78,7 @@ namespace flow.UI
                 {
                     //We initialze the levelButton info
                     int nLevel = i * panelSize + j;
-                    lvlPanel.setlvlButton(pack.levelPanelColors[i], levels[nLevel], j, nPanel, i * panelSize + j, logicLevels[nLevel]);
+                    lvlPanel.setlvlButton(pack.levelPanelColors[i], levels[nLevel], j, nLevel, logicLevels[nLevel]);
                 }
             }
 

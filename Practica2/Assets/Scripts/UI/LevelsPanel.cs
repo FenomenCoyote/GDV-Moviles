@@ -28,16 +28,15 @@ namespace flow.UI {
         /// <param name="c">Color</param>
         /// <param name="lvl">Level configuration</param>
         /// <param name="number">Index of the level buttons array</param>
-        /// <param name="nPanel">Panel number</param>
         /// <param name="lvlIndex">Index of the levels array</param>
         /// <param name="logicLevel">Level info to be saved and loaded</param>
-        public void setlvlButton(Color c, string lvl, int number, int nPanel, int lvlIndex, Logic.Level logicLevel)
+        public void setlvlButton(Color c, string lvl, int number, int lvlIndex, Logic.Level logicLevel)
         {
             //We initialize the level button color and info
             LevelButton button = lvlButton[number];
 
             button.setButtonLevelColor(c);
-            button.setLevelInfo(lvl, nPanel, lvlIndex);
+            button.setLevelInfo(lvl, lvlIndex);
 
             //We enable the lock image if the level is locked
             if (logicLevel.locked)
