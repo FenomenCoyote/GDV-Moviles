@@ -200,7 +200,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9594ecb5bd0287746a21e64f25cf51ac, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  nivelesText: {fileID: 1527274719}
+  levelsText: {fileID: 1527274719}
   categoryHeader: {fileID: 6621999297182245064, guid: b4e9f3b87baefee4b8729bec9942aca2, type: 3}
   categoryButton: {fileID: -8947032083130238934, guid: dac07249a91b1ee43a494514267b9fbf, type: 3}
   removeAdsText: {fileID: 1661040117}
@@ -565,7 +565,7 @@ GameObject:
   - component: {fileID: 1527274720}
   - component: {fileID: 1527274719}
   m_Layer: 5
-  m_Name: nivelesText
+  m_Name: levelsText
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

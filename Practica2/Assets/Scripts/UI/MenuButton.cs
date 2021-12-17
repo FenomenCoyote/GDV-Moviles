@@ -9,23 +9,23 @@ namespace flow.UI
     public class MenuButton : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
     {
         [SerializeField]
-        Text levelPackName;
+        Text levelPackName;             //The text that shows the level pack name
 
         [SerializeField]
-        Text packProgress;
+        Text packProgress;              //The text that shows completed level and the total levels
 
         [SerializeField]
-        Image finishedPackCheck;
+        Image finishedPackCheck;        //The check image
 
         [SerializeField]
-        Image perfectPackStar;
+        Image perfectPackStar;          //The star image
 
-        RectTransform rectTransform;
+        RectTransform rectTransform;    //The RectTransform attached to this gameobject
 
-        LevelPack pack;
-        PackCategory category;
+        LevelPack pack;                 //The level pack this button belongs to
+        PackCategory category;          //The pack category this button belongs to
 
-        Button button;
+        Button button;                  //The button attached to this gameobject
 
         private void Awake()
         {
@@ -57,7 +57,7 @@ namespace flow.UI
         }
 
         /// <summary>
-        /// Sets the level pack and the pack categoty of this menuButton.
+        /// Sets the level pack and the pack category of this menuButton.
         /// We also set the level pack name and its color.
         /// </summary>
         /// <param name="levelPack">Level pack</param>
@@ -71,10 +71,10 @@ namespace flow.UI
         }
 
         /// <summary>
-        /// Sets the level we have completed of the level pack in a text
+        /// Sets the levels we have completed of the level pack in a text
         /// </summary>
         /// <param name="levelsDone">Levels we have completed</param>
-        /// <param name="totalLevels">Totals levelsof the level pack</param>
+        /// <param name="totalLevels">Totals levels of the level pack</param>
         public void setPackProgress(int levelsDone, int totalLevels)
         {
             packProgress.text = levelsDone.ToString() + "/" + totalLevels.ToString();

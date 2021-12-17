@@ -8,10 +8,10 @@ namespace flow.UI
     public class EndImage : MonoBehaviour
     {
         [SerializeField]
-        private Image checkImg;
+        private Image checkImg;     //The check image
 
         [SerializeField]
-        private Image starImg;
+        private Image starImg;      //The start image
 
         /// <summary>
         /// Enables or disables the check image 

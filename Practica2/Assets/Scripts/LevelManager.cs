@@ -92,7 +92,7 @@ namespace flow {
 
                 recordText.text = "récord: " + logicLevel.record.ToString();
             }
-            int t = GameManager.Instance.getLevelPackSize();
+            
 
             if (currentLvlIndex == 0)
             {

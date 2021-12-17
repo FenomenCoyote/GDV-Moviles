@@ -6,13 +6,16 @@ namespace flow
 {
     public class SoundManager : MonoBehaviour
     {
+        //Enum with the type of sounds
         public enum Sound
         {
             Back, Forward, Leak, Flow
         }
 
+        //Instance of the SoundManager
         public static SoundManager Instance { get; private set; }
 
+        //AudioSurces to play each type of sound
         [SerializeField] private AudioSource back;
         [SerializeField] private AudioSource forward;
         [SerializeField] private AudioSource leak;
@@ -20,6 +23,7 @@ namespace flow
 
         private void Awake()
         {
+            //We make sure that we have only one instance of the SoundManager between scenes
             if(Instance != null)
             {
                 Destroy(gameObject);
@@ -39,7 +43,10 @@ namespace flow
             }
         }
 #endif
-
+        /// <summary>
+        /// Plays a sound
+        /// </summary>
+        /// <param name="s">Sound to play</param>
         public void playSound(Sound s)
         {
             switch (s)

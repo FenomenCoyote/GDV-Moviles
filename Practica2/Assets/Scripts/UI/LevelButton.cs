@@ -6,20 +6,20 @@ namespace flow.UI
 {
     public class LevelButton : MonoBehaviour
     {
-        [SerializeField] Text levelTextNumber;
-        [SerializeField] Image check;
-        [SerializeField] Image lockImg;
-        [SerializeField] Image star;
+        [SerializeField] Text levelTextNumber;   //The text that shows the level number
+        [SerializeField] Image check;            //The check image
+        [SerializeField] Image lockImg;          //The lock image
+        [SerializeField] Image star;             //The star image
 
-        Image img;
-        RectTransform rectTr;
-        Button button;
+        Image img;               //The image attached to this gameobject
+        RectTransform rectTr;    //The RectTransform attached to this gameobject
+        Button button;           //The button attached to this gameobject
 
-        bool locked;
+        bool locked;             //If the level is locked or not
 
-        string levelInfo;
-        int nPanel;
-        int lvlIndex;
+        string levelInfo;   //Level configuration
+        int nPanel;         //Panel number
+        int lvlIndex;       //Index of the level array
 
         void Awake()
         {

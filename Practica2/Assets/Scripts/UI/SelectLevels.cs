@@ -9,22 +9,22 @@ namespace flow.UI
     public class SelectLevels : MonoBehaviour
     {
 
-        [SerializeField] Text categoryText;
+        [SerializeField] Text categoryText;         //The text that shows the name of the pack category
 
-        [SerializeField] Image check;
-        [SerializeField] Image star;
+        [SerializeField] Image check;               //The check image
+        [SerializeField] Image star;                //The star image
 
-        [SerializeField] LevelsPanel levelsPanel;
+        [SerializeField] LevelsPanel levelsPanel;   //Levels panel object
 
-        [SerializeField] ScrollRect scroll;
+        [SerializeField] ScrollRect scroll;         //Scroll rect component
 
-        PackCategory category;
-        LevelPack pack;
+        PackCategory category;                      //The selected pack category
+        LevelPack pack;                             //Tthe selected level pack 
 
-        HorizontalLayoutGroup hLayout;
-        RectTransform rectTr;
+        HorizontalLayoutGroup hLayout;              //The HorizontalLayoutGroup attached to this gameobject
+        RectTransform rectTr;                       //The RectTransform attached to this gameobject
 
-        private const int panelSize = 30;
+        private const int panelSize = 30;           //Number of panel buttons
 
         private void Awake()
         {
@@ -35,57 +35,69 @@ namespace flow.UI
 
         void Start()
         {
+            //We get the selected LevelPack and the PackCategory
             category = GameManager.Instance.getPackCategory();
             pack = GameManager.Instance.getLevelPack();
 
-            //Texto nombre categor�a
+            //We set the category text an the check image
             categoryText.text = pack.packName;
             categoryText.color = category.categoryColor;
             check.color = category.categoryColor;
 
+            //We get the Category and LevelPack containers that store information
             Logic.Category logicCategory = GameManager.Instance.getState().getCategoryByName(category.categoryName);
             Logic.LvlPack logicPack = logicCategory.getPackByName(pack.packName);
+            //We get some information of the LevelPack container
             int completedLevels = logicPack.completedLevels;
             int perfectLevels = logicPack.perfectLevels;
             int nLeves = logicPack.levels.Length;
+            //If we have completed all levels perfectly we enable the star image
             if (completedLevels == nLeves && perfectLevels == nLeves)
                 star.enabled = true;
-            else if (completedLevels == nLeves)
+            else if (completedLevels == nLeves) //If we have completed all levels we enable the check image
                 check.enabled = true;
 
+            //We get the Level container array of the LevelOck container
             Logic.Level[] logicLevels = logicPack.levels;
 
+            //We get the levels array
             string[] levels = GameManager.Instance.getLevelPack().levels.ToString().Split('\n');
 
-            float auxWidth = 0;
+            float totalWidth = 0; //Total width of the RectTransform
             int nPanel = -1;
-            //Recorre los paneles
+            //We iterate through the panels
             for (int i = 0; i < (levels.Length - 1) / panelSize; i++)
             {
-                if (levels[i * panelSize].Split(',')[2] == "1")
+                //We set the panel number
+                if (levels[i * panelSize].Split(',')[2] == "1")//¿Con los niveles de Manias y Rectangulos no se calcula bien el numero del panel?
                 {
                     nPanel++;
                 }
 
+                //We instantiate the level panel
                 LevelsPanel lvlPanel = Instantiate(levelsPanel, transform);
-                auxWidth += lvlPanel.getWidth() + hLayout.spacing;
-
+                //We add the width of each level panel to the total width
+                totalWidth += lvlPanel.getWidth() + hLayout.spacing;
+                //We set the dimensions text
                 lvlPanel.setDimensionsText(pack.levelPanelName[i]);
-                //Recorre los niveles del panel
+
+                //We iterate through the levels of the panel
                 for (int j = 0; j < panelSize; j++)
                 {
+                    //We initialze the levelButton info
                     int nLevel = i * panelSize + j;
                     lvlPanel.setlvlButton(pack.levelPanelColors[i], levels[nLevel], j, nPanel, i * panelSize + j, logicLevels[nLevel]);
                 }
             }
 
-            rectTr.SetSizeWithCurrentAnchors(RectTransform.Axis.Horizontal, auxWidth + hLayout.spacing);
+            //We set the width of the RectTrasform
+            rectTr.SetSizeWithCurrentAnchors(RectTransform.Axis.Horizontal, totalWidth + hLayout.spacing);
         }
 
+        //This callback goes to the ChoosePack scene
         public void backClickCallback()
         {
             GameManager.Instance.gotoSelectCategoryMenu();
         }
-
     }
 }

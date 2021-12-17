@@ -13,7 +13,6 @@ MonoBehaviour:
   m_Name: bonusPack
   m_EditorClassIdentifier: 
   levels: {fileID: 4900000, guid: 793db0631e54c984c85e2d76a5d425bd, type: 3}
-  theme: {fileID: 11400000, guid: 9beabe3a5d2a3094bbbc1395267da400, type: 2}
   packName: Bonus Pack
   levelPanelColors:
   - {r: 0, g: 0.7735849, b: 0.10617836, a: 1}
@@ -22,8 +21,8 @@ MonoBehaviour:
   - {r: 0.735849, g: 0.33762488, b: 0, a: 1}
   - {r: 0.7264151, g: 0, b: 0, a: 1}
   levelPanelName:
-  - "5x5 - f\xE1cil"
+  - 5x5 - easy
   - 6x6
-  - 7x7 - medio
+  - 7x7 - medium
   - 8x8
-  - "9x9 - dif\xEDcil"
+  - 9x9 - difficult

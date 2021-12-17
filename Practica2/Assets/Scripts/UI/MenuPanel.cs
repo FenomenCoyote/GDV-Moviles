@@ -6,16 +6,16 @@ using UnityEngine.UI;
 public class MenuPanel : MonoBehaviour
 {
     [SerializeField]
-    Text panelText;
+    Text panelText;                   //The panel text
 
     [SerializeField]
-    Image checkImg;
+    Image checkImg;                   //The star image
 
     [SerializeField]
-    Image starImg;
+    Image starImg;                    //The star image
 
-    Image img;
-    RectTransform rectTransform;
+    Image img;                       //The image attached to this gameobject
+    RectTransform rectTransform;     //The RectTransform attached to this gameobject
 
     private void Awake()
     {
@@ -33,7 +33,7 @@ public class MenuPanel : MonoBehaviour
     }
 
     /// <summary>
-    /// 
+    /// Sets the image color
     /// </summary>
     /// <param name="color"></param>
     public void setColor(Color color)
