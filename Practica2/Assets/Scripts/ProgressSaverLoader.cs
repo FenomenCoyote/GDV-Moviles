@@ -100,7 +100,7 @@ namespace flow
                 level.completed = true;
                 pack.completedLevels++;
                 level.record = steps;
-                //Desbloquear siguiente nivel
+                //Unlock tehe next level
                 if (lvlIndex < pack.levels.Length - 1)
                     pack.levels[lvlIndex + 1].locked = false;
                 if (perfect)

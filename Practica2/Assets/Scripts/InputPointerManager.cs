@@ -7,11 +7,15 @@ namespace flow
     public class InputPointerManager : MonoBehaviour
     {
         [SerializeField]
-        private SpriteRenderer sprite;
+        private SpriteRenderer sprite; //Pointer sprite 
 
         [SerializeField]
-        [Range(0, 1)] private float alphaCorrect, alphaNotCorrect;
+        [Range(0, 1)] private float alphaCorrect, alphaNotCorrect; //Alpha of the pointer
 
+        /// <summary>
+        /// Sets the color of the pointer 
+        /// </summary>
+        /// <param name="c"></param>
         public void setColor(Color c)
         {
             sprite.enabled = true;
@@ -22,16 +26,25 @@ namespace flow
             sprite.color = tempColor;
         }
 
+        /// <summary>
+        /// Enanbles the pointer
+        /// </summary>
         private void OnEnable()
         {
             sprite.enabled = true;
         }
 
+        /// <summary>
+        /// Disables the pointer
+        /// </summary>
         private void OnDisable()
         {
             sprite.enabled = false;
         }
 
+        /// <summary>
+        /// Sets the correct alpha to the pointer color
+        /// </summary>
         public void setCorrect()
         {
             Color c = sprite.color;
@@ -41,6 +54,9 @@ namespace flow
             updatePos();
         }
 
+        /// <summary>
+        /// Sets the incorrect alpha to the pointer color
+        /// </summary>
         public void setNotCorrect()
         {
             Color c = sprite.color;
@@ -48,6 +64,9 @@ namespace flow
             sprite.color = c;
         }
 
+        /// <summary>
+        /// Updates the position of the pointer
+        /// </summary>
         void Update()
         {
             if(sprite.enabled)

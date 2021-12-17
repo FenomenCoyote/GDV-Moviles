@@ -13,12 +13,12 @@ public class TileAnimation : MonoBehaviour
     [Tooltip("How much does it scale")]
     [SerializeField][Range(0.1f, 2f)] private float animationScale = 0.25f;
 
-    [Tooltip("if it hides and fades")]
+    [Tooltip("If it hides and fades")]
     [SerializeField] private bool hideWhenEnded;
 
-    private Vector3 initialScale;
+    private Vector3 initialScale;   //Initial scale of the sprite
 
-    private SpriteRenderer sprite;
+    private SpriteRenderer sprite; //The sprite renderer attached to this gameobject
 
     private void Awake()
     {
@@ -26,16 +26,27 @@ public class TileAnimation : MonoBehaviour
         initialScale = transform.localScale;
     }
 
+    /// <summary>
+    /// Sets the initial scale of the sprite
+    /// </summary>
+    /// <param name="scale">New scale</param>
     public void setInitialScale(Vector3 scale)
     {
         initialScale = scale;
     }
 
+    /// <summary>
+    /// Starts the scale animation of the sprite
+    /// </summary>
     public void startAnim()
     {
         StartCoroutine(Scale());
     }
 
+    /// <summary>
+    /// This method performs the scale animation of the sprite
+    /// </summary>
+    /// <returns></returns>
     private IEnumerator Scale()
     {
         if (hideWhenEnded)

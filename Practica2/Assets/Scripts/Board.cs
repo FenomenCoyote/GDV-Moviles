@@ -190,11 +190,11 @@ namespace flow
             {
                 render();
 
-                percentageText.text = "tubería: " + getPercentage() + "%";
-                stepsText.text = "pasos: " + steps;
+                percentageText.text = "pipe: " + getPercentage() + "%";
+                stepsText.text = "moves: " + steps;
 
                 int completed = getPipesCompleted();
-                flowsText.text = "flujos: " + completed + "/" + pipes.Count;
+                flowsText.text = "flows: " + completed + "/" + pipes.Count;
 
                 if(completed == pipes.Count)
                 {
@@ -594,7 +594,7 @@ namespace flow
                 int pipeLength = _pipes[i].Count;
                 Color color = colors[i];
 
-                //Inicial
+                //Initial
                 Tuple<uint, uint> initial = _pipes[i][0];
                 Tile initTile = tiles[initial.Item1, initial.Item2];
                 initTile.setColor(color);
@@ -663,9 +663,9 @@ namespace flow
 
             aStar.RecibeLaberinto(tiles, pathFindingPenalizeOtherColors, pathFindingPenalizeMyEnd);
 
-            flowsText.text = "flujos: 0/" + pipes.Count;
-            percentageText.text = "tubería: 0%";
-            stepsText.text = "pasos: 0";
+            flowsText.text = "flows: 0/" + pipes.Count;
+            percentageText.text = "pipe: 0%";
+            stepsText.text = "moves: 0";
         }
 
         /// <summary>
@@ -693,9 +693,9 @@ namespace flow
                 t.setActiveTile(false);
             }
 
-            percentageText.text = "tubería: " + getPercentage() + "%";
-            stepsText.text = "pasos: 0";
-            flowsText.text = "flujos: 0/" + pipes.Count;
+            percentageText.text = "pipes: " + getPercentage() + "%";
+            stepsText.text = "moves: 0";
+            flowsText.text = "flows: 0/" + pipes.Count;
         }
 
         /// <summary>
@@ -725,11 +725,11 @@ namespace flow
 
                     render();
 
-                    percentageText.text = "tubería: " + getPercentage() + "%";
-                    stepsText.text = "pasos: " + steps;
+                    percentageText.text = "pipe: " + getPercentage() + "%";
+                    stepsText.text = "moves: " + steps;
 
                     int completed = getPipesCompleted();
-                    flowsText.text = "flujos: " + completed + "/" + pipes.Count;
+                    flowsText.text = "flows: " + completed + "/" + pipes.Count;
 
                     if (completed == pipes.Count)
                     {

@@ -83,7 +83,7 @@ namespace flow {
                     endImage.enableStar(true);
                 else endImage.enableCheck(true);
 
-                recordText.text = "récord: " + logicLevel.record.ToString();
+                recordText.text = "best: " + logicLevel.record.ToString();
             }
             
 
@@ -126,9 +126,9 @@ namespace flow {
                 endImage.enableStar(false);
                 endImage.enableCheck(true);
             }
-            recordText.text = "récord: " + logicLevel.record.ToString();
+            recordText.text = "best: " + logicLevel.record.ToString();
 
-            //if we are complete the last level we hhave finished the leval pack
+            //if we are complete the last level we have finished the level pack
             if (currentLvlIndex >= GameManager.Instance.getLevelPackSize() - 2)
             {
                 completeText.text = "Congratulations!";

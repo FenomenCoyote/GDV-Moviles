@@ -82,7 +82,7 @@ namespace flow.UI
                 }
             }
 
-            //We set the width of the RectTrasform
+            //We set the width of the RectTransform
             rectTr.SetSizeWithCurrentAnchors(RectTransform.Axis.Horizontal, totalWidth + hLayout.spacing);
         }
 
